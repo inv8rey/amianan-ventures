@@ -9,9 +9,8 @@ export function Footer() {
           {/* Brand */}
           <div>
             <Link href="/" className="flex items-center gap-2.5 mb-5 group">
-              <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-[#00cc6a]">
-                <span className="text-black font-black text-sm leading-none">AV</span>
-              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/amianan.svg" alt="Amianan Ventures" width={36} height={36} className="object-contain" />
               <div>
                 <div className="text-sm font-black tracking-tight text-white leading-none">
                   AMIANAN <span className="text-[#00cc6a]">VENTURES</span>

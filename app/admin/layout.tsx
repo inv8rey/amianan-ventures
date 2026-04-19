@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { Zap, LayoutDashboard, FileText, Calendar, Building2, Upload } from 'lucide-react'
+import { LayoutDashboard, FileText, Calendar, Building2, Upload } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { AdminLogout } from '@/components/admin/AdminLogout'
 
@@ -24,9 +24,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <aside className="w-60 shrink-0 border-r border-border/40 bg-card flex flex-col">
         <div className="p-5 border-b border-border/40">
           <Link href="/admin" className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded bg-primary">
-              <Zap className="h-3.5 w-3.5 text-primary-foreground" />
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/amianan.svg" alt="Amianan Ventures" width={28} height={28} className="object-contain" />
             <span className="text-sm font-bold">AV Admin</span>
           </Link>
         </div>
