@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { formatDistanceToNow, format } from 'date-fns'
+import { format } from 'date-fns'
 import { ArrowRight, ChevronRight, Calendar, MapPin } from 'lucide-react'
 import {
   getFeaturedArticles,
@@ -21,9 +21,9 @@ const locationLabel: Record<Location, string> = {
   national: 'National',
 }
 
-function timeAgo(date: string | null) {
+function formatDate(date: string | null) {
   if (!date) return ''
-  return formatDistanceToNow(new Date(date), { addSuffix: true })
+  return format(new Date(date), 'MMM d, yyyy')
 }
 
 // ─── Category / type label ─────────────────────────────────────
@@ -78,7 +78,7 @@ function HeroColumn({ featured, below }: { featured: Article; below: Article[] }
         <p className="text-sm text-zinc-500 leading-relaxed line-clamp-2 mb-3">{featured.excerpt}</p>
         <div className="text-xs text-zinc-400">
           By <span className="font-semibold text-zinc-600">{featured.author}</span>
-          {featured.published_at && <span className="ml-2">{timeAgo(featured.published_at)}</span>}
+          {featured.published_at && <span className="ml-2">{formatDate(featured.published_at)}</span>}
         </div>
       </Link>
 
@@ -111,7 +111,7 @@ function HeroColumn({ featured, below }: { featured: Article; below: Article[] }
               <h3 className="text-sm font-bold text-zinc-800 group-hover:text-[#00a855] transition-colors leading-snug line-clamp-2">
                 {article.title}
               </h3>
-              <p className="text-[11px] text-zinc-400 mt-1">{timeAgo(article.published_at)}</p>
+              <p className="text-[11px] text-zinc-400 mt-1">{formatDate(article.published_at)}</p>
             </Link>
           ))}
         </div>
@@ -145,7 +145,7 @@ function RightColumn({ latest, events }: { latest: Article[]; events: Event[] })
                   </span>
                 )}
                 <span className="text-[10px] text-zinc-400 font-medium ml-auto">
-                  {timeAgo(article.published_at)}
+                  {formatDate(article.published_at)}
                 </span>
               </div>
               <span className="text-xs font-semibold text-zinc-800 group-hover:text-[#00a855] transition-colors leading-snug line-clamp-2">
@@ -243,7 +243,7 @@ function RecentArticles({ articles }: { articles: Article[] }) {
             <p className="text-xs text-zinc-500 line-clamp-2 leading-relaxed flex-1">{article.excerpt}</p>
             <div className="flex items-center justify-between text-[10px] text-zinc-400">
               <span>{article.author}</span>
-              <span>{timeAgo(article.published_at)}</span>
+              <span>{formatDate(article.published_at)}</span>
             </div>
           </Link>
         ))}
@@ -274,7 +274,7 @@ function FounderStoriesStrip({ articles }: { articles: Article[] }) {
             <ArticleTag article={article} />
             <h3 className="text-sm font-bold text-zinc-900 group-hover:text-[#00a855] transition-colors leading-snug line-clamp-2">{article.title}</h3>
             <p className="text-xs text-zinc-500 line-clamp-2 leading-relaxed flex-1">{article.excerpt}</p>
-            <p className="text-[10px] text-zinc-400">{timeAgo(article.published_at)}</p>
+            <p className="text-[10px] text-zinc-400">{formatDate(article.published_at)}</p>
           </Link>
         ))}
       </div>
@@ -358,7 +358,7 @@ export default async function HomePage() {
                   )}
                   <div>
                     <h4 className="text-xs font-semibold text-zinc-800 group-hover:text-[#00a855] transition-colors line-clamp-2 leading-snug">{article.title}</h4>
-                    <p className="text-[10px] text-zinc-400 mt-1">{timeAgo(article.published_at)}</p>
+                    <p className="text-[10px] text-zinc-400 mt-1">{formatDate(article.published_at)}</p>
                   </div>
                 </Link>
               ))}

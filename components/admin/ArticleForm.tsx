@@ -82,7 +82,7 @@ export function ArticleForm({ article }: ArticleFormProps) {
       status: intent,
       published_at:
         intent === 'published'
-          ? new Date().toISOString()   // stamp now for immediate publish
+          ? (form.published_at ?? new Date().toISOString()) // preserve original date; stamp now only if new
           : intent === 'scheduled'
             ? form.published_at        // keep the future date the user set
             : form.published_at,       // draft: preserve whatever was there

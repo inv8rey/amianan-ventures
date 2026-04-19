@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { format, formatDistanceToNow } from 'date-fns'
+import { format } from 'date-fns'
 import { ArrowLeft, Clock, User, MapPin } from 'lucide-react'
 import { SubmitStoryBanner } from '@/components/site/SubmitStoryBanner'
 import { getArticleBySlug, getPublishedArticles } from '@/lib/queries'
@@ -159,7 +159,7 @@ export default async function FounderStoryPage({ params }: { params: Promise<{ s
                             {a.title}
                           </h4>
                           <p className="text-[10px] text-zinc-400 mt-0.5">
-                            {a.published_at ? formatDistanceToNow(new Date(a.published_at), { addSuffix: true }) : ''}
+                            {a.published_at ? format(new Date(a.published_at), 'MMM d, yyyy') : ''}
                           </p>
                         </div>
                       </Link>

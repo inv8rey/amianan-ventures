@@ -21,6 +21,20 @@ const DIRECTORY_TYPES: { value: DirectoryType; label: string }[] = [
   { value: 'community', label: 'Community' },
 ]
 
+const SECTOR_OPTIONS = [
+  'Agriculture & Food Innovation',
+  'Fintech',
+  'E-commerce & Marketplaces',
+  'Logistics & Supply Chain',
+  'Health',
+  'Climate & Sustainability',
+  'Tourism',
+  'Creative Industries & Digital Media',
+  'AI, Data & Software',
+  'Gaming & Interactive Media',
+  'Smart Cities & GovTech',
+]
+
 interface FormData {
   name: string
   type: DirectoryType
@@ -55,6 +69,10 @@ export function DirectoryForm({ entry }: Props) {
 
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  // Track whether the current sector value is a custom entry (not in SECTOR_OPTIONS)
+  const [isCustomSector, setIsCustomSector] = useState(
+    () => !!entry?.sector && !SECTOR_OPTIONS.includes(entry.sector)
+  )
 
   const set = (key: keyof FormData, value: unknown) =>
     setForm((f) => ({ ...f, [key]: value }))
@@ -159,13 +177,41 @@ export function DirectoryForm({ entry }: Props) {
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="sector">Sector / Industry</Label>
-            <Input
-              id="sector"
-              value={form.sector}
-              onChange={(e) => set('sector', e.target.value)}
-              placeholder="e.g. EdTech, AgriFood, SaaS"
-            />
+            <Label>Sector / Industry</Label>
+            <Select
+              value={isCustomSector ? '__custom__' : (form.sector || '__none__')}
+              onValueChange={(v) => {
+                if (v === '__custom__') {
+                  setIsCustomSector(true)
+                  set('sector', '')
+                } else if (v === '__none__') {
+                  setIsCustomSector(false)
+                  set('sector', '')
+                } else {
+                  setIsCustomSector(false)
+                  set('sector', v)
+                }
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select sector…" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__none__">— None —</SelectItem>
+                {SECTOR_OPTIONS.map((s) => (
+                  <SelectItem key={s} value={s}>{s}</SelectItem>
+                ))}
+                <SelectItem value="__custom__">Other (type below)…</SelectItem>
+              </SelectContent>
+            </Select>
+            {isCustomSector && (
+              <Input
+                value={form.sector}
+                onChange={(e) => set('sector', e.target.value)}
+                placeholder="Type custom sector / industry"
+                autoFocus
+              />
+            )}
           </div>
         </div>
 
