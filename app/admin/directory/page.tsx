@@ -7,7 +7,7 @@ import { DirectoryBulkTable } from '@/components/admin/DirectoryBulkTable'
 
 export default async function AdminDirectoryPage() {
   const supabase = await createClient()
-  const { data: entries } = await supabase
+  const { data: entries, error } = await supabase
     .from('directory')
     .select('id, name, type, sector, city, status, featured, created_at')
     .order('name', { ascending: true })
@@ -27,6 +27,11 @@ export default async function AdminDirectoryPage() {
         </Link>
       </div>
 
+      {error && (
+        <div className="mb-4 rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          <strong>Database error:</strong> {error.message}
+        </div>
+      )}
       <DirectoryBulkTable entries={entries ?? []} />
     </div>
   )
