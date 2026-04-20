@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans, Geist_Mono, DM_Serif_Display } from 'next/font/google'
+import { GoogleAnalytics } from '@next/third-parties/google'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 
@@ -63,6 +64,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <Toaster />
       </body>
+      {process.env.NEXT_PUBLIC_GA_ID && (
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+      )}
     </html>
   )
 }
