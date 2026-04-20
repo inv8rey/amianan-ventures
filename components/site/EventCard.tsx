@@ -1,13 +1,25 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { format } from 'date-fns'
 import { Calendar, MapPin } from 'lucide-react'
 import type { Event } from '@/types'
 
+const PH_TZ = 'Asia/Manila'
+
+function phDate(iso: string) {
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone: PH_TZ, weekday: 'short', month: 'short', day: 'numeric', year: 'numeric',
+  }).format(new Date(iso))
+}
+function phTime(iso: string) {
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone: PH_TZ, hour: 'numeric', minute: '2-digit', hour12: true,
+  }).format(new Date(iso))
+}
+
 export function EventCard({ event }: { event: Event }) {
   const href = `/events/${event.slug}`
-  const dateStr = format(new Date(event.date), 'EEE, MMM d, yyyy')
-  const timeStr = format(new Date(event.date), 'h:mm a')
+  const dateStr = phDate(event.date)
+  const timeStr = phTime(event.date)
   const isPast = new Date(event.date) < new Date()
 
   return (

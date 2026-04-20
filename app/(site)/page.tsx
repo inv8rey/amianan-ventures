@@ -173,10 +173,10 @@ function RightColumn({ latest, events }: { latest: Article[]; events: Event[] })
             <Link key={event.id} href={`/events/${event.slug}`} className="group flex gap-3">
               <div className="shrink-0 text-center w-10">
                 <div className="text-[10px] font-bold text-[#00a855] uppercase leading-none">
-                  {format(new Date(event.date), 'MMM')}
+                  {new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Manila', month: 'short' }).format(new Date(event.date))}
                 </div>
                 <div className="text-lg font-black text-zinc-900 leading-tight">
-                  {format(new Date(event.date), 'd')}
+                  {new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Manila', day: 'numeric' }).format(new Date(event.date))}
                 </div>
               </div>
               <div className="min-w-0">

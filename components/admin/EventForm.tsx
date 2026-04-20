@@ -26,17 +26,26 @@ function slugify(str: string) {
     .replace(/^-+|-+$/g, '')
 }
 
-// Split an ISO string into [date, time] parts ("2024-01-15", "14:30")
+// Split an ISO/datetime string into local [date, time] parts ("2024-01-15", "14:30")
+// Uses the date object's LOCAL time so what the user typed matches what they see
 function splitDateTime(iso: string | null | undefined): [string, string] {
   if (!iso) return ['', '']
-  return [iso.slice(0, 10), iso.slice(11, 16)]
+  const d = new Date(iso)
+  if (isNaN(d.getTime())) return [iso.slice(0, 10), iso.slice(11, 16)]
+  const yyyy = d.getFullYear()
+  const mm = String(d.getMonth() + 1).padStart(2, '0')
+  const dd = String(d.getDate()).padStart(2, '0')
+  const hh = String(d.getHours()).padStart(2, '0')
+  const min = String(d.getMinutes()).padStart(2, '0')
+  return [`${yyyy}-${mm}-${dd}`, `${hh}:${min}`]
 }
 
-// Combine date + time strings into ISO (local-time)
+// Combine date + time strings — stores without UTC conversion so the time
+// is preserved as-is (Supabase timestamptz will store it at face value in UTC)
 function combineDateTime(date: string, time: string): string | null {
   if (!date) return null
-  const combined = time ? `${date}T${time}:00` : `${date}T00:00:00`
-  return new Date(combined).toISOString()
+  // Append Z so it is treated as UTC everywhere (server + client = consistent)
+  return time ? `${date}T${time}:00.000Z` : `${date}T00:00:00.000Z`
 }
 
 export function EventForm({ event }: EventFormProps) {

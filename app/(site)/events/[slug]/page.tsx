@@ -2,8 +2,12 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { format } from 'date-fns'
 import { ArrowLeft, Calendar, MapPin, ExternalLink } from 'lucide-react'
+
+const PH_TZ = 'Asia/Manila'
+function phFmt(iso: string, opts: Intl.DateTimeFormatOptions) {
+  return new Intl.DateTimeFormat('en-US', { timeZone: PH_TZ, ...opts }).format(new Date(iso))
+}
 import { getEventBySlug } from '@/lib/queries'
 import { createBuildClient } from '@/lib/supabase/build'
 
@@ -49,10 +53,10 @@ export default async function EventPage({
   const event = await getEventBySlug(slug)
   if (!event) notFound()
 
-  const dateStr = format(new Date(event.date), 'EEEE, MMMM d, yyyy')
-  const timeStr = format(new Date(event.date), 'h:mm a')
+  const dateStr = phFmt(event.date, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+  const timeStr = phFmt(event.date, { hour: 'numeric', minute: '2-digit', hour12: true })
   const endDateStr = event.end_date
-    ? format(new Date(event.end_date), 'MMMM d, yyyy · h:mm a')
+    ? phFmt(event.end_date, { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true })
     : null
   const isPast = new Date(event.date) < new Date()
 
