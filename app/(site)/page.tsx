@@ -7,8 +7,11 @@ import {
   getPublishedArticles,
   getPublishedEvents,
   getAllDirectoryEntries,
+  getFeaturedListings,
 } from '@/lib/queries'
 import { EcosystemSection } from '@/components/site/EcosystemSection'
+import { FeaturedListings } from '@/components/site/FeaturedListings'
+import { NewsletterSignup } from '@/components/site/NewsletterSignup'
 import type { Article, DirectoryEntry, DirectoryType, Event, Location } from '@/types'
 
 export const revalidate = 60
@@ -289,11 +292,13 @@ export default async function HomePage() {
     latestAll,
     founderStories,
     upcomingEvents,
+    featuredListings,
   ] = await Promise.all([
     getFeaturedArticles(1),
     getPublishedArticles(18, 'news'),
     getPublishedArticles(4, 'founder-stories'),
     getPublishedEvents(true),
+    getFeaturedListings().catch(() => []),
   ])
 
   // Directory might not exist yet — fail gracefully
@@ -370,6 +375,9 @@ export default async function HomePage() {
       {/* ── Main content ─── */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
+        {/* Featured Partners — sponsored/partner photo cards */}
+        <FeaturedListings listings={featuredListings} />
+
         {/* Ecosystem Directory — shown before news */}
         <EcosystemSection entriesByType={entriesByType} counts={counts} showViewAll />
 
@@ -386,37 +394,46 @@ export default async function HomePage() {
         <div className="absolute -right-24 top-1/2 -translate-y-1/2 w-96 h-96 rounded-full border border-white/5 pointer-events-none" />
         <div className="absolute -right-12 top-1/2 -translate-y-1/2 w-64 h-64 rounded-full border border-white/5 pointer-events-none" />
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-          {/* Left: headline */}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+          {/* Left: headline + CTAs */}
           <div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-3">
               Building something<br />
               in the <span className="text-[#00cc6a] italic">north?</span>
             </h2>
-            <p className="text-2xl sm:text-3xl font-black text-white/70 leading-tight">
+            <p className="text-2xl sm:text-3xl font-black text-white/70 leading-tight mb-7">
               We want to hear from you.
-            </p>
-          </div>
-
-          {/* Right: description + CTAs */}
-          <div>
-            <p className="text-sm text-zinc-400 leading-relaxed mb-7 max-w-sm">
-              Whether you're launching a startup, running an innovation program, or supporting founders — list it, pitch it, share it. The platform is built by the community, for the community.
             </p>
             <div className="flex flex-wrap gap-3">
               <Link
-                href="/contact"
+                href="/submit-startup"
                 className="inline-flex items-center gap-2 bg-[#00cc6a] text-black px-6 py-3 rounded font-bold text-sm hover:bg-[#00b85e] transition-colors uppercase tracking-wide"
               >
                 Submit a startup <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="/contact"
+                href="/partner"
                 className="inline-flex items-center gap-2 border border-white/30 text-white px-6 py-3 rounded font-bold text-sm hover:border-white hover:bg-white/5 transition-colors uppercase tracking-wide"
               >
                 Partner with us
               </Link>
+              <Link
+                href="/founder-story"
+                className="inline-flex items-center gap-2 border border-white/30 text-white px-6 py-3 rounded font-bold text-sm hover:border-white hover:bg-white/5 transition-colors uppercase tracking-wide"
+              >
+                Share your story
+              </Link>
             </div>
+          </div>
+
+          {/* Right: newsletter */}
+          <div>
+            <p className="text-xs font-black uppercase tracking-widest text-zinc-500 mb-3">Stay in the loop</p>
+            <p className="text-lg font-black text-white mb-2">Get the latest from Northern Luzon&apos;s innovation scene.</p>
+            <p className="text-sm text-zinc-400 leading-relaxed mb-5 max-w-sm">
+              Founder stories, ecosystem news, and upcoming events — delivered straight to your inbox.
+            </p>
+            <NewsletterSignup source="homepage-cta" />
           </div>
         </div>
       </div>

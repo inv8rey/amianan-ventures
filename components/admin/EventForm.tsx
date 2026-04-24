@@ -26,26 +26,31 @@ function slugify(str: string) {
     .replace(/^-+|-+$/g, '')
 }
 
-// Split an ISO/datetime string into local [date, time] parts ("2024-01-15", "14:30")
-// Uses the date object's LOCAL time so what the user typed matches what they see
+// Split an ISO/datetime string into [date, time] parts displayed in Manila timezone
+// so the admin always sees the time they originally entered.
 function splitDateTime(iso: string | null | undefined): [string, string] {
   if (!iso) return ['', '']
   const d = new Date(iso)
   if (isNaN(d.getTime())) return [iso.slice(0, 10), iso.slice(11, 16)]
-  const yyyy = d.getFullYear()
-  const mm = String(d.getMonth() + 1).padStart(2, '0')
-  const dd = String(d.getDate()).padStart(2, '0')
-  const hh = String(d.getHours()).padStart(2, '0')
-  const min = String(d.getMinutes()).padStart(2, '0')
-  return [`${yyyy}-${mm}-${dd}`, `${hh}:${min}`]
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Manila',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hour12: false,
+  }).formatToParts(d)
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '00'
+  let hour = get('hour')
+  if (hour === '24') hour = '00' // some engines return 24 for midnight
+  return [
+    `${get('year')}-${get('month')}-${get('day')}`,
+    `${hour}:${get('minute')}`,
+  ]
 }
 
-// Combine date + time strings — stores without UTC conversion so the time
-// is preserved as-is (Supabase timestamptz will store it at face value in UTC)
+// Combine date + time strings and store with +08:00 offset (Manila time)
+// so Supabase records the correct UTC timestamp regardless of the server's timezone.
 function combineDateTime(date: string, time: string): string | null {
   if (!date) return null
-  // Append Z so it is treated as UTC everywhere (server + client = consistent)
-  return time ? `${date}T${time}:00.000Z` : `${date}T00:00:00.000Z`
+  return time ? `${date}T${time}:00+08:00` : `${date}T00:00:00+08:00`
 }
 
 export function EventForm({ event }: EventFormProps) {

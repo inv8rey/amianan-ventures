@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { FileText, Calendar, Building2, PlusCircle, ExternalLink } from 'lucide-react'
+import { FileText, Calendar, Building2, PlusCircle, ExternalLink, Inbox, Mail, ImageIcon } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { format } from 'date-fns'
 
@@ -10,12 +10,16 @@ export default async function AdminDashboard() {
     { count: articleCount },
     { count: eventCount },
     { count: directoryCount },
+    { count: submissionCount },
+    { count: subscriberCount },
     { data: recentArticles },
     { data: recentDirectory },
   ] = await Promise.all([
     supabase.from('articles').select('*', { count: 'exact', head: true }),
     supabase.from('events').select('*', { count: 'exact', head: true }),
     supabase.from('directory').select('*', { count: 'exact', head: true }),
+    supabase.from('form_submissions').select('*', { count: 'exact', head: true }).eq('status', 'new'),
+    supabase.from('newsletter_subscribers').select('*', { count: 'exact', head: true }).eq('status', 'active'),
     supabase
       .from('articles')
       .select('id, title, status, category, published_at')
@@ -32,6 +36,8 @@ export default async function AdminDashboard() {
     { label: 'Total Articles', value: articleCount ?? 0, icon: FileText, color: 'text-primary', href: '/admin/articles' },
     { label: 'Total Events', value: eventCount ?? 0, icon: Calendar, color: 'text-emerald-400', href: '/admin/events' },
     { label: 'Directory Listings', value: directoryCount ?? 0, icon: Building2, color: 'text-blue-400', href: '/admin/directory' },
+    { label: 'New Submissions', value: submissionCount ?? 0, icon: Inbox, color: 'text-orange-400', href: '/admin/submissions' },
+    { label: 'Subscribers', value: subscriberCount ?? 0, icon: Mail, color: 'text-purple-400', href: '/admin/newsletter' },
   ]
 
   return (
@@ -51,7 +57,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
         {stats.map((stat) => (
           <Link
             key={stat.label}
@@ -68,11 +74,12 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Quick actions */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {[
           { href: '/admin/articles/new', label: 'New Article', sub: 'Write a news story or founder story', color: 'text-primary', bg: 'bg-primary/10 group-hover:bg-primary/20' },
           { href: '/admin/events/new', label: 'New Event', sub: 'Add an upcoming event or workshop', color: 'text-emerald-400', bg: 'bg-emerald-500/10 group-hover:bg-emerald-500/20' },
           { href: '/admin/directory/new', label: 'New Listing', sub: 'Add a startup, program, or organization', color: 'text-blue-400', bg: 'bg-blue-500/10 group-hover:bg-blue-500/20' },
+          { href: '/admin/featured-listings/new', label: 'New Featured', sub: 'Add a sponsored or partner listing', color: 'text-orange-400', bg: 'bg-orange-500/10 group-hover:bg-orange-500/20' },
         ].map((action) => (
           <Link
             key={action.href}

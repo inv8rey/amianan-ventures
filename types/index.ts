@@ -77,6 +77,42 @@ export interface Event {
   updated_at: string
 }
 
+export interface NewsletterSubscriber {
+  id: string
+  email: string
+  status: 'active' | 'unsubscribed'
+  source: string | null
+  created_at: string
+}
+
+export type FormSubmissionType = 'startup' | 'partner' | 'founder-story'
+
+export interface FormSubmission {
+  id: string
+  type: FormSubmissionType
+  name: string
+  email: string
+  organization: string | null
+  message: string
+  extra_data: Record<string, string> | null
+  status: 'new' | 'reviewed' | 'archived'
+  created_at: string
+}
+
+export interface FeaturedListing {
+  id: string
+  title: string
+  tagline: string | null
+  description: string | null
+  image_url: string | null
+  cta_url: string | null
+  sponsor_label: string
+  display_order: number
+  status: 'draft' | 'published'
+  created_at: string
+  updated_at: string
+}
+
 export interface ArticleFormData {
   title: string
   slug: string

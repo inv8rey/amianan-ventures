@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { Mail, ArrowRight } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -8,25 +9,22 @@ export const metadata: Metadata = {
 
 const LINKS = [
   {
-    label: 'Share Your Story',
-    description: 'Got a founder story or feature idea? Submit it here.',
-    href: 'https://airtable.com/appYUrRsmwImGgG3C/pagjZcduZUZQd759K/form',
-    cta: 'Submit a story',
-    color: '#00cc6a',
-  },
-  {
-    label: 'List / Submit a Startup',
+    label: 'Submit a Startup',
     description: 'Add your startup or organization to the Northern Luzon ecosystem directory.',
-    href: 'https://airtable.com/appYUrRsmwImGgG3C/pagsOvlAtunXtZ5Og/form',
-    cta: 'Submit a listing',
-    color: '#00cc6a',
+    href: '/submit-startup',
+    cta: 'Submit a startup',
   },
   {
-    label: 'For Founder Story Feature',
-    description: "Want to be featured as a founder? Fill out this form and we'll be in touch.",
-    href: 'https://airtable.com/appYUrRsmwImGgG3C/pagGIjuSJK91I4fV0/form',
-    cta: 'Apply to be featured',
-    color: '#d97706',
+    label: 'Partner With Us',
+    description: 'Interested in content partnerships, event sponsorships, or featured placements?',
+    href: '/partner',
+    cta: 'Send a partnership inquiry',
+  },
+  {
+    label: 'Share Your Founder Story',
+    description: "Are you a founder building in the north? We want to feature your innovation story.",
+    href: '/founder-story',
+    cta: 'Share your story',
   },
 ]
 
@@ -45,11 +43,9 @@ export default function ContactPage() {
       {/* Form links */}
       <div className="space-y-4 mb-12">
         {LINKS.map((item) => (
-          <a
+          <Link
             key={item.label}
             href={item.href}
-            target="_blank"
-            rel="noopener noreferrer"
             className="group flex items-center justify-between gap-6 rounded-xl border border-zinc-200 bg-white p-6 hover:border-black hover:shadow-md transition-all"
           >
             <div>
@@ -59,7 +55,7 @@ export default function ContactPage() {
             <span className="shrink-0 inline-flex items-center gap-1.5 text-sm font-bold text-zinc-700 group-hover:text-black transition-colors">
               {item.cta} <ArrowRight className="h-4 w-4" />
             </span>
-          </a>
+          </Link>
         ))}
       </div>
 

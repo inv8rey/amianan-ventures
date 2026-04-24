@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import type { Article, DirectoryEntry, Event, Location } from '@/types'
+import type { Article, DirectoryEntry, Event, FeaturedListing, Location } from '@/types'
 
 export async function getPublishedArticles(limit?: number, category?: string, location?: Location) {
   const supabase = await createClient()
@@ -135,6 +135,16 @@ export async function getAllDirectoryEntries(limit = 60) {
     .order('name', { ascending: true })
     .limit(limit)
   return (data ?? []) as DirectoryEntry[]
+}
+
+export async function getFeaturedListings() {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('featured_listings')
+    .select('*')
+    .eq('status', 'published')
+    .order('display_order', { ascending: true })
+  return (data ?? []) as FeaturedListing[]
 }
 
 export async function getFeaturedDirectoryEntries() {
