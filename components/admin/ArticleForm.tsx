@@ -3,7 +3,27 @@
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Save, Eye, Trash2, Loader2, ExternalLink, Clock, CalendarClock } from 'lucide-react'
-import { format } from 'date-fns'
+// Convert a UTC ISO string to a Manila-timezone datetime-local value ("YYYY-MM-DDTHH:mm")
+function toManilaLocal(iso: string): string {
+  const d = new Date(iso)
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Manila',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hour12: false,
+  }).formatToParts(d)
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '00'
+  const hour = get('hour') === '24' ? '00' : get('hour')
+  return `${get('year')}-${get('month')}-${get('day')}T${hour}:${get('minute')}`
+}
+
+// Format a stored ISO for display in Manila time
+function formatManila(iso: string): string {
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Manila',
+    month: 'short', day: 'numeric', year: 'numeric',
+    hour: 'numeric', minute: '2-digit', hour12: true,
+  }).format(new Date(iso))
+}
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -204,9 +224,10 @@ export function ArticleForm({ article }: ArticleFormProps) {
               id="publish_date"
               type="datetime-local"
               className="h-8 text-sm"
-              value={form.published_at ? form.published_at.slice(0, 16) : ''}
+              value={form.published_at ? toManilaLocal(form.published_at) : ''}
               onChange={(e) =>
-                set('published_at', e.target.value ? new Date(e.target.value).toISOString() : null)
+                // Store with Manila offset so Supabase records the correct UTC time
+                set('published_at', e.target.value ? `${e.target.value}:00+08:00` : null)
               }
             />
             <p className="text-[10px] text-muted-foreground leading-snug">
@@ -275,7 +296,7 @@ export function ArticleForm({ article }: ArticleFormProps) {
           {!isNew && form.status === 'scheduled' && form.published_at && (
             <p className="text-xs text-amber-500 flex items-center gap-1">
               <Clock className="h-3 w-3 shrink-0" />
-              Scheduled: {format(new Date(form.published_at), 'MMM d, yyyy h:mm a')}
+              Scheduled: {formatManila(form.published_at)}
             </p>
           )}
         </div>
