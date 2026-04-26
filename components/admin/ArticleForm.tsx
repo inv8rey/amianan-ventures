@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { Save, Eye, Trash2, Loader2, ExternalLink, Clock, CalendarClock } from 'lucide-react'
+import { Save, Eye, Trash2, Loader2, ExternalLink, Clock, CalendarClock, Copy, Check, Link2 } from 'lucide-react'
 // Convert a UTC ISO string to a Manila-timezone datetime-local value ("YYYY-MM-DDTHH:mm")
 function toManilaLocal(iso: string): string {
   const d = new Date(iso)
@@ -70,6 +70,18 @@ export function ArticleForm({ article }: ArticleFormProps) {
 
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [copied, setCopied] = useState<'live' | 'preview' | null>(null)
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://amiananventures.org'
+  const liveUrl = `${siteUrl}/${form.category}/${form.slug}`
+  const previewUrl = article ? `${siteUrl}/preview/${article.id}` : null
+
+  function copyToClipboard(url: string, type: 'live' | 'preview') {
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(type)
+      setTimeout(() => setCopied(null), 2000)
+    })
+  }
   const [tagInput, setTagInput] = useState(article?.tags?.join(', ') ?? '')
 
   const set = (key: keyof ArticleFormData, value: unknown) =>
@@ -300,6 +312,71 @@ export function ArticleForm({ article }: ArticleFormProps) {
             </p>
           )}
         </div>
+
+        {/* Links */}
+        {!isNew && (
+          <div className="rounded-lg border border-border/40 bg-card p-4 space-y-3">
+            <h3 className="text-sm font-semibold flex items-center gap-1.5">
+              <Link2 className="h-3.5 w-3.5 text-muted-foreground" /> Links
+            </h3>
+
+            {/* Preview link — always available */}
+            <div className="space-y-1">
+              <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Preview (shareable)</p>
+              <div className="flex items-center gap-1.5">
+                <a
+                  href={previewUrl!}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 truncate text-[11px] text-primary hover:underline font-mono"
+                >
+                  {previewUrl}
+                </a>
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(previewUrl!, 'preview')}
+                  title="Copy preview link"
+                  className="shrink-0 p-1 rounded hover:bg-muted transition-colors"
+                >
+                  {copied === 'preview'
+                    ? <Check className="h-3.5 w-3.5 text-emerald-500" />
+                    : <Copy className="h-3.5 w-3.5 text-muted-foreground" />}
+                </button>
+              </div>
+              <p className="text-[10px] text-muted-foreground">
+                Works for draft, scheduled &amp; published — safe to share for review.
+              </p>
+            </div>
+
+            {/* Live link — always shown so you can copy for Facebook */}
+            <div className="space-y-1 pt-1 border-t border-border/30">
+              <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Live URL</p>
+              <div className="flex items-center gap-1.5">
+                <a
+                  href={liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`flex-1 truncate text-[11px] font-mono ${form.status === 'published' ? 'text-primary hover:underline' : 'text-muted-foreground'}`}
+                >
+                  {liveUrl}
+                </a>
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(liveUrl, 'live')}
+                  title="Copy live link"
+                  className="shrink-0 p-1 rounded hover:bg-muted transition-colors"
+                >
+                  {copied === 'live'
+                    ? <Check className="h-3.5 w-3.5 text-emerald-500" />
+                    : <Copy className="h-3.5 w-3.5 text-muted-foreground" />}
+                </button>
+              </div>
+              {form.status !== 'published' && (
+                <p className="text-[10px] text-amber-500">Not live yet — publish first.</p>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Meta */}
         <div className="rounded-lg border border-border/40 bg-card p-4 space-y-3">
