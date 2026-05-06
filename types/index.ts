@@ -57,6 +57,7 @@ export interface Article {
   status: 'draft' | 'published' | 'scheduled'
   featured: boolean
   published_at: string | null
+  views: number
   created_at: string
   updated_at: string
 }

@@ -1,11 +1,12 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { LayoutDashboard, FileText, Calendar, Building2, Upload, ImageIcon, Inbox, Mail } from 'lucide-react'
+import { LayoutDashboard, FileText, Calendar, Building2, Upload, ImageIcon, Inbox, Mail, BarChart2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { AdminLogout } from '@/components/admin/AdminLogout'
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
+  { href: '/admin/analytics', label: 'Analytics', icon: BarChart2, exact: false },
   { href: '/admin/articles', label: 'Articles', icon: FileText, exact: false },
   { href: '/admin/events', label: 'Events', icon: Calendar, exact: false },
   { href: '/admin/directory', label: 'Directory', icon: Building2, exact: false },
