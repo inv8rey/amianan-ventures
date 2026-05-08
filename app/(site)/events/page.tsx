@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { EventCard } from '@/components/site/EventCard'
+import { EventsCalendar } from '@/components/site/EventsCalendar'
 import { getPublishedEvents } from '@/lib/queries'
 
 export const metadata: Metadata = {
@@ -15,9 +15,13 @@ export default async function EventsPage() {
     getPublishedEvents(false),
   ])
 
-  const pastOnly = past.filter(
-    (e) => !upcoming.find((u) => u.id === e.id)
-  )
+  // Merge and deduplicate all events
+  const seen = new Set<string>()
+  const allEvents = [...upcoming, ...past].filter((e) => {
+    if (seen.has(e.id)) return false
+    seen.add(e.id)
+    return true
+  })
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
@@ -31,38 +35,7 @@ export default async function EventsPage() {
         </p>
       </div>
 
-      {/* Upcoming */}
-      {upcoming.length > 0 ? (
-        <section className="mb-14">
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground border-b border-border/40 pb-2 mb-6">
-            Upcoming Events
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {upcoming.map((event) => (
-              <EventCard key={event.id} event={event} />
-            ))}
-          </div>
-        </section>
-      ) : (
-        <div className="text-center py-16 text-muted-foreground border border-border/40 rounded-xl mb-14">
-          <p className="text-lg">No upcoming events at the moment.</p>
-          <p className="text-sm mt-1">Check back soon for new events.</p>
-        </div>
-      )}
-
-      {/* Past events */}
-      {pastOnly.length > 0 && (
-        <section>
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground border-b border-border/40 pb-2 mb-6">
-            Past Events
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {pastOnly.map((event) => (
-              <EventCard key={event.id} event={event} />
-            ))}
-          </div>
-        </section>
-      )}
+      <EventsCalendar events={allEvents} />
     </div>
   )
 }
