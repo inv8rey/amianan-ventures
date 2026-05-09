@@ -53,7 +53,6 @@ export function Footer() {
                 { href: 'https://airtable.com/appYUrRsmwImGgG3C/pagsOvlAtunXtZ5Og/form', label: 'List a startup' },
                 { href: 'https://airtable.com/appYUrRsmwImGgG3C/pagjZcduZUZQd759K/form', label: 'Share your story' },
                 { href: 'https://airtable.com/appYUrRsmwImGgG3C/pagGIjuSJK91I4fV0/form', label: 'For founder story' },
-                { href: `mailto:amiananventures@gmail.com`, label: 'Partner with us' },
               ].map((link) => (
                 <li key={link.label}>
                   <a
@@ -66,6 +65,11 @@ export function Footer() {
                   </a>
                 </li>
               ))}
+              <li>
+                <Link href="/contact" className="text-sm text-zinc-400 hover:text-[#00cc6a] transition-colors">
+                  Partner with us
+                </Link>
+              </li>
             </ul>
           </div>
 
