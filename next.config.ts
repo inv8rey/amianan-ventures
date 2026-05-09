@@ -2,16 +2,16 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   images: {
-    minimumCacheTTL: 31536000,
-    formats: ['image/webp'],
+    // Disable Vercel image optimization — images are served from Supabase CDN
+    // which already optimizes delivery. This prevents hitting the 5K/month
+    // free-tier transformation limit.
+    unoptimized: true,
     remotePatterns: [
-      // Supabase storage
       {
         protocol: 'https',
         hostname: '*.supabase.co',
         pathname: '/storage/v1/object/public/**',
       },
-      // Allow any https image during development
       {
         protocol: 'https',
         hostname: '**',
