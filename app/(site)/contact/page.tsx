@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Mail, ArrowRight } from 'lucide-react'
+import { Mail, ArrowRight, MapPin } from 'lucide-react'
 import { QuickMessageForm } from './QuickMessageForm'
 
 export const metadata: Metadata = {
@@ -118,8 +118,90 @@ export default function ContactPage() {
         </div>
       </div>
 
-      {/* Quick Message */}
+      {/* Ambassador Program */}
       <div className="mb-14">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-[#00cc6a] mb-2">Join the Team</p>
+        <h2 className="text-2xl font-black text-zinc-900 mb-2 leading-tight">Regional Ambassador Program</h2>
+        <p className="text-zinc-500 text-sm leading-relaxed max-w-xl mb-8">
+          We&apos;re building a network of on-the-ground ambassadors who know their regions, their founders, and their communities. If you&apos;re embedded in the Northern Luzon innovation scene and want to help grow it — we want to hear from you.
+        </p>
+
+        {/* What ambassadors do */}
+        <div className="rounded-xl border border-zinc-200 bg-white p-6 mb-6">
+          <p className="text-xs font-black uppercase tracking-widest text-zinc-400 mb-4">What You&apos;ll Do</p>
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2.5">
+            {[
+              'Scout and surface local startup stories worth telling',
+              'Cover events, programs, and ecosystem milestones in your region',
+              'Connect Amianan Ventures with founders, schools, and organizations',
+              'Contribute regional news and insights to our platform',
+              'Help map and verify ecosystem directory listings',
+              'Represent Amianan Ventures at local events and forums',
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-2.5 text-sm text-zinc-600">
+                <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#00cc6a] shrink-0" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Open regions */}
+        <p className="text-xs font-black uppercase tracking-widest text-zinc-400 mb-4">Open Regions</p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          {[
+            {
+              region: 'Cordillera',
+              areas: 'Baguio City, Benguet, Ifugao, Mountain Province, Abra, Apayao, Kalinga',
+              color: 'border-emerald-200 bg-emerald-50',
+              dot: 'bg-emerald-400',
+              badge: 'text-emerald-700 bg-emerald-100',
+            },
+            {
+              region: 'Ilocos Region',
+              areas: 'Ilocos Norte, Ilocos Sur, La Union, Pangasinan',
+              color: 'border-blue-200 bg-blue-50',
+              dot: 'bg-blue-400',
+              badge: 'text-blue-700 bg-blue-100',
+            },
+            {
+              region: 'Cagayan Valley',
+              areas: 'Cagayan, Isabela, Nueva Vizcaya, Quirino, Batanes',
+              color: 'border-amber-200 bg-amber-50',
+              dot: 'bg-amber-400',
+              badge: 'text-amber-700 bg-amber-100',
+            },
+          ].map((r) => (
+            <div key={r.region} className={`rounded-xl border p-5 ${r.color}`}>
+              <div className="flex items-center gap-2 mb-3">
+                <MapPin className="h-4 w-4 text-zinc-500 shrink-0" />
+                <p className="font-black text-zinc-900 text-sm">{r.region}</p>
+                <span className={`ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide ${r.badge}`}>
+                  Open
+                </span>
+              </div>
+              <p className="text-xs text-zinc-500 leading-relaxed">{r.areas}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <div className="rounded-xl border border-zinc-900 bg-zinc-900 p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <p className="font-black text-white mb-1">Ready to represent your region?</p>
+            <p className="text-sm text-zinc-400">Send us a message below — tell us your region, your background, and why you want to be part of this.</p>
+          </div>
+          <a
+            href="#quick-message"
+            className="shrink-0 inline-flex items-center gap-2 bg-[#00cc6a] text-black px-6 py-2.5 rounded font-bold text-sm hover:bg-[#00b85e] transition-colors uppercase tracking-wide whitespace-nowrap"
+          >
+            Apply Now <ArrowRight className="h-4 w-4" />
+          </a>
+        </div>
+      </div>
+
+      {/* Quick Message */}
+      <div id="quick-message" className="mb-14">
         <p className="text-[10px] font-bold uppercase tracking-widest text-[#00cc6a] mb-2">Quick Message</p>
         <h2 className="text-2xl font-black text-zinc-900 mb-2 leading-tight">Send Us a Message</h2>
         <p className="text-zinc-500 text-sm leading-relaxed max-w-lg mb-8">
