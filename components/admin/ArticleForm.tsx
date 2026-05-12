@@ -295,7 +295,7 @@ export function ArticleForm({ article }: ArticleFormProps) {
           </div>
 
           {/* Status indicators */}
-          {!isNew && form.status === 'published' && (
+          {!isNew && (form.status === 'published' || (form.status === 'scheduled' && form.published_at && new Date(form.published_at) <= new Date())) && (
             <a
               href={`/${form.category}/${form.slug}`}
               target="_blank"
@@ -305,7 +305,7 @@ export function ArticleForm({ article }: ArticleFormProps) {
               <ExternalLink className="h-3 w-3" /> View live article
             </a>
           )}
-          {!isNew && form.status === 'scheduled' && form.published_at && (
+          {!isNew && form.status === 'scheduled' && form.published_at && new Date(form.published_at) > new Date() && (
             <p className="text-xs text-amber-500 flex items-center gap-1">
               <Clock className="h-3 w-3 shrink-0" />
               Scheduled: {formatManila(form.published_at)}

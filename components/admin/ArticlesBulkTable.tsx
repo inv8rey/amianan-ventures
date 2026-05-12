@@ -186,15 +186,20 @@ export function ArticlesBulkTable({ articles }: { articles: Article[] }) {
                     : format(new Date(article.created_at), 'MMM d, yyyy')}
                 </td>
                 <td className="px-4 py-3">
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
-                    article.status === 'published'
+                  {(() => {
+                    const isPastDue = article.status === 'scheduled' && article.published_at && new Date(article.published_at) <= new Date()
+                    const label = isPastDue ? 'publishing…' : article.status
+                    const cls = article.status === 'published' || isPastDue
                       ? 'bg-emerald-500/15 text-emerald-400'
                       : article.status === 'scheduled'
                         ? 'bg-amber-500/15 text-amber-400'
                         : 'bg-muted text-muted-foreground'
-                  }`}>
-                    {article.status}
-                  </span>
+                    return (
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${cls}`}>
+                        {label}
+                      </span>
+                    )
+                  })()}
                 </td>
                 <td className="px-4 py-3 text-right">
                   <Link
