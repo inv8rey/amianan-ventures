@@ -173,8 +173,33 @@ export function ArticleForm({ article }: ArticleFormProps) {
     router.push('/admin/articles')
   }
 
+  // Past-due scheduled — show a prominent fix banner
+  const isPastDueScheduled =
+    !isNew &&
+    form.status === 'scheduled' &&
+    form.published_at !== null &&
+    new Date(form.published_at) <= new Date()
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Past-due banner */}
+      {isPastDueScheduled && (
+        <div className="lg:col-span-3 rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3 flex items-center justify-between gap-4">
+          <p className="text-sm text-amber-400 font-medium">
+            ⚠️ This article was scheduled for {formatManila(form.published_at!)} but is still marked as <strong>scheduled</strong>. Click Publish Now to make it live.
+          </p>
+          <Button
+            size="sm"
+            onClick={() => save('published')}
+            disabled={saving}
+            className="shrink-0"
+          >
+            {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin mr-1" /> : <Eye className="h-3.5 w-3.5 mr-1" />}
+            Publish Now
+          </Button>
+        </div>
+      )}
+
       {/* Main content */}
       <div className="lg:col-span-2 space-y-5">
         <div className="space-y-1.5">

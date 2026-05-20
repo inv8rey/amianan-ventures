@@ -2,7 +2,40 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { LayoutDashboard, FileText, Calendar, Building2, Upload, ImageIcon, Inbox, Mail, BarChart2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
+import { revalidatePath } from 'next/cache'
 import { AdminLogout } from '@/components/admin/AdminLogout'
+
+// Runs on every admin page load — flips past-due scheduled articles to published.
+async function autoPublish(supabase: Awaited<ReturnType<typeof createClient>>) {
+  try {
+    const now = new Date().toISOString()
+    const { data: due } = await supabase
+      .from('articles')
+      .select('id, slug, category')
+      .eq('status', 'scheduled')
+      .lte('published_at', now)
+
+    if (!due?.length) return
+
+    const { error } = await supabase
+      .from('articles')
+      .update({ status: 'published' })
+      .in('id', due.map((a) => a.id))
+
+    if (error) {
+      console.error('[autoPublish] update failed:', error.message)
+      return
+    }
+
+    revalidatePath('/news')
+    revalidatePath('/founder-stories')
+    revalidatePath('/')
+    for (const a of due) revalidatePath(`/${a.category}/${a.slug}`)
+    console.log(`[autoPublish] published ${due.length} article(s)`)
+  } catch (e) {
+    console.error('[autoPublish] unexpected error:', e)
+  }
+}
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
@@ -21,6 +54,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) redirect('/login')
+
+  // Auto-publish any past-due scheduled articles on every admin page load
+  await autoPublish(supabase)
 
   return (
     <div className="flex min-h-screen">
