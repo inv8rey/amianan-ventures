@@ -1,19 +1,36 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { LayoutDashboard, FileText, Calendar, Building2, Upload, ImageIcon, Inbox, Mail, BarChart2 } from 'lucide-react'
+import { LayoutDashboard, FileText, Calendar, Building2, Upload, ImageIcon, Inbox, Mail, BarChart2, PenLine } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { revalidatePath } from 'next/cache'
 import { AdminLogout } from '@/components/admin/AdminLogout'
 
 // Runs on every admin page load — flips past-due scheduled articles to published.
-async function autoPublish(supabase: Awaited<ReturnType<typeof createClient>>) {
+// Uses the service role key so it can see and update scheduled articles (bypasses RLS).
+async function autoPublish() {
   try {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+    if (!url || !serviceKey) {
+      console.warn('[autoPublish] SUPABASE_SERVICE_ROLE_KEY not set — skipping auto-publish')
+      return
+    }
+
+    const supabase = createAdminClient(url, serviceKey, { auth: { persistSession: false } })
     const now = new Date().toISOString()
-    const { data: due } = await supabase
+
+    const { data: due, error: fetchErr } = await supabase
       .from('articles')
       .select('id, slug, category')
       .eq('status', 'scheduled')
       .lte('published_at', now)
+
+    if (fetchErr) {
+      console.error('[autoPublish] fetch failed:', fetchErr.message)
+      return
+    }
 
     if (!due?.length) return
 
@@ -44,6 +61,7 @@ const navItems = [
   { href: '/admin/events', label: 'Events', icon: Calendar, exact: false },
   { href: '/admin/directory', label: 'Directory', icon: Building2, exact: false },
   { href: '/admin/featured-listings', label: 'Featured Listings', icon: ImageIcon, exact: false },
+  { href: '/admin/contributions', label: 'Contributions', icon: PenLine, exact: false },
   { href: '/admin/submissions', label: 'Submissions', icon: Inbox, exact: false },
   { href: '/admin/newsletter', label: 'Newsletter', icon: Mail, exact: false },
   { href: '/admin/import', label: 'Import CSV', icon: Upload, exact: false },
@@ -56,7 +74,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (!user) redirect('/login')
 
   // Auto-publish any past-due scheduled articles on every admin page load
-  await autoPublish(supabase)
+  await autoPublish()
 
   return (
     <div className="flex min-h-screen">

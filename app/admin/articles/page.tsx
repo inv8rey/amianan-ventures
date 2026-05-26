@@ -3,13 +3,19 @@ import { PlusCircle } from 'lucide-react'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { revalidatePath } from 'next/cache'
 import { ArticlesBulkTable } from '@/components/admin/ArticlesBulkTable'
 
 // Auto-publish any scheduled articles whose time has passed.
-// Uses the authenticated admin session — no service key required.
+// Uses the service role key (bypasses RLS) so scheduled articles are visible and writable.
 async function autoPublishDue() {
-  const supabase = await createClient()
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!url || !serviceKey) return 0
+
+  const supabase = createAdminClient(url, serviceKey, { auth: { persistSession: false } })
   const now = new Date().toISOString()
 
   const { data: due, error: fetchErr } = await supabase

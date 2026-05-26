@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArticleCard } from '@/components/site/ArticleCard'
+import { NewsSearchBar } from '@/components/site/NewsSearchBar'
 import { getPublishedArticles } from '@/lib/queries'
 import { LOCATIONS } from '@/types'
 import type { Location } from '@/types'
@@ -95,31 +95,8 @@ export default async function NewsPage({
         ))}
       </div>
 
-      {/* Articles grid */}
-      {articles.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {articles.map((article) => (
-            <ArticleCard key={article.id} article={article} />
-          ))}
-        </div>
-      ) : (
-        <div className="text-center py-24 border border-dashed border-zinc-200 rounded-xl">
-          <p className="text-lg font-semibold text-zinc-500">
-            {activeLocation
-              ? `No articles from ${locationLabel[activeLocation]} yet.`
-              : 'No articles published yet.'}
-          </p>
-          <p className="text-sm text-zinc-400 mt-1">Check back soon.</p>
-          {activeLocation && (
-            <Link
-              href="/news"
-              className="mt-4 inline-block text-sm font-semibold text-[#00a855] hover:underline"
-            >
-              ← View all regions
-            </Link>
-          )}
-        </div>
-      )}
+      {/* Search + Articles grid */}
+      <NewsSearchBar articles={articles} activeLocation={activeLocation} />
     </div>
   )
 }
