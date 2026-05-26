@@ -492,7 +492,7 @@ export default async function HomePage() {
       </div>
 
       {/* ── Pre-footer CTA ─── */}
-      <div className="mt-16 bg-[#042212] relative overflow-hidden">
+      <div id="newsletter" className="mt-16 bg-[#042212] relative overflow-hidden">
         {/* Decorative rings */}
         <div className="absolute -right-24 top-1/2 -translate-y-1/2 w-96 h-96 rounded-full border border-white/5 pointer-events-none" />
         <div className="absolute -right-12 top-1/2 -translate-y-1/2 w-64 h-64 rounded-full border border-white/5 pointer-events-none" />
