@@ -80,13 +80,13 @@ export function Header() {
                 href="/contribute"
                 className="hidden sm:inline-flex items-center px-3.5 py-1.5 rounded text-xs font-bold bg-[#00cc6a] text-black hover:bg-[#00b85e] transition-colors uppercase tracking-wider whitespace-nowrap"
               >
-                Contribute
+                Become a Contributor
               </Link>
               <Link
                 href="#newsletter"
                 className="hidden lg:inline-flex items-center px-3.5 py-1.5 rounded text-xs font-bold border border-white/30 text-white hover:bg-white/10 hover:border-white/60 transition-colors uppercase tracking-wider whitespace-nowrap"
               >
-                Subscribe
+                Subscribe to Newsletter
               </Link>
               <button
                 className="md:hidden p-1.5 rounded text-white/70 hover:text-white"
@@ -147,14 +147,14 @@ export function Header() {
                 onClick={() => setOpen(false)}
                 className="flex-1 py-2 rounded text-xs font-bold bg-[#00cc6a] text-black hover:bg-[#00b85e] transition-colors uppercase tracking-wider text-center"
               >
-                Contribute
+                Become a Contributor
               </Link>
               <Link
                 href="#newsletter"
                 onClick={() => setOpen(false)}
                 className="flex-1 py-2 rounded text-xs font-bold border border-white/30 text-white hover:bg-white/10 transition-colors uppercase tracking-wider text-center"
               >
-                Subscribe
+                Subscribe to Newsletter
               </Link>
             </div>
           </nav>
