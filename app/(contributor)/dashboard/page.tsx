@@ -1,7 +1,8 @@
+import type React from 'react'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { Plus, AlertCircle } from 'lucide-react'
+import { Plus, AlertCircle, FileText, CheckCircle, Clock, RotateCcw } from 'lucide-react'
 import { format } from 'date-fns'
 import {
   CONTENT_TYPE_LABELS,
@@ -38,6 +39,12 @@ export default async function DashboardPage() {
 
   if (!profile) redirect('/contribute/login')
 
+  // Compute analytics
+  const totalCount = submissions.length
+  const publishedCount = submissions.filter((s) => s.status === 'published').length
+  const inReviewCount = submissions.filter((s) => s.status === 'submitted' || s.status === 'under_review').length
+  const revisionCount = submissions.filter((s) => s.status === 'revision_requested').length
+
   return (
     <div>
       {/* Header */}
@@ -46,7 +53,7 @@ export default async function DashboardPage() {
           <h1 className="text-2xl font-black text-zinc-900">
             Welcome back, {profile.display_name || 'Contributor'}
           </h1>
-          <p className="text-sm text-zinc-500 mt-1">{submissions.length} submission{submissions.length !== 1 ? 's' : ''}</p>
+          <p className="text-sm text-zinc-500 mt-1">Your contributor dashboard</p>
         </div>
         <Link
           href="/submit"
@@ -54,6 +61,14 @@ export default async function DashboardPage() {
         >
           <Plus className="h-4 w-4" /> New Submission
         </Link>
+      </div>
+
+      {/* Analytics stat cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        <StatCard icon={<FileText className="h-4 w-4" />} label="Total" value={totalCount} color="zinc" />
+        <StatCard icon={<CheckCircle className="h-4 w-4" />} label="Published" value={publishedCount} color="green" />
+        <StatCard icon={<Clock className="h-4 w-4" />} label="In Review" value={inReviewCount} color="amber" />
+        <StatCard icon={<RotateCcw className="h-4 w-4" />} label="Needs Revision" value={revisionCount} color="orange" />
       </div>
 
       {/* Profile completion banner */}
@@ -97,6 +112,34 @@ export default async function DashboardPage() {
           ))}
         </div>
       )}
+    </div>
+  )
+}
+
+type StatColor = 'zinc' | 'green' | 'amber' | 'orange'
+const statColorMap: Record<StatColor, { bg: string; icon: string; value: string }> = {
+  zinc:   { bg: 'bg-zinc-50',   icon: 'text-zinc-400',   value: 'text-zinc-900' },
+  green:  { bg: 'bg-[#00a855]/8', icon: 'text-[#00a855]', value: 'text-zinc-900' },
+  amber:  { bg: 'bg-amber-50',  icon: 'text-amber-500',  value: 'text-zinc-900' },
+  orange: { bg: 'bg-orange-50', icon: 'text-orange-500', value: 'text-zinc-900' },
+}
+
+function StatCard({
+  icon, label, value, color,
+}: {
+  icon: React.ReactNode
+  label: string
+  value: number
+  color: StatColor
+}) {
+  const c = statColorMap[color]
+  return (
+    <div className={`rounded-xl border border-zinc-200 p-4 ${c.bg} flex flex-col gap-2`}>
+      <div className={`${c.icon}`}>{icon}</div>
+      <div>
+        <p className={`text-2xl font-black ${c.value}`}>{value}</p>
+        <p className="text-xs text-zinc-500 font-medium">{label}</p>
+      </div>
     </div>
   )
 }

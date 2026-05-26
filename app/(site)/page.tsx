@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { format } from 'date-fns'
-import { ArrowRight, ChevronRight, Calendar, MapPin } from 'lucide-react'
+import { ArrowRight, ChevronRight, Calendar, MapPin, Briefcase } from 'lucide-react'
 import {
   getFeaturedArticles,
   getPublishedArticles,
@@ -13,6 +13,7 @@ import { EcosystemSection } from '@/components/site/EcosystemSection'
 import { FeaturedListings } from '@/components/site/FeaturedListings'
 import { NewsletterSignup } from '@/components/site/NewsletterSignup'
 import type { Article, DirectoryEntry, DirectoryType, Event, Location } from '@/types'
+import { ROLE_LABELS, type ContributorRole } from '@/types/contributor'
 
 export const revalidate = 60
 
@@ -285,7 +286,104 @@ function FounderStoriesStrip({ articles }: { articles: Article[] }) {
   )
 }
 
+// ─── Contributors strip ────────────────────────────────────────
+interface PublicContributor {
+  id: string
+  display_name: string
+  role: string | null
+  organization: string | null
+  photo_url: string | null
+  published_count: number
+}
+
+function ContributorsStrip({ contributors }: { contributors: PublicContributor[] }) {
+  if (contributors.length === 0) return null
+  return (
+    <section className="py-8 border-t border-zinc-200">
+      <div className="flex items-center justify-between mb-5">
+        <div className="section-label mb-0">Community Contributors</div>
+        <Link href="/contribute" className="text-[10px] font-bold text-[#00a855] hover:underline uppercase tracking-wider flex items-center gap-0.5">
+          Become a contributor <ChevronRight className="h-3 w-3" />
+        </Link>
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        {contributors.map((c) => (
+          <Link
+            key={c.id}
+            href={`/contributors/${c.id}`}
+            className="group flex flex-col items-center text-center gap-2 p-4 rounded-xl border border-zinc-200 bg-white hover:border-[#00a855]/40 hover:shadow-sm transition-all"
+          >
+            {c.photo_url ? (
+              <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-zinc-200 group-hover:border-[#00a855]/40 transition-colors">
+                <Image src={c.photo_url} alt={c.display_name} fill className="object-cover" sizes="56px" />
+              </div>
+            ) : (
+              <div className="w-14 h-14 rounded-full bg-zinc-900 flex items-center justify-center border-2 border-zinc-200 group-hover:border-[#00a855]/40 transition-colors">
+                <span className="text-xl font-black text-white">
+                  {c.display_name.charAt(0).toUpperCase()}
+                </span>
+              </div>
+            )}
+            <div className="min-w-0 w-full">
+              <p className="text-xs font-bold text-zinc-900 group-hover:text-[#00a855] transition-colors truncate">{c.display_name}</p>
+              {c.role && (
+                <p className="text-[10px] text-zinc-400 truncate mt-0.5">
+                  {ROLE_LABELS[c.role as ContributorRole] ?? c.role}
+                </p>
+              )}
+              <p className="text-[10px] font-semibold text-[#00a855] mt-1">
+                {c.published_count} article{c.published_count !== 1 ? 's' : ''}
+              </p>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
+  )
+}
+
 // ─── Page ──────────────────────────────────────────────────────
+async function getPublishedContributors(): Promise<PublicContributor[]> {
+  try {
+    const { createServiceClient } = await import('@/lib/supabase/service')
+    const supabase = createServiceClient()
+
+    // Get contributors who have at least one published submission
+    const { data: subs } = await supabase
+      .from('contributor_submissions')
+      .select('contributor_id')
+      .eq('status', 'published')
+
+    if (!subs || subs.length === 0) return []
+
+    // Count published per contributor
+    const countMap: Record<string, number> = {}
+    for (const s of subs) {
+      countMap[s.contributor_id] = (countMap[s.contributor_id] ?? 0) + 1
+    }
+
+    const contributorIds = Object.keys(countMap)
+
+    const { data: profiles } = await supabase
+      .from('contributor_profiles')
+      .select('id, display_name, role, organization, photo_url')
+      .in('id', contributorIds)
+
+    if (!profiles) return []
+
+    return profiles.map((p) => ({
+      id: p.id,
+      display_name: p.display_name,
+      role: p.role,
+      organization: p.organization,
+      photo_url: p.photo_url,
+      published_count: countMap[p.id] ?? 0,
+    })).sort((a, b) => b.published_count - a.published_count)
+  } catch {
+    return []
+  }
+}
+
 export default async function HomePage() {
   const [
     featured,
@@ -293,12 +391,14 @@ export default async function HomePage() {
     founderStories,
     upcomingEvents,
     featuredListings,
+    contributors,
   ] = await Promise.all([
     getFeaturedArticles(1),
     getPublishedArticles(18, 'news'),
     getPublishedArticles(4, 'founder-stories'),
     getPublishedEvents(true),
     getFeaturedListings().catch(() => []),
+    getPublishedContributors(),
   ])
 
   // Directory might not exist yet — fail gracefully
@@ -386,6 +486,9 @@ export default async function HomePage() {
 
         {/* Founder Stories */}
         <FounderStoriesStrip articles={founderStories} />
+
+        {/* Contributors */}
+        <ContributorsStrip contributors={contributors} />
       </div>
 
       {/* ── Pre-footer CTA ─── */}
