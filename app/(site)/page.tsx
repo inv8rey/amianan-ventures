@@ -32,7 +32,7 @@ interface EcosystemContribution {
 
 const CONTRIBUTION_TYPE_STYLE: Record<ContentType, { label: string; color: string; dot: string }> = {
   founder_story:       { label: 'Founder Story',       color: 'text-amber-700 bg-amber-50 border-amber-100',     dot: 'bg-amber-400' },
-  opinion_essay:       { label: 'Opinion',              color: 'text-violet-700 bg-violet-50 border-violet-100',  dot: 'bg-violet-400' },
+  opinion_essay:       { label: 'Perspective',          color: 'text-violet-700 bg-violet-50 border-violet-100',  dot: 'bg-violet-400' },
   program_recap:       { label: 'Program Recap',        color: 'text-blue-700 bg-blue-50 border-blue-100',        dot: 'bg-blue-400' },
   ecosystem_spotlight: { label: 'Ecosystem Spotlight',  color: 'text-[#00a855] bg-[#00a855]/8 border-[#00a855]/20', dot: 'bg-[#00a855]' },
   field_notes:         { label: 'Field Notes',          color: 'text-teal-700 bg-teal-50 border-teal-100',        dot: 'bg-teal-400' },

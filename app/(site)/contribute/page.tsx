@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 const contentTypes = [
   { icon: Mic2,         label: 'Founder Story',        desc: 'Your personal journey building a startup or MSME' },
-  { icon: Lightbulb,    label: 'Opinion / Essay',       desc: 'Your perspective on an ecosystem issue or trend' },
+  { icon: Lightbulb,    label: 'Perspective',            desc: 'Your perspective on an ecosystem issue or trend' },
   { icon: BookOpen,     label: 'Program Recap',         desc: 'A recap of an event, program, or initiative you ran or attended' },
   { icon: Building2,    label: 'Ecosystem Spotlight',   desc: 'Highlighting an organization, community, or initiative' },
   { icon: FlaskConical, label: 'Field Notes',           desc: 'Research observations or thesis findings relevant to the region' },

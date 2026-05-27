@@ -68,7 +68,7 @@ export interface ContributorSubmission {
 
 export const CONTENT_TYPE_LABELS: Record<ContentType, string> = {
   founder_story: 'Founder Story',
-  opinion_essay: 'Opinion / Essay',
+  opinion_essay: 'Perspective',
   program_recap: 'Program Recap',
   ecosystem_spotlight: 'Ecosystem Spotlight',
   field_notes: 'Field Notes',
