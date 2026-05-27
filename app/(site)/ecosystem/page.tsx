@@ -1,10 +1,59 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, ExternalLink, Star } from 'lucide-react'
+import { ArrowRight, ExternalLink, Star, ChevronRight } from 'lucide-react'
 import { getAllDirectoryEntries, getFeaturedDirectoryEntries } from '@/lib/queries'
 import { EcosystemDirectory } from '@/components/site/EcosystemDirectory'
+import { ROLE_LABELS, type ContributorRole } from '@/types/contributor'
 import type { DirectoryEntry, DirectoryType } from '@/types'
+
+interface PublicContributor {
+  id: string
+  display_name: string
+  role: string | null
+  organization: string | null
+  photo_url: string | null
+  published_count: number
+}
+
+async function getPublishedContributors(): Promise<PublicContributor[]> {
+  try {
+    const { createServiceClient } = await import('@/lib/supabase/service')
+    const supabase = createServiceClient()
+
+    const { data: subs } = await supabase
+      .from('contributor_submissions')
+      .select('contributor_id')
+      .eq('status', 'published')
+
+    if (!subs || subs.length === 0) return []
+
+    const countMap: Record<string, number> = {}
+    for (const s of subs) {
+      countMap[s.contributor_id] = (countMap[s.contributor_id] ?? 0) + 1
+    }
+
+    const { data: profiles } = await supabase
+      .from('contributor_profiles')
+      .select('id, display_name, role, organization, photo_url')
+      .in('id', Object.keys(countMap))
+
+    if (!profiles) return []
+
+    return profiles
+      .map((p) => ({
+        id: p.id,
+        display_name: p.display_name,
+        role: p.role,
+        organization: p.organization,
+        photo_url: p.photo_url,
+        published_count: countMap[p.id] ?? 0,
+      }))
+      .sort((a, b) => b.published_count - a.published_count)
+  } catch {
+    return []
+  }
+}
 
 export const revalidate = 60
 
@@ -31,9 +80,10 @@ const TYPE_LABELS: Record<DirectoryType, string> = {
 }
 
 export default async function EcosystemPage() {
-  const [directoryAll, featuredEntries] = await Promise.all([
+  const [directoryAll, featuredEntries, contributors] = await Promise.all([
     getAllDirectoryEntries(500).catch(() => [] as DirectoryEntry[]),
     getFeaturedDirectoryEntries().catch(() => [] as DirectoryEntry[]),
+    getPublishedContributors(),
   ])
 
   const types: DirectoryType[] = ['startup', 'incubator', 'government', 'university', 'community']
@@ -123,6 +173,76 @@ export default async function EcosystemPage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         <EcosystemDirectory entriesByType={entriesByType} counts={counts} />
       </div>
+
+      {/* ── Contributors ── */}
+      {contributors.length > 0 && (
+        <div className="border-t border-zinc-200">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#00a855] mb-1">People</p>
+                <h2 className="text-2xl font-black text-zinc-900">Meet the voices behind the stories</h2>
+                <p className="text-sm text-zinc-500 mt-1">
+                  Founders, researchers, and ecosystem builders contributing to Amianan Ventures
+                </p>
+              </div>
+              <Link
+                href="/contribute"
+                className="hidden sm:inline-flex items-center gap-1 text-xs font-bold text-[#00a855] hover:underline uppercase tracking-wider shrink-0"
+              >
+                Become a contributor <ChevronRight className="h-3 w-3" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {contributors.map((c) => (
+                <Link
+                  key={c.id}
+                  href={`/contributors/${c.id}`}
+                  className="group flex flex-col items-center text-center gap-3 p-5 rounded-xl border border-zinc-200 bg-white hover:border-[#00a855]/40 hover:shadow-sm transition-all"
+                >
+                  {c.photo_url ? (
+                    <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-zinc-200 group-hover:border-[#00a855]/40 transition-colors shrink-0">
+                      <Image src={c.photo_url} alt={c.display_name} fill className="object-cover" sizes="64px" />
+                    </div>
+                  ) : (
+                    <div className="w-16 h-16 rounded-full bg-zinc-900 flex items-center justify-center border-2 border-zinc-200 group-hover:border-[#00a855]/40 transition-colors shrink-0">
+                      <span className="text-2xl font-black text-white">
+                        {c.display_name.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                  )}
+                  <div className="min-w-0 w-full">
+                    <p className="text-sm font-bold text-zinc-900 group-hover:text-[#00a855] transition-colors truncate">
+                      {c.display_name}
+                    </p>
+                    {c.role && (
+                      <p className="text-[10px] text-zinc-400 mt-0.5 truncate">
+                        {ROLE_LABELS[c.role as ContributorRole] ?? c.role}
+                      </p>
+                    )}
+                    {c.organization && (
+                      <p className="text-[10px] text-zinc-400 truncate">{c.organization}</p>
+                    )}
+                    <p className="text-[10px] font-semibold text-[#00a855] mt-1.5">
+                      {c.published_count} article{c.published_count !== 1 ? 's' : ''}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            <div className="mt-6 sm:hidden text-center">
+              <Link
+                href="/contribute"
+                className="inline-flex items-center gap-1 text-xs font-bold text-[#00a855] hover:underline uppercase tracking-wider"
+              >
+                Become a contributor <ChevronRight className="h-3 w-3" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── Submit CTA ── */}
       <div className="bg-[#042212] border-t border-white/10">
