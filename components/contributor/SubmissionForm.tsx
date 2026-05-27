@@ -2,8 +2,9 @@
 
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import {
-  Loader2, Save, Send, FileText, Link2, Check, CalendarClock,
+  Loader2, Save, Send, FileText, Link2, Check, CalendarClock, ImageIcon, Upload,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
@@ -61,12 +62,14 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
   const [scheduledFor, setScheduledFor] = useState(
     editSubmission?.scheduled_for ? toLocalDatetimeInput(editSubmission.scheduled_for) : ''
   )
+  const [coverImageUrl, setCoverImageUrl] = useState(editSubmission?.cover_image_url ?? '')
   const [agreed1, setAgreed1] = useState(false)
   const [agreed2, setAgreed2] = useState(false)
 
   // ── Save state ──────────────────────────────────────────────────
   const [submitting, setSubmitting] = useState(false)
   const [draftSaving, setDraftSaving] = useState(false)
+  const [uploadingCover, setUploadingCover] = useState(false)
   const [savedDraftId, setSavedDraftId] = useState<string | null>(
     isDraftEdit ? (editSubmission?.id ?? null) : null
   )
@@ -75,8 +78,32 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
 
   const hasContent = draftType === 'gdocs' ? !!gdocsUrl.trim() : !!draftContent.trim()
   const canSubmit =
-    !!contentType && !!headline.trim() && !!summary.trim() && hasContent && agreed1 && agreed2
+    !!contentType && !!headline.trim() && !!summary.trim() && hasContent && !!coverImageUrl && agreed1 && agreed2
   const canSaveDraft = !!headline.trim()
+
+  // ── Cover image upload ──────────────────────────────────────────
+  async function handleCoverUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (!file.type.startsWith('image/')) { toast.error('Please upload an image file'); return }
+    if (file.size > 5 * 1024 * 1024) { toast.error('Image must be under 5 MB'); return }
+
+    setUploadingCover(true)
+    const supabase = createClient()
+    const ext = file.name.split('.').pop() ?? 'jpg'
+    const path = `${contributorId}/${Date.now()}.${ext}`
+
+    const { error } = await supabase.storage
+      .from('contributor-covers')
+      .upload(path, file, { upsert: true })
+    if (error) { toast.error('Upload failed: ' + error.message); setUploadingCover(false); return }
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('contributor-covers')
+      .getPublicUrl(path)
+    setCoverImageUrl(publicUrl)
+    setUploadingCover(false)
+  }
 
   // ── Save Draft ──────────────────────────────────────────────────
   async function handleSaveDraft() {
@@ -94,6 +121,7 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
       draft_type: draftType,
       draft_content: draftType === 'text' ? draftContent : null,
       gdocs_url: draftType === 'gdocs' ? gdocsUrl.trim() : null,
+      cover_image_url: coverImageUrl || null,
       status: 'draft',
       scheduled_for: null,
     }
@@ -119,6 +147,7 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
     if (!headline.trim()) { toast.error('Headline is required'); return }
     if (!summary.trim()) { toast.error('Summary is required'); return }
     if (!hasContent) { toast.error('Add your article content or a Google Docs link'); return }
+    if (!coverImageUrl) { toast.error('Upload a cover image before submitting'); return }
     if (!agreed1 || !agreed2) { toast.error('Please check both confirmation boxes'); return }
     if (scheduleType === 'scheduled' && !scheduledFor) {
       toast.error('Select a publish date or choose "Publish when approved"'); return
@@ -137,6 +166,7 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
       draft_type: draftType,
       draft_content: draftType === 'text' ? draftContent : null,
       gdocs_url: draftType === 'gdocs' ? gdocsUrl.trim() : null,
+      cover_image_url: coverImageUrl || null,
       status: 'submitted',
       submitted_at: new Date().toISOString(),
       scheduled_for: scheduleType === 'scheduled' && scheduledFor
@@ -173,6 +203,53 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
 
       {/* ── Left: Main content ─────────────────────────────────── */}
       <div className="lg:col-span-2 space-y-5">
+
+        {/* Cover Image */}
+        <div className="space-y-1.5">
+          <label className="block text-sm font-semibold text-zinc-700">
+            Cover Image <span className="text-red-500">*</span>
+            <span className="ml-2 text-[11px] font-normal text-zinc-400">16:9 recommended · JPG/PNG/WebP · max 5 MB</span>
+          </label>
+          <div className="relative rounded-xl overflow-hidden border-2 border-dashed border-zinc-200 bg-zinc-50"
+            style={{ aspectRatio: '16/9' }}>
+            {coverImageUrl ? (
+              <>
+                <Image
+                  src={coverImageUrl}
+                  alt="Cover"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 600px"
+                  unoptimized
+                />
+                {/* Replace overlay */}
+                <label className="absolute inset-0 flex items-center justify-center bg-black/0 hover:bg-black/40 transition-colors cursor-pointer group">
+                  <span className="opacity-0 group-hover:opacity-100 flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-zinc-900 text-xs font-bold shadow transition-opacity">
+                    <Upload className="h-3.5 w-3.5" /> Replace Image
+                  </span>
+                  <input type="file" accept="image/*" className="sr-only" onChange={handleCoverUpload} disabled={uploadingCover} />
+                </label>
+              </>
+            ) : (
+              <label className="absolute inset-0 flex flex-col items-center justify-center gap-3 cursor-pointer">
+                {uploadingCover ? (
+                  <Loader2 className="h-8 w-8 animate-spin text-zinc-400" />
+                ) : (
+                  <>
+                    <div className="w-12 h-12 rounded-full bg-zinc-200 flex items-center justify-center">
+                      <ImageIcon className="h-6 w-6 text-zinc-400" />
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm font-semibold text-zinc-600">Click to upload cover image</p>
+                      <p className="text-xs text-zinc-400 mt-0.5">16:9 ratio looks best on article cards</p>
+                    </div>
+                  </>
+                )}
+                <input type="file" accept="image/*" className="sr-only" onChange={handleCoverUpload} disabled={uploadingCover} />
+              </label>
+            )}
+          </div>
+        </div>
 
         {/* Headline */}
         <div className="space-y-1.5">

@@ -29,7 +29,7 @@ async function getContribution(id: string) {
       .from('contributor_submissions')
       .select(`
         id, headline, summary, content_type, draft_type, draft_content, gdocs_url,
-        region, sector, published_at, published_url,
+        cover_image_url, region, sector, published_at, published_url,
         contributor_profiles (
           id, display_name, full_name, role, organization, region,
           bio, photo_url, linkedin_url, facebook_url, website_url
@@ -65,6 +65,7 @@ export async function generateMetadata({
       title: contribution.headline,
       description: contribution.summary,
       type: 'article',
+      ...(contribution.cover_image_url ? { images: [{ url: contribution.cover_image_url }] } : {}),
     },
   }
 }
@@ -147,6 +148,21 @@ export default async function ContributionPage({
             )}
           </div>
         </div>
+
+        {/* ── Cover image hero ── */}
+        {contribution.cover_image_url && (
+          <div className="relative w-full rounded-2xl overflow-hidden mb-10 shadow-sm" style={{ aspectRatio: '16/9' }}>
+            <Image
+              src={contribution.cover_image_url}
+              alt={contribution.headline}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 768px"
+              priority
+              unoptimized
+            />
+          </div>
+        )}
 
         {/* ── Contributor byline ── */}
         {profile && (

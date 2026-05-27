@@ -51,6 +51,7 @@ export interface ContributorSubmission {
   draft_type: DraftType
   draft_content: string | null
   gdocs_url: string | null
+  cover_image_url: string | null
   status: SubmissionStatus
   revision_notes: string | null
   editor_notes: string | null

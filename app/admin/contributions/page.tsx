@@ -1,6 +1,8 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { format } from 'date-fns'
+import { ImageIcon } from 'lucide-react'
 import {
   CONTENT_TYPE_LABELS,
   STATUS_LABELS,
@@ -129,7 +131,26 @@ export default async function AdminContributionsPage({
                       </span>
                     </td>
                     <td className="px-4 py-3 max-w-xs">
-                      <p className="font-medium line-clamp-1 text-sm">{sub.headline}</p>
+                      <div className="flex items-center gap-2.5">
+                        {/* Cover thumbnail */}
+                        <div className="relative w-12 h-8 rounded overflow-hidden shrink-0 bg-muted">
+                          {sub.cover_image_url ? (
+                            <Image
+                              src={sub.cover_image_url}
+                              alt=""
+                              fill
+                              className="object-cover"
+                              sizes="48px"
+                              unoptimized
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <ImageIcon className="h-3 w-3 text-muted-foreground/30" />
+                            </div>
+                          )}
+                        </div>
+                        <p className="font-medium line-clamp-1 text-sm">{sub.headline}</p>
+                      </div>
                     </td>
                     <td className="px-4 py-3">
                       <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${STATUS_COLORS[status]}`}>

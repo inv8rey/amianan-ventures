@@ -2,9 +2,10 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
-import { Loader2, Trash2, Undo2 } from 'lucide-react'
+import { Loader2, Trash2, Undo2, ImageIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import {
   CONTENT_TYPE_LABELS,
@@ -65,7 +66,24 @@ export function SubmissionCard({ submission: sub }: SubmissionCardProps) {
       isRevision ? 'border-orange-200 bg-orange-50/30' :
       'border-zinc-200'
     }`}>
-      <div className="flex items-center gap-4 p-4">
+      <div className="flex items-center gap-3 p-4">
+        {/* Cover thumbnail */}
+        <div className="relative w-20 h-14 rounded-lg overflow-hidden shrink-0 bg-zinc-100">
+          {sub.cover_image_url ? (
+            <Image
+              src={sub.cover_image_url}
+              alt=""
+              fill
+              className="object-cover"
+              sizes="80px"
+              unoptimized
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <ImageIcon className="h-5 w-5 text-zinc-300" />
+            </div>
+          )}
+        </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">

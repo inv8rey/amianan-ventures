@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { format } from 'date-fns'
@@ -93,6 +94,20 @@ export default async function EditorReviewPage({
               {submission.reviewed_at && ` · Reviewed ${format(new Date(submission.reviewed_at), 'MMM d')}`}
             </p>
           </div>
+
+          {/* Cover image */}
+          {submission.cover_image_url && (
+            <div className="relative w-full rounded-xl overflow-hidden bg-muted" style={{ aspectRatio: '16/9' }}>
+              <Image
+                src={submission.cover_image_url}
+                alt="Cover"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 700px"
+                unoptimized
+              />
+            </div>
+          )}
 
           {/* Summary */}
           <div className="rounded-lg border border-border/40 bg-card p-4">
