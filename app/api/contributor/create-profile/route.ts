@@ -2,11 +2,10 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
 // Called right after contributor signup to insert their profile row.
-// Uses service role key to bypass RLS (the user session cookie isn't available
-// immediately after signup in the same server request).
+// Uses service role key to bypass RLS.
 //
-// Includes retry logic — Supabase auth commits the user row asynchronously,
-// so a brief race condition can cause a FK violation if we insert too fast.
+// Retries on FK violation (23503) — Supabase occasionally commits the
+// auth.users row a few ms after signUp() resolves, causing a race condition.
 function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms))
 }
@@ -28,37 +27,33 @@ export async function POST(request: Request) {
 
   const supabase = createClient(url, serviceKey, { auth: { persistSession: false } })
 
-  // Wait until auth.users row is visible — retry up to 5 times with backoff
-  const delays = [200, 400, 800, 1500, 2500]
-  let userConfirmed = false
-
-  for (const delay of delays) {
-    const { data } = await supabase.auth.admin.getUserById(userId)
-    if (data?.user?.id) {
-      userConfirmed = true
-      break
-    }
-    await sleep(delay)
-  }
-
-  if (!userConfirmed) {
-    return NextResponse.json({ error: 'User not found in auth — please try again.' }, { status: 404 })
-  }
-
-  const { error } = await supabase.from('contributor_profiles').insert({
+  const payload = {
     id: userId,
     display_name: displayName ?? '',
     full_name: fullName ?? null,
     role: role ?? null,
-  })
+  }
 
-  if (error) {
-    // Row already exists (duplicate signup attempt) — treat as success
-    if (error.code === '23505') {
-      return NextResponse.json({ ok: true })
+  // Retry up to 5 times on FK violation — handles auth commit race condition
+  const delays = [300, 600, 1200, 2000, 3000]
+
+  for (let i = 0; i <= delays.length; i++) {
+    const { error } = await supabase.from('contributor_profiles').insert(payload)
+
+    if (!error) return NextResponse.json({ ok: true })
+
+    // Duplicate row — already created (e.g. double submit)
+    if (error.code === '23505') return NextResponse.json({ ok: true })
+
+    // FK violation — auth user not committed yet, wait and retry
+    if (error.code === '23503' && i < delays.length) {
+      await sleep(delays[i])
+      continue
     }
+
+    // Any other error — fail immediately
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  return NextResponse.json({ ok: true })
+  return NextResponse.json({ error: 'Could not create profile after retries. Please try again.' }, { status: 500 })
 }
