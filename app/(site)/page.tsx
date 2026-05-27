@@ -291,7 +291,7 @@ function RightColumn({ latest, events, topContributors }: { latest: Article[]; e
                 </div>
                 {/* Article count */}
                 <span className="text-[10px] font-bold text-[#00a855] shrink-0">
-                  {c.published_count} art{c.published_count !== 1 ? 's' : ''}
+                  {c.published_count} {c.published_count !== 1 ? 'articles' : 'article'}
                 </span>
               </Link>
             ))}
