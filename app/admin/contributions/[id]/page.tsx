@@ -144,7 +144,7 @@ export default async function EditorReviewPage({
               </a>
             ) : submission.draft_content ? (
               <div
-                className="prose prose-sm max-w-none dark:prose-invert"
+                className="prose-article"
                 dangerouslySetInnerHTML={{ __html: submission.draft_content }}
               />
             ) : (

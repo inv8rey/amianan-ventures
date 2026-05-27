@@ -237,14 +237,7 @@ export default async function ContributionPage({
             </div>
           ) : contribution.draft_content ? (
             <div
-              className="prose prose-zinc max-w-none
-                prose-headings:font-black prose-headings:tracking-tight
-                prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg
-                prose-p:text-zinc-700 prose-p:leading-relaxed
-                prose-a:text-[#00a855] prose-a:no-underline hover:prose-a:underline
-                prose-strong:text-zinc-900 prose-strong:font-bold
-                prose-blockquote:border-l-[#00a855] prose-blockquote:text-zinc-500
-                prose-li:text-zinc-700"
+              className="prose-article"
               dangerouslySetInnerHTML={{ __html: contribution.draft_content }}
             />
           ) : (
