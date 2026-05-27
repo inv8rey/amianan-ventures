@@ -6,6 +6,10 @@ import {
   Lightbulb, Mic2, Building2, FlaskConical,
   Users, MapPin, FileText, TrendingUp,
 } from 'lucide-react'
+import { getPublishedArticles } from '@/lib/queries'
+import type { Article } from '@/types'
+
+export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'Contribute — Write for Amianan Ventures',
@@ -21,48 +25,34 @@ const contentTypes = [
 ]
 
 const steps = [
-  { step: '01', icon: PenLine,      title: 'Create an account',  desc: 'Sign up with your email and build a contributor profile — your byline, role, and bio.' },
-  { step: '02', icon: BookOpen,     title: 'Submit your piece',  desc: 'Fill out the submission form with your headline, summary, and draft (or a Google Docs link).' },
-  { step: '03', icon: Eye,          title: 'Editorial review',   desc: "Our editor reviews every submission. You'll hear back within 5–7 days with approval or feedback." },
-  { step: '04', icon: CheckCircle,  title: 'Published!',         desc: 'Approved pieces go live on amiananventures.org with your byline and are shared across our channels.' },
+  { step: '01', icon: PenLine,     title: 'Create an account', desc: 'Sign up with your email and build a contributor profile — your byline, role, and bio.' },
+  { step: '02', icon: BookOpen,    title: 'Submit your piece', desc: 'Fill out the submission form with your headline, summary, and draft (or a Google Docs link).' },
+  { step: '03', icon: Eye,         title: 'Editorial review',  desc: "Our editor reviews every submission. You'll hear back within 5–7 days with approval or feedback." },
+  { step: '04', icon: CheckCircle, title: 'Published!',        desc: 'Approved pieces go live on amiananventures.org with your byline and are shared across our channels.' },
 ]
 
 const stats = [
-  { icon: FileText,    value: '50+',   label: 'Stories Published' },
-  { icon: Users,       value: '60+',   label: 'Contributors' },
-  { icon: MapPin,      value: '4',     label: 'Regions Covered' },
-  { icon: TrendingUp,  value: '15K+',  label: 'Monthly Readers' },
+  { icon: FileText,   value: '50+',  label: 'Stories Published' },
+  { icon: Users,      value: '60+',  label: 'Contributors' },
+  { icon: MapPin,     value: '4',    label: 'Regions Covered' },
+  { icon: TrendingUp, value: '15K+', label: 'Monthly Readers' },
 ]
 
-// Sample article cards shown in the hero — decorative / aspirational
-const heroCards = [
-  {
-    type: 'Founder Story',
-    typeColor: 'text-[#00a855] bg-[#00a855]/10',
-    headline: 'Building traceability for Benguet coffee farmers',
-    author: 'Jessa R.',
-    read: '6 min read',
-    img: null,
-  },
-  {
-    type: 'Ecosystem Report',
-    typeColor: 'text-violet-600 bg-violet-500/10',
-    headline: 'State of AI adoption among SMEs in Northern Luzon',
-    author: 'Amianan Ventures',
-    read: '8 min read',
-    img: null,
-  },
-  {
-    type: 'Program Recap',
-    typeColor: 'text-orange-600 bg-orange-500/10',
-    headline: 'What founders learned at Cordillera Startup Week 2024',
-    author: 'Miguel D.',
-    read: '6 min read',
-    img: null,
-  },
-]
+const categoryLabel: Record<string, string> = {
+  'news':            'News',
+  'founder-stories': 'Founder Story',
+  'events':          'Event',
+}
 
-export default function ContributePage() {
+const categoryColor: Record<string, string> = {
+  'news':            'text-blue-600 bg-blue-500/10',
+  'founder-stories': 'text-[#00a855] bg-[#00a855]/10',
+  'events':          'text-orange-600 bg-orange-500/10',
+}
+
+export default async function ContributePage() {
+  const articles = await getPublishedArticles(3).catch(() => [] as Article[])
+
   return (
     <div className="min-h-screen bg-white">
 
@@ -79,9 +69,9 @@ export default function ContributePage() {
           sizes="100vw"
         />
 
-        {/* Gradient overlay — heavier on left for text legibility, fades right */}
+        {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/20" />
-        {/* Bottom fade */}
+        {/* Bottom fade to white */}
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent" />
 
         <div className="relative z-10 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-20 lg:py-0">
@@ -96,10 +86,10 @@ export default function ContributePage() {
               </div>
 
               {/* Headline */}
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-[1.08] mb-5">
-                Help document<br />
-                the future of<br />
-                <span className="text-[#00cc6a]">Northern Luzon<br />startups.</span>
+              <h1 className="text-4xl sm:text-5xl lg:text-[3.25rem] font-black text-white leading-[1.08] mb-5">
+                The Home for Startup<br />
+                Stories and Innovation<br />
+                <span className="text-[#00cc6a]">in Northern Luzon.</span>
               </h1>
 
               {/* Subtext */}
@@ -136,34 +126,63 @@ export default function ContributePage() {
               </div>
             </div>
 
-            {/* ── Right: floating article cards ── */}
+            {/* ── Right: real article cards ── */}
             <div className="hidden lg:flex flex-col gap-3 items-end">
-              {heroCards.map((card, i) => (
-                <div
-                  key={card.headline}
-                  className={`w-full max-w-sm bg-white rounded-2xl shadow-xl overflow-hidden border border-zinc-100 transition-transform ${
+              {articles.length > 0 ? articles.map((article, i) => (
+                <Link
+                  key={article.id}
+                  href={`/${article.category}/${article.slug}`}
+                  className={`w-full max-w-sm bg-white rounded-2xl shadow-xl overflow-hidden border border-zinc-100 hover:shadow-2xl transition-all ${
                     i === 0 ? 'translate-x-0' : i === 1 ? '-translate-x-4' : '-translate-x-8'
                   }`}
                 >
                   <div className="flex gap-3 p-4">
-                    {/* Thumbnail placeholder */}
-                    <div className="shrink-0 w-16 h-16 rounded-xl bg-zinc-100 overflow-hidden">
-                      <div className="w-full h-full bg-gradient-to-br from-zinc-200 to-zinc-300" />
-                    </div>
+                    {article.cover_image ? (
+                      <div className="relative shrink-0 w-16 h-16 rounded-xl overflow-hidden">
+                        <Image
+                          src={article.cover_image}
+                          alt={article.title}
+                          fill
+                          className="object-cover"
+                          sizes="64px"
+                        />
+                      </div>
+                    ) : (
+                      <div className="shrink-0 w-16 h-16 rounded-xl bg-gradient-to-br from-zinc-200 to-zinc-300" />
+                    )}
                     <div className="flex-1 min-w-0">
-                      <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full ${card.typeColor} mb-1.5 inline-block`}>
-                        {card.type}
+                      <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full mb-1.5 inline-block ${categoryColor[article.category] ?? 'text-zinc-600 bg-zinc-100'}`}>
+                        {categoryLabel[article.category] ?? article.category}
                       </span>
                       <p className="text-xs font-bold text-zinc-900 leading-snug line-clamp-2 mb-1.5">
-                        {card.headline}
+                        {article.title}
                       </p>
                       <p className="text-[10px] text-zinc-400">
-                        By {card.author} · {card.read}
+                        By {article.author}
                       </p>
                     </div>
                   </div>
-                </div>
-              ))}
+                </Link>
+              )) : (
+                // Fallback placeholder cards if no articles yet
+                ['Founder Story', 'Ecosystem News', 'Innovation Recap'].map((label, i) => (
+                  <div
+                    key={label}
+                    className={`w-full max-w-sm bg-white rounded-2xl shadow-xl border border-zinc-100 p-4 flex gap-3 ${
+                      i === 0 ? 'translate-x-0' : i === 1 ? '-translate-x-4' : '-translate-x-8'
+                    }`}
+                  >
+                    <div className="shrink-0 w-16 h-16 rounded-xl bg-gradient-to-br from-zinc-200 to-zinc-300" />
+                    <div className="flex-1">
+                      <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full mb-1.5 inline-block text-[#00a855] bg-[#00a855]/10">
+                        {label}
+                      </span>
+                      <div className="h-2.5 bg-zinc-100 rounded w-4/5 mb-1.5" />
+                      <div className="h-2 bg-zinc-100 rounded w-3/5" />
+                    </div>
+                  </div>
+                ))
+              )}
 
               {/* Region tags */}
               <div className="flex flex-wrap gap-2 mt-2 justify-end">
@@ -210,7 +229,6 @@ export default function ContributePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {steps.map((s, i) => (
               <div key={s.step} className="relative">
-                {/* Connector line */}
                 {i < steps.length - 1 && (
                   <div className="hidden lg:block absolute top-4 left-full w-full h-px bg-white/10 -translate-x-4" />
                 )}
@@ -219,7 +237,7 @@ export default function ContributePage() {
                   <div className="flex-1 h-px bg-white/10" />
                 </div>
                 <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center mb-4">
-                  <s.icon className="h-4.5 w-4.5 text-white" />
+                  <s.icon className="h-4 w-4 text-white" />
                 </div>
                 <p className="text-sm font-bold text-white mb-1.5">{s.title}</p>
                 <p className="text-xs text-white/50 leading-relaxed">{s.desc}</p>
