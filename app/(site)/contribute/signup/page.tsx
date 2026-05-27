@@ -65,21 +65,17 @@ export default function ContributorSignupPage() {
       return
     }
 
-    // 2. Create contributor profile row via API (uses service key to bypass RLS)
-    const profileRes = await fetch('/api/contributor/create-profile', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        userId: authData.user.id,
-        displayName: form.displayName.trim(),
-        fullName: form.fullName.trim() || null,
-        role: form.role || null,
-      }),
+    // 2. Insert contributor profile using the user's own session (satisfies RLS + FK)
+    const { error: profileError } = await supabase.from('contributor_profiles').insert({
+      id: authData.user.id,
+      display_name: form.displayName.trim(),
+      full_name: form.fullName.trim() || null,
+      role: form.role || null,
     })
 
-    if (!profileRes.ok) {
-      const err = await profileRes.json()
-      toast.error(err.error ?? 'Profile creation failed')
+    if (profileError && profileError.code !== '23505') {
+      // 23505 = duplicate row (already exists), treat as success
+      toast.error('Profile creation failed: ' + profileError.message)
       setLoading(false)
       return
     }
