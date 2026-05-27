@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
-import { Loader2, Trash2, Undo2, ImageIcon } from 'lucide-react'
+import { Loader2, Trash2, Undo2, ImageIcon, Pencil } from 'lucide-react'
 import { toast } from 'sonner'
 import {
   CONTENT_TYPE_LABELS,
@@ -139,30 +139,43 @@ export function SubmissionCard({ submission: sub }: SubmissionCardProps) {
       </div>
 
       {/* Actions row */}
-      {(canDelete || canWithdraw) && !loading && !confirmDelete && (
-        <div className="flex items-center gap-2 px-4 pb-3 border-t border-zinc-100 pt-2.5">
+      {!loading && !confirmDelete && (
+        <div className="flex items-center gap-3 px-4 pb-3 border-t border-zinc-100 pt-2.5">
+          {/* Edit — available for all statuses */}
+          <Link
+            href={`/submit?edit=${sub.id}`}
+            className="flex items-center gap-1 text-[11px] font-semibold text-zinc-500 hover:text-zinc-900 transition-colors"
+          >
+            <Pencil className="h-3 w-3" />
+            Edit
+          </Link>
+
           {canWithdraw && (
-            <button
-              onClick={() => handleAction('withdraw')}
-              disabled={loading}
-              className="flex items-center gap-1 text-[11px] font-semibold text-zinc-400 hover:text-zinc-700 transition-colors"
-            >
-              <Undo2 className="h-3 w-3" />
-              Withdraw to Draft
-            </button>
+            <>
+              <span className="text-zinc-200">·</span>
+              <button
+                onClick={() => handleAction('withdraw')}
+                disabled={loading}
+                className="flex items-center gap-1 text-[11px] font-semibold text-zinc-400 hover:text-zinc-700 transition-colors"
+              >
+                <Undo2 className="h-3 w-3" />
+                Withdraw
+              </button>
+            </>
           )}
-          {canWithdraw && canDelete && (
-            <span className="text-zinc-200">·</span>
-          )}
+
           {canDelete && (
-            <button
-              onClick={() => setConfirmDelete(true)}
-              disabled={loading}
-              className="flex items-center gap-1 text-[11px] font-semibold text-red-400 hover:text-red-600 transition-colors"
-            >
-              <Trash2 className="h-3 w-3" />
-              Delete
-            </button>
+            <>
+              <span className="text-zinc-200">·</span>
+              <button
+                onClick={() => setConfirmDelete(true)}
+                disabled={loading}
+                className="flex items-center gap-1 text-[11px] font-semibold text-red-400 hover:text-red-600 transition-colors"
+              >
+                <Trash2 className="h-3 w-3" />
+                Delete
+              </button>
+            </>
           )}
         </div>
       )}

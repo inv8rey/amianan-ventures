@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import {
-  Loader2, Save, Send, FileText, Link2, Check, CalendarClock, ImageIcon, Upload,
+  Loader2, Save, Send, FileText, Link2, Check, CalendarClock, ImageIcon, Upload, Info,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
@@ -44,6 +44,9 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
   const router = useRouter()
   const isEdit = !!editSubmission
   const isDraftEdit = editSubmission?.status === 'draft'
+  const isRevisionEdit = editSubmission?.status === 'revision_requested'
+  // For published/submitted/approved/rejected edits — warn that saving resubmits for review
+  const isResubmitEdit = isEdit && !isDraftEdit && !isRevisionEdit
 
   // ── Form state ─────────────────────────────────────────────────
   const [contentType, setContentType] = useState<ContentType | ''>(
@@ -199,6 +202,17 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
   }
 
   return (
+    <div className="space-y-5">
+    {/* Resubmit notice */}
+    {isResubmitEdit && (
+      <div className="flex items-start gap-3 px-4 py-3 rounded-xl bg-blue-50 border border-blue-200">
+        <Info className="h-4 w-4 text-blue-500 shrink-0 mt-0.5" />
+        <p className="text-xs text-blue-700 leading-relaxed">
+          <span className="font-bold">Heads up:</span> Saving changes will resubmit this article for editorial review.
+          {editSubmission?.status === 'published' && ' It will remain publicly visible at its current URL until the review is complete.'}
+        </p>
+      </div>
+    )}
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
       {/* ── Left: Main content ─────────────────────────────────── */}
@@ -516,6 +530,7 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
         </div>
 
       </div>
+    </div>
     </div>
   )
 }

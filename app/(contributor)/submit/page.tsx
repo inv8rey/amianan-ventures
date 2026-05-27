@@ -15,7 +15,7 @@ export default async function SubmitPage({
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/contribute/login')
 
-  // Fetch existing submission if editing a draft or revision_requested piece
+  // Fetch existing submission for editing — any status the contributor owns
   let editSubmission: ContributorSubmission | undefined
   if (editId) {
     const { data } = await supabase
@@ -23,18 +23,25 @@ export default async function SubmitPage({
       .select('*')
       .eq('id', editId)
       .eq('contributor_id', user.id)
-      .in('status', ['draft', 'revision_requested'])
       .single()
     if (data) editSubmission = data as ContributorSubmission
   }
 
-  const isDraft = editSubmission?.status === 'draft'
-  const title = isDraft ? 'Continue Your Draft' : editSubmission ? 'Edit Your Submission' : 'New Submission'
-  const subtitle = isDraft
-    ? 'Finish your draft and submit for editorial review when ready'
-    : editSubmission
-    ? 'Make your revisions and resubmit for editorial review'
-    : 'Share your story with the Northern Luzon innovation ecosystem'
+  const status = editSubmission?.status
+  const titleMap: Partial<Record<string, string>> = {
+    draft:              'Continue Your Draft',
+    published:          'Edit Published Article',
+    approved:           'Edit Approved Article',
+    revision_requested: 'Edit Your Submission',
+  }
+  const subtitleMap: Partial<Record<string, string>> = {
+    draft:              'Finish your draft and submit for editorial review when ready',
+    published:          'Changes will be resubmitted for editorial review before going live',
+    approved:           'Changes will be resubmitted for editorial review',
+    revision_requested: 'Make the requested changes and resubmit',
+  }
+  const title    = status ? (titleMap[status]    ?? 'Edit Your Submission') : 'New Submission'
+  const subtitle = status ? (subtitleMap[status] ?? 'Make your changes and resubmit for editorial review') : 'Share your story with the Northern Luzon innovation ecosystem'
 
   return (
     <div>

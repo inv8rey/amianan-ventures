@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Loader2, Trash2, Undo2 } from 'lucide-react'
+import { Loader2, Trash2, Undo2, Pencil } from 'lucide-react'
 import { toast } from 'sonner'
 import type { SubmissionStatus } from '@/types/contributor'
 
@@ -20,8 +21,6 @@ export function SubmissionDetailActions({ submissionId, status }: SubmissionDeta
   const canDelete = status !== 'published' && status !== 'approved'
   // Withdraw: only submitted or under_review
   const canWithdraw = status === 'submitted' || status === 'under_review'
-
-  if (!canDelete && !canWithdraw) return null
 
   async function handleAction(action: 'delete' | 'withdraw') {
     setLoading(true)
@@ -53,6 +52,15 @@ export function SubmissionDetailActions({ submissionId, status }: SubmissionDeta
       <p className="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-3">Actions</p>
 
       <div className="flex flex-wrap gap-2">
+        {/* Edit — always available */}
+        <Link
+          href={`/submit?edit=${submissionId}`}
+          className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-700 hover:border-zinc-400 hover:bg-zinc-50 transition-colors"
+        >
+          <Pencil className="h-3.5 w-3.5" />
+          Edit Article
+        </Link>
+
         {canWithdraw && (
           <button
             onClick={() => handleAction('withdraw')}
@@ -96,9 +104,9 @@ export function SubmissionDetailActions({ submissionId, status }: SubmissionDeta
         )}
       </div>
 
-      {canWithdraw && (
+      {status === 'published' && (
         <p className="text-[11px] text-zinc-400 mt-2">
-          &quot;Withdraw to Draft&quot; pulls your submission back so you can edit and resubmit it.
+          Edits will be resubmitted for review. Your article stays live at its current URL during that time.
         </p>
       )}
     </div>
