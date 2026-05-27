@@ -12,6 +12,7 @@ import {
 } from '@/types/contributor'
 
 const STATUS_ICON: Record<SubmissionStatus, React.ElementType> = {
+  draft: Pencil,
   submitted: Clock,
   under_review: Eye,
   revision_requested: AlertTriangle,

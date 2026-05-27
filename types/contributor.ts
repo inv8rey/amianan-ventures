@@ -14,6 +14,7 @@ export type ContentType =
   | 'field_notes'
 
 export type SubmissionStatus =
+  | 'draft'
   | 'submitted'
   | 'under_review'
   | 'revision_requested'
@@ -54,6 +55,7 @@ export interface ContributorSubmission {
   revision_notes: string | null
   editor_notes: string | null
   published_url: string | null
+  scheduled_for: string | null
   submitted_at: string
   reviewed_at: string | null
   published_at: string | null
@@ -80,6 +82,7 @@ export const CONTENT_TYPE_DESCRIPTIONS: Record<ContentType, string> = {
 }
 
 export const STATUS_LABELS: Record<SubmissionStatus, string> = {
+  draft: 'Draft',
   submitted: 'Submitted',
   under_review: 'Under Review',
   revision_requested: 'Revision Requested',
@@ -89,6 +92,7 @@ export const STATUS_LABELS: Record<SubmissionStatus, string> = {
 }
 
 export const STATUS_COLORS: Record<SubmissionStatus, string> = {
+  draft: 'bg-zinc-500/15 text-zinc-500',
   submitted: 'bg-blue-500/15 text-blue-400',
   under_review: 'bg-amber-500/15 text-amber-400',
   revision_requested: 'bg-orange-500/15 text-orange-400',

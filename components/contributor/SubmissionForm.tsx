@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { Loader2, Mic2, Lightbulb, BookOpen, Building2, FlaskConical, FileText, Link2, ChevronLeft, ChevronRight, Check } from 'lucide-react'
+import { Loader2, Mic2, Lightbulb, BookOpen, Building2, FlaskConical, FileText, Link2, ChevronLeft, ChevronRight, Check, Save, CalendarClock } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 import {
@@ -58,9 +58,23 @@ const INITIAL: FormData = {
 
 const STEPS = ['Content Type', 'Your Article', 'Review & Submit']
 
+// Convert UTC ISO string to local datetime-local input value (YYYY-MM-DDTHH:mm)
+function toLocalDatetimeInput(isoString: string): string {
+  const d = new Date(isoString)
+  const offset = d.getTimezoneOffset()
+  const local = new Date(d.getTime() - offset * 60000)
+  return local.toISOString().slice(0, 16)
+}
+
+// Min datetime for scheduling: 1 hour from now
+function minScheduleTime(): string {
+  return toLocalDatetimeInput(new Date(Date.now() + 3600000).toISOString())
+}
+
 export function SubmissionForm({ contributorId, editSubmission }: SubmissionFormProps) {
   const router = useRouter()
   const isEdit = !!editSubmission
+  const isDraftEdit = editSubmission?.status === 'draft'
 
   const [step, setStep] = useState(0)
   const [form, setForm] = useState<FormData>(
@@ -77,9 +91,22 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
         }
       : INITIAL
   )
+
+  const [scheduleType, setScheduleType] = useState<'immediate' | 'scheduled'>(
+    editSubmission?.scheduled_for ? 'scheduled' : 'immediate'
+  )
+  const [scheduledFor, setScheduledFor] = useState(
+    editSubmission?.scheduled_for ? toLocalDatetimeInput(editSubmission.scheduled_for) : ''
+  )
+
   const [agreed1, setAgreed1] = useState(false)
   const [agreed2, setAgreed2] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [draftSaving, setDraftSaving] = useState(false)
+  // Track saved draft id (for new drafts that haven't been saved before)
+  const [savedDraftId, setSavedDraftId] = useState<string | null>(
+    editSubmission?.status === 'draft' ? editSubmission.id : null
+  )
 
   function set(key: keyof FormData, value: string) {
     setForm((f) => ({ ...f, [key]: value }))
@@ -96,13 +123,64 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
     return true
   }
 
+  // ── Save Draft ─────────────────────────────────────────────────
+  async function handleSaveDraft() {
+    if (!form.headline.trim()) {
+      toast.error('Enter a headline first to save your draft')
+      return
+    }
+
+    setDraftSaving(true)
+    const supabase = createClient()
+
+    const payload = {
+      contributor_id: contributorId,
+      content_type: form.contentType || ('founder_story' as ContentType),
+      headline: form.headline.trim(),
+      summary: form.summary.trim() || '',
+      region: form.region || null,
+      sector: form.sector || null,
+      draft_type: form.draftType,
+      draft_content: form.draftType === 'text' ? form.draftContent : null,
+      gdocs_url: form.draftType === 'gdocs' ? form.gdocsUrl.trim() : null,
+      status: 'draft',
+      scheduled_for: null,
+    }
+
+    const targetId = savedDraftId ?? (isEdit && isDraftEdit ? editSubmission?.id : null)
+
+    if (targetId) {
+      const { error } = await supabase
+        .from('contributor_submissions')
+        .update(payload)
+        .eq('id', targetId)
+      if (error) { toast.error('Could not save draft: ' + error.message); setDraftSaving(false); return }
+    } else {
+      const { data, error } = await supabase
+        .from('contributor_submissions')
+        .insert(payload)
+        .select('id')
+        .single()
+      if (error) { toast.error('Could not save draft: ' + error.message); setDraftSaving(false); return }
+      setSavedDraftId(data.id)
+    }
+
+    toast.success('Draft saved')
+    setDraftSaving(false)
+  }
+
+  // ── Submit for review ──────────────────────────────────────────
   async function handleSubmit() {
     if (!agreed1 || !agreed2) {
       toast.error('Please check both confirmation boxes to continue')
       return
     }
-    setSubmitting(true)
+    if (scheduleType === 'scheduled' && !scheduledFor) {
+      toast.error('Please select a publish date or choose "Publish when approved"')
+      return
+    }
 
+    setSubmitting(true)
     const supabase = createClient()
 
     const payload = {
@@ -117,17 +195,22 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
       gdocs_url: form.draftType === 'gdocs' ? form.gdocsUrl.trim() : null,
       status: 'submitted',
       submitted_at: new Date().toISOString(),
+      scheduled_for: scheduleType === 'scheduled' && scheduledFor
+        ? new Date(scheduledFor).toISOString()
+        : null,
     }
 
+    // Use savedDraftId if we saved a draft first, else editSubmission id
+    const updateId = savedDraftId ?? (isEdit ? editSubmission?.id : null)
     let submissionId: string
 
-    if (isEdit && editSubmission) {
+    if (updateId) {
       const { error } = await supabase
         .from('contributor_submissions')
         .update(payload)
-        .eq('id', editSubmission.id)
+        .eq('id', updateId)
       if (error) { toast.error('Save failed: ' + error.message); setSubmitting(false); return }
-      submissionId = editSubmission.id
+      submissionId = updateId
     } else {
       const { data, error } = await supabase
         .from('contributor_submissions')
@@ -149,9 +232,12 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
       }),
     }).catch(() => {})
 
-    toast.success(isEdit ? 'Resubmitted successfully!' : 'Submission received!')
+    const isResubmit = isEdit && !isDraftEdit
+    toast.success(isResubmit ? 'Resubmitted successfully!' : 'Submission received! We\'ll review it shortly.')
     router.push(`/submissions/${submissionId}`)
   }
+
+  const showSaveDraft = step >= 1
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -347,7 +433,7 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
                   className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:border-zinc-400 focus:bg-white transition-colors"
                 />
                 <p className="text-xs text-zinc-400 mt-1.5">
-                  Make sure your doc is set to "Anyone with the link can view"
+                  Make sure your doc is set to &quot;Anyone with the link can view&quot;
                 </p>
               </div>
             )}
@@ -361,7 +447,7 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
           <h2 className="text-lg font-black text-zinc-900 mb-1">Review your submission</h2>
           <p className="text-sm text-zinc-500 mb-6">Check everything looks good before submitting</p>
 
-          <div className="rounded-xl border border-zinc-200 bg-white divide-y divide-zinc-100 mb-6">
+          <div className="rounded-xl border border-zinc-200 bg-white divide-y divide-zinc-100 mb-5">
             <div className="px-4 py-3 flex items-start gap-3">
               <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider w-24 shrink-0 pt-0.5">Type</span>
               <span className="text-sm font-semibold text-zinc-900">{CONTENT_TYPE_LABELS[form.contentType as ContentType]}</span>
@@ -405,6 +491,51 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
             </div>
           </div>
 
+          {/* ── Publish Timing ── */}
+          <div className="rounded-xl border border-zinc-200 bg-white p-4 mb-5">
+            <div className="flex items-center gap-2 mb-3">
+              <CalendarClock className="h-3.5 w-3.5 text-zinc-500" />
+              <p className="text-xs font-bold text-zinc-700 uppercase tracking-wider">Publish Timing</p>
+            </div>
+            <div className="space-y-2.5">
+              <label className="flex items-center gap-2.5 cursor-pointer">
+                <input
+                  type="radio"
+                  checked={scheduleType === 'immediate'}
+                  onChange={() => setScheduleType('immediate')}
+                  className="w-3.5 h-3.5 accent-black"
+                />
+                <div>
+                  <span className="text-sm font-medium text-zinc-800">Publish when admin approves</span>
+                  <p className="text-[11px] text-zinc-400 leading-none mt-0.5">Your article goes live as soon as it&apos;s reviewed and approved.</p>
+                </div>
+              </label>
+              <label className="flex items-center gap-2.5 cursor-pointer">
+                <input
+                  type="radio"
+                  checked={scheduleType === 'scheduled'}
+                  onChange={() => setScheduleType('scheduled')}
+                  className="w-3.5 h-3.5 accent-black"
+                />
+                <div>
+                  <span className="text-sm font-medium text-zinc-800">Schedule a publish date</span>
+                  <p className="text-[11px] text-zinc-400 leading-none mt-0.5">Article publishes automatically at your chosen time (after approval).</p>
+                </div>
+              </label>
+              {scheduleType === 'scheduled' && (
+                <div className="ml-6 pt-1">
+                  <input
+                    type="datetime-local"
+                    value={scheduledFor}
+                    onChange={(e) => setScheduledFor(e.target.value)}
+                    min={minScheduleTime()}
+                    className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition-colors"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Agreement checkboxes */}
           <div className="space-y-3 mb-6">
             {[
@@ -438,26 +569,44 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
           <ChevronLeft className="h-4 w-4" /> Back
         </button>
 
-        {step < 2 ? (
-          <button
-            type="button"
-            onClick={() => setStep((s) => s + 1)}
-            disabled={!canAdvance()}
-            className="flex items-center gap-1.5 px-5 py-2 rounded-lg bg-black text-white text-sm font-semibold hover:bg-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-          >
-            Continue <ChevronRight className="h-4 w-4" />
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={handleSubmit}
-            disabled={submitting || !agreed1 || !agreed2}
-            className="flex items-center gap-2 px-5 py-2 rounded-lg bg-black text-white text-sm font-semibold hover:bg-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-          >
-            {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
-            {isEdit ? 'Resubmit' : 'Submit for Review'}
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {/* Save Draft — available from step 1 onwards */}
+          {showSaveDraft && (
+            <button
+              type="button"
+              onClick={handleSaveDraft}
+              disabled={draftSaving || submitting}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-zinc-200 text-sm font-semibold text-zinc-600 hover:border-zinc-400 hover:text-zinc-900 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            >
+              {draftSaving
+                ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                : <Save className="h-3.5 w-3.5" />
+              }
+              Save Draft
+            </button>
+          )}
+
+          {step < 2 ? (
+            <button
+              type="button"
+              onClick={() => setStep((s) => s + 1)}
+              disabled={!canAdvance()}
+              className="flex items-center gap-1.5 px-5 py-2 rounded-lg bg-black text-white text-sm font-semibold hover:bg-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              Continue <ChevronRight className="h-4 w-4" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={submitting || !agreed1 || !agreed2}
+              className="flex items-center gap-2 px-5 py-2 rounded-lg bg-black text-white text-sm font-semibold hover:bg-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
+              {isEdit && !isDraftEdit ? 'Resubmit' : 'Submit for Review'}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   )

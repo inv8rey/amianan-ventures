@@ -2,7 +2,7 @@ import type React from 'react'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { Plus, AlertCircle, FileText, CheckCircle, Clock, RotateCcw } from 'lucide-react'
+import { Plus, AlertCircle, FileText, CheckCircle, Clock, RotateCcw, PenLine } from 'lucide-react'
 import { format } from 'date-fns'
 import {
   CONTENT_TYPE_LABELS,
@@ -39,8 +39,10 @@ export default async function DashboardPage() {
 
   if (!profile) redirect('/contribute/login')
 
-  // Compute analytics
-  const totalCount = submissions.length
+  // Compute analytics (exclude drafts from "total" since they're not submitted)
+  const draftCount = submissions.filter((s) => s.status === 'draft').length
+  const submittedSubmissions = submissions.filter((s) => s.status !== 'draft')
+  const totalCount = submittedSubmissions.length
   const publishedCount = submissions.filter((s) => s.status === 'published').length
   const inReviewCount = submissions.filter((s) => s.status === 'submitted' || s.status === 'under_review').length
   const revisionCount = submissions.filter((s) => s.status === 'revision_requested').length
@@ -70,6 +72,19 @@ export default async function DashboardPage() {
         <StatCard icon={<Clock className="h-4 w-4" />} label="In Review" value={inReviewCount} color="amber" />
         <StatCard icon={<RotateCcw className="h-4 w-4" />} label="Needs Revision" value={revisionCount} color="orange" />
       </div>
+
+      {/* Drafts banner */}
+      {draftCount > 0 && (
+        <div className="flex items-center gap-3 p-4 rounded-xl bg-zinc-50 border border-zinc-200 mb-4">
+          <PenLine className="h-4 w-4 text-zinc-400 shrink-0" />
+          <p className="text-sm text-zinc-600 flex-1">
+            You have <span className="font-bold text-zinc-900">{draftCount} draft{draftCount !== 1 ? 's' : ''}</span> — finish writing and submit for review.
+          </p>
+          <Link href="#drafts" className="text-xs font-bold text-zinc-700 hover:underline shrink-0">
+            View Drafts →
+          </Link>
+        </div>
+      )}
 
       {/* Profile completion banner */}
       {profileIncomplete(profile) && (
@@ -106,7 +121,7 @@ export default async function DashboardPage() {
           </Link>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div id="drafts" className="space-y-3">
           {submissions.map((sub) => (
             <SubmissionCard key={sub.id} submission={sub} />
           ))}
@@ -146,12 +161,16 @@ function StatCard({
 
 function SubmissionCard({ submission: sub }: { submission: ContributorSubmission }) {
   const status = sub.status as SubmissionStatus
+  const isDraft = status === 'draft'
   const isRevision = status === 'revision_requested'
   const isPublished = status === 'published'
+  const isScheduled = status === 'approved' && !!sub.scheduled_for
 
   return (
     <div className={`flex items-center gap-4 p-4 rounded-xl border bg-white transition-colors ${
-      isRevision ? 'border-orange-200 bg-orange-50/30' : 'border-zinc-200'
+      isDraft ? 'border-zinc-200 bg-zinc-50/60' :
+      isRevision ? 'border-orange-200 bg-orange-50/30' :
+      'border-zinc-200'
     }`}>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
@@ -162,8 +181,18 @@ function SubmissionCard({ submission: sub }: { submission: ContributorSubmission
           <span className="text-[10px] text-zinc-400">
             {format(new Date(sub.created_at), 'MMM d, yyyy')}
           </span>
+          {isScheduled && sub.scheduled_for && (
+            <>
+              <span className="text-zinc-200">·</span>
+              <span className="text-[10px] text-emerald-500 font-semibold">
+                Scheduled {format(new Date(sub.scheduled_for), 'MMM d')}
+              </span>
+            </>
+          )}
         </div>
-        <p className="text-sm font-bold text-zinc-900 line-clamp-1">{sub.headline}</p>
+        <p className={`text-sm font-bold line-clamp-1 ${isDraft ? 'text-zinc-500' : 'text-zinc-900'}`}>
+          {sub.headline}
+        </p>
       </div>
 
       <span className={`text-[10px] px-2.5 py-1 rounded-full font-semibold shrink-0 ${STATUS_COLORS[status]}`}>
@@ -173,12 +202,18 @@ function SubmissionCard({ submission: sub }: { submission: ContributorSubmission
       {isPublished && sub.published_url ? (
         <a
           href={sub.published_url}
-          target="_blank"
           rel="noopener noreferrer"
           className="text-xs font-bold text-[#00a855] hover:underline shrink-0"
         >
           Read Live →
         </a>
+      ) : isDraft ? (
+        <Link
+          href={`/submit?edit=${sub.id}`}
+          className="text-xs font-bold text-zinc-700 hover:text-black shrink-0"
+        >
+          Continue →
+        </Link>
       ) : (
         <Link
           href={`/submissions/${sub.id}`}

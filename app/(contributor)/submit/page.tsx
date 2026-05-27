@@ -15,7 +15,7 @@ export default async function SubmitPage({
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/contribute/login')
 
-  // Fetch existing submission if editing a revision_requested piece
+  // Fetch existing submission if editing a draft or revision_requested piece
   let editSubmission: ContributorSubmission | undefined
   if (editId) {
     const { data } = await supabase
@@ -23,13 +23,16 @@ export default async function SubmitPage({
       .select('*')
       .eq('id', editId)
       .eq('contributor_id', user.id)
-      .eq('status', 'revision_requested')
+      .in('status', ['draft', 'revision_requested'])
       .single()
-    if (data) editSubmission = data
+    if (data) editSubmission = data as ContributorSubmission
   }
 
-  const title = editSubmission ? 'Edit Your Submission' : 'New Submission'
-  const subtitle = editSubmission
+  const isDraft = editSubmission?.status === 'draft'
+  const title = isDraft ? 'Continue Your Draft' : editSubmission ? 'Edit Your Submission' : 'New Submission'
+  const subtitle = isDraft
+    ? 'Finish your draft and submit for editorial review when ready'
+    : editSubmission
     ? 'Make your revisions and resubmit for editorial review'
     : 'Share your story with the Northern Luzon innovation ecosystem'
 
