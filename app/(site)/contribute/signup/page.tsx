@@ -45,11 +45,17 @@ export default function ContributorSignupPage() {
     const supabase = createClient()
 
     // 1. Create Supabase Auth user
+    // All profile fields are passed as user_metadata so the DB trigger
+    // (handle_new_contributor_profile) can create the profile row atomically.
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email: form.email,
       password: form.password,
       options: {
-        data: { role: 'contributor', display_name: form.displayName },
+        data: {
+          display_name: form.displayName.trim(),
+          full_name: form.fullName.trim() || null,
+          contributor_role: form.role || null,
+        },
       },
     })
 
@@ -65,20 +71,8 @@ export default function ContributorSignupPage() {
       return
     }
 
-    // 2. Insert contributor profile using the user's own session (satisfies RLS + FK)
-    const { error: profileError } = await supabase.from('contributor_profiles').insert({
-      id: authData.user.id,
-      display_name: form.displayName.trim(),
-      full_name: form.fullName.trim() || null,
-      role: form.role || null,
-    })
-
-    if (profileError && profileError.code !== '23505') {
-      // 23505 = duplicate row (already exists), treat as success
-      toast.error('Profile creation failed: ' + profileError.message)
-      setLoading(false)
-      return
-    }
+    // Profile is created by the DB trigger on auth.users INSERT —
+    // no separate insert needed here.
 
     toast.success('Account created! Welcome to the contributor portal.')
     router.push('/dashboard')
