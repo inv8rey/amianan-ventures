@@ -174,8 +174,8 @@ function HeroColumn({ featured, below }: { featured: Article; below: Article[] }
   )
 }
 
-// ─── Right: Latest + Events stacked ───────────────────────────
-function RightColumn({ latest, events }: { latest: Article[]; events: Event[] }) {
+// ─── Right: Latest + Events + Top Contributors stacked ────────
+function RightColumn({ latest, events, topContributors }: { latest: Article[]; events: Event[]; topContributors: PublicContributor[] }) {
   return (
     <div className="space-y-7 divide-y divide-zinc-200">
       {/* Latest */}
@@ -251,6 +251,59 @@ function RightColumn({ latest, events }: { latest: Article[]; events: Event[] })
           View all events <ChevronRight className="h-3 w-3" />
         </Link>
       </div>
+
+      {/* Top Contributors */}
+      {topContributors.length > 0 && (
+        <div className="pt-7">
+          <div className="flex items-center gap-2 mb-3 pb-2 border-b-2 border-black">
+            <span className="w-1 h-4 bg-[#00cc6a] rounded-full" />
+            <span className="text-xs font-black uppercase tracking-widest text-black">Top Contributors</span>
+          </div>
+          <div className="space-y-3">
+            {topContributors.slice(0, 5).map((c, i) => (
+              <Link
+                key={c.id}
+                href={`/contributors/${c.id}`}
+                className="group flex items-center gap-2.5 hover:bg-zinc-50 px-1 -mx-1 py-1 rounded transition-colors"
+              >
+                {/* Rank */}
+                <span className="text-[10px] font-black text-zinc-300 w-4 shrink-0 text-center">{i + 1}</span>
+                {/* Avatar */}
+                {c.photo_url ? (
+                  <div className="relative w-7 h-7 rounded-full overflow-hidden shrink-0 border border-zinc-200">
+                    <Image src={c.photo_url} alt={c.display_name} fill className="object-cover" sizes="28px" />
+                  </div>
+                ) : (
+                  <div className="w-7 h-7 rounded-full bg-zinc-900 flex items-center justify-center shrink-0 border border-zinc-200">
+                    <span className="text-[9px] font-black text-white">{c.display_name.charAt(0).toUpperCase()}</span>
+                  </div>
+                )}
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-bold text-zinc-800 group-hover:text-[#00a855] transition-colors truncate leading-none">
+                    {c.display_name}
+                  </p>
+                  {c.role && (
+                    <p className="text-[10px] text-zinc-400 truncate leading-none mt-0.5">
+                      {ROLE_LABELS[c.role as ContributorRole] ?? c.role}
+                    </p>
+                  )}
+                </div>
+                {/* Article count */}
+                <span className="text-[10px] font-bold text-[#00a855] shrink-0">
+                  {c.published_count} art{c.published_count !== 1 ? 's' : ''}
+                </span>
+              </Link>
+            ))}
+          </div>
+          <Link
+            href="/ecosystem#contributors"
+            className="mt-3 flex items-center gap-1 text-[10px] font-bold text-zinc-500 hover:text-black uppercase tracking-wider transition-colors"
+          >
+            View all contributors <ChevronRight className="h-3 w-3" />
+          </Link>
+        </div>
+      )}
     </div>
   )
 }
@@ -676,9 +729,9 @@ export default async function HomePage() {
             )}
           </div>
 
-          {/* RIGHT: Latest + Events */}
+          {/* RIGHT: Latest + Events + Top Contributors */}
           <div className="hidden lg:block">
-            <RightColumn latest={latestAll} events={upcomingEvents} />
+            <RightColumn latest={latestAll} events={upcomingEvents} topContributors={contributors} />
           </div>
 
           {/* Mobile: compact latest */}
