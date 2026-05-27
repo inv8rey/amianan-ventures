@@ -28,19 +28,34 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
   }
 
+  const supabase = createAdminClient(supabaseUrl, serviceKey, { auth: { persistSession: false } })
+
   const body = await request.json()
-  const { submissionId, status, editorNotes, revisionNotes } = body as {
+  const { submissionId, status, editorNotes, revisionNotes, action } = body as {
     submissionId: string
-    status: SubmissionStatus
+    status?: SubmissionStatus
     editorNotes?: string
     revisionNotes?: string
+    action?: 'delete'
   }
 
-  if (!submissionId || !status) {
-    return NextResponse.json({ error: 'submissionId and status required' }, { status: 400 })
+  if (!submissionId) {
+    return NextResponse.json({ error: 'submissionId required' }, { status: 400 })
   }
 
-  const supabase = createAdminClient(supabaseUrl, serviceKey, { auth: { persistSession: false } })
+  // Admin delete — permanently removes the submission
+  if (action === 'delete') {
+    const { error } = await supabase
+      .from('contributor_submissions')
+      .delete()
+      .eq('id', submissionId)
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ ok: true, action: 'deleted' })
+  }
+
+  if (!status) {
+    return NextResponse.json({ error: 'status required' }, { status: 400 })
+  }
 
   // Build update payload
   const updatePayload: Record<string, unknown> = {}

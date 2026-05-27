@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
-import { Loader2, CheckCircle, MessageSquare, XCircle, Globe, Clock } from 'lucide-react'
+import { Loader2, CheckCircle, MessageSquare, XCircle, Globe, Clock, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { format } from 'date-fns'
 import type { ContributorSubmission, SubmissionStatus } from '@/types/contributor'
@@ -11,7 +11,7 @@ interface EditorActionsProps {
   submission: ContributorSubmission
 }
 
-type ActionMode = null | 'revision' | 'reject'
+type ActionMode = null | 'revision' | 'reject' | 'delete'
 
 export function EditorActions({ submission }: EditorActionsProps) {
   const router = useRouter()
@@ -53,6 +53,26 @@ export function EditorActions({ submission }: EditorActionsProps) {
       }
       setMode(null)
       startTransition(() => router.refresh())
+    } catch (e) {
+      toast.error((e as Error).message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function handleDelete() {
+    setSaving(true)
+    try {
+      const res = await fetch('/api/contributor/editor-action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ submissionId: submission.id, action: 'delete' }),
+      })
+      if (!res.ok) {
+        const err = await res.json()
+        throw new Error(err.error ?? 'Delete failed')
+      }
+      startTransition(() => router.push('/admin/contributions'))
     } catch (e) {
       toast.error((e as Error).message)
     } finally {
@@ -199,6 +219,38 @@ export function EditorActions({ submission }: EditorActionsProps) {
           This submission is {status === 'rejected' ? 'rejected' : 'published'} — no further actions.
         </p>
       )}
+
+      {/* ── Danger Zone ────────────────────────────────────────── */}
+      <div className="border-t border-border/40 pt-4">
+        <p className="text-[10px] font-semibold text-destructive/60 uppercase tracking-wider mb-2">Danger Zone</p>
+        {mode !== 'delete' ? (
+          <button
+            onClick={() => setMode('delete')}
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-md border border-destructive/20 text-xs font-semibold text-destructive/70 hover:border-destructive/50 hover:text-destructive hover:bg-destructive/5 transition-colors"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+            Delete Submission
+          </button>
+        ) : (
+          <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 space-y-2">
+            <p className="text-xs font-semibold text-destructive">Permanently delete this submission?</p>
+            <p className="text-[10px] text-muted-foreground">This cannot be undone. The contributor will not be notified.</p>
+            <div className="flex gap-2">
+              <button
+                onClick={handleDelete}
+                disabled={saving}
+                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-md bg-destructive text-destructive-foreground text-xs font-bold hover:opacity-90 disabled:opacity-50 transition-colors"
+              >
+                {saving && <Loader2 className="h-3 w-3 animate-spin" />}
+                Yes, Delete
+              </button>
+              <button onClick={() => setMode(null)} className="px-3 py-2 rounded-md text-xs text-muted-foreground hover:bg-muted/50">
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

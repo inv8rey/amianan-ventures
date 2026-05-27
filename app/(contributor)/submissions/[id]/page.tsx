@@ -10,6 +10,7 @@ import {
   type ContributorSubmission,
   type SubmissionStatus,
 } from '@/types/contributor'
+import { SubmissionDetailActions } from '@/components/contributor/SubmissionDetailActions'
 
 const STATUS_ICON: Record<SubmissionStatus, React.ElementType> = {
   draft: Pencil,
@@ -171,6 +172,9 @@ export default async function SubmissionDetailPage({
           </div>
         </div>
       )}
+
+      {/* Delete / Withdraw actions */}
+      <SubmissionDetailActions submissionId={submission.id} status={status} />
 
       {/* Submission details */}
       <div className="rounded-xl border border-zinc-200 bg-white divide-y divide-zinc-100">

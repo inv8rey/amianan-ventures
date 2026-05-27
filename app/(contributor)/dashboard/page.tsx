@@ -3,14 +3,8 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { Plus, AlertCircle, FileText, CheckCircle, Clock, RotateCcw, PenLine } from 'lucide-react'
-import { format } from 'date-fns'
-import {
-  CONTENT_TYPE_LABELS,
-  STATUS_LABELS,
-  STATUS_COLORS,
-  type ContributorSubmission,
-  type SubmissionStatus,
-} from '@/types/contributor'
+import { SubmissionCard } from '@/components/contributor/SubmissionCard'
+import type { ContributorSubmission } from '@/types/contributor'
 
 function profileIncomplete(profile: { display_name: string; bio: string | null; role: string | null }) {
   return !profile.bio || !profile.role || !profile.display_name
@@ -155,75 +149,6 @@ function StatCard({
         <p className={`text-2xl font-black ${c.value}`}>{value}</p>
         <p className="text-xs text-zinc-500 font-medium">{label}</p>
       </div>
-    </div>
-  )
-}
-
-function SubmissionCard({ submission: sub }: { submission: ContributorSubmission }) {
-  const status = sub.status as SubmissionStatus
-  const isDraft = status === 'draft'
-  const isRevision = status === 'revision_requested'
-  const isPublished = status === 'published'
-  const isScheduled = status === 'approved' && !!sub.scheduled_for
-
-  return (
-    <div className={`flex items-center gap-4 p-4 rounded-xl border bg-white transition-colors ${
-      isDraft ? 'border-zinc-200 bg-zinc-50/60' :
-      isRevision ? 'border-orange-200 bg-orange-50/30' :
-      'border-zinc-200'
-    }`}>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
-            {CONTENT_TYPE_LABELS[sub.content_type]}
-          </span>
-          <span className="text-zinc-200">·</span>
-          <span className="text-[10px] text-zinc-400">
-            {format(new Date(sub.created_at), 'MMM d, yyyy')}
-          </span>
-          {isScheduled && sub.scheduled_for && (
-            <>
-              <span className="text-zinc-200">·</span>
-              <span className="text-[10px] text-emerald-500 font-semibold">
-                Scheduled {format(new Date(sub.scheduled_for), 'MMM d')}
-              </span>
-            </>
-          )}
-        </div>
-        <p className={`text-sm font-bold line-clamp-1 ${isDraft ? 'text-zinc-500' : 'text-zinc-900'}`}>
-          {sub.headline}
-        </p>
-      </div>
-
-      <span className={`text-[10px] px-2.5 py-1 rounded-full font-semibold shrink-0 ${STATUS_COLORS[status]}`}>
-        {STATUS_LABELS[status]}
-      </span>
-
-      {isPublished && sub.published_url ? (
-        <a
-          href={sub.published_url}
-          rel="noopener noreferrer"
-          className="text-xs font-bold text-[#00a855] hover:underline shrink-0"
-        >
-          Read Live →
-        </a>
-      ) : isDraft ? (
-        <Link
-          href={`/submit?edit=${sub.id}`}
-          className="text-xs font-bold text-zinc-700 hover:text-black shrink-0"
-        >
-          Continue →
-        </Link>
-      ) : (
-        <Link
-          href={`/submissions/${sub.id}`}
-          className={`text-xs font-bold shrink-0 ${
-            isRevision ? 'text-orange-600 hover:underline' : 'text-zinc-500 hover:text-zinc-900'
-          }`}
-        >
-          {isRevision ? 'View Feedback →' : 'View →'}
-        </Link>
-      )}
     </div>
   )
 }
