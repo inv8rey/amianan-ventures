@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { LayoutDashboard, FileText, Calendar, Building2, Upload, ImageIcon, Inbox, Mail, BarChart2, PenLine, Users } from 'lucide-react'
+import { LayoutDashboard, FileText, Calendar, Building2, Upload, ImageIcon, Inbox, Mail, BarChart2, PenLine, Users, Target } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { revalidatePath } from 'next/cache'
@@ -57,6 +57,7 @@ async function autoPublish() {
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
   { href: '/admin/analytics', label: 'Analytics', icon: BarChart2, exact: false },
+  { href: '/admin/goals', label: 'Goals & OKRs', icon: Target, exact: false },
   { href: '/admin/articles', label: 'Articles', icon: FileText, exact: false },
   { href: '/admin/events', label: 'Events', icon: Calendar, exact: false },
   { href: '/admin/directory', label: 'Directory', icon: Building2, exact: false },
