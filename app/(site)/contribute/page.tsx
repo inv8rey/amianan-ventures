@@ -5,6 +5,7 @@ import {
   PenLine, Eye, CheckCircle, ArrowRight, BookOpen,
   Lightbulb, Mic2, Building2, FlaskConical,
   Users, MapPin, FileText, TrendingUp,
+  Globe, Handshake, BadgeCheck, Megaphone, BarChart2, Star,
 } from 'lucide-react'
 import { getPublishedArticles } from '@/lib/queries'
 import type { Article } from '@/types'
@@ -18,17 +19,50 @@ export const metadata: Metadata = {
 
 const contentTypes = [
   { icon: Mic2,         label: 'Founder Story',        desc: 'Your personal journey building a startup or MSME' },
-  { icon: Lightbulb,    label: 'Perspective',            desc: 'Your perspective on an ecosystem issue or trend' },
+  { icon: Lightbulb,    label: 'Perspective',           desc: 'Your perspective on an ecosystem issue or trend' },
   { icon: BookOpen,     label: 'Program Recap',         desc: 'A recap of an event, program, or initiative you ran or attended' },
   { icon: Building2,    label: 'Ecosystem Spotlight',   desc: 'Highlighting an organization, community, or initiative' },
   { icon: FlaskConical, label: 'Field Notes',           desc: 'Research observations or thesis findings relevant to the region' },
 ]
 
 const steps = [
-  { step: '01', icon: PenLine,     title: 'Create an account', desc: 'Sign up with your email and build a contributor profile — your byline, role, and bio.' },
-  { step: '02', icon: BookOpen,    title: 'Submit your piece', desc: 'Fill out the submission form with your headline, summary, and draft (or a Google Docs link).' },
-  { step: '03', icon: Eye,         title: 'Editorial review',  desc: "Our editor reviews every submission. You'll hear back within 5–7 days with approval or feedback." },
+  { step: '01', icon: PenLine,     title: 'Create an account', desc: 'Sign up with your email and build a contributor profile with your byline, role, and bio.' },
+  { step: '02', icon: BookOpen,    title: 'Submit your piece', desc: 'Fill out the submission form with your headline, summary, and draft or a Google Docs link.' },
+  { step: '03', icon: Eye,         title: 'Editorial review',  desc: 'Our editor reviews every submission. You will hear back within 5 to 7 days with approval or feedback.' },
   { step: '04', icon: CheckCircle, title: 'Published!',        desc: 'Approved pieces go live on amiananventures.org with your byline and are shared across our channels.' },
+]
+
+const values = [
+  {
+    icon: Globe,
+    title: 'Reach thousands of readers',
+    desc: 'Your article goes out to founders, TBI staff, investors, students, and government officials across Northern Luzon and beyond.',
+  },
+  {
+    icon: BadgeCheck,
+    title: 'Build your credibility',
+    desc: 'A bylined piece on a recognized regional media platform strengthens your professional profile and positions you as a thought leader.',
+  },
+  {
+    icon: Handshake,
+    title: 'Grow your network',
+    desc: 'Writing for Amianan Ventures connects you to a community of ecosystem builders who read, share, and respond to your work.',
+  },
+  {
+    icon: Megaphone,
+    title: 'Shape the narrative',
+    desc: 'The stories that get told shape what gets funded, built, and supported. Your voice helps define Northern Luzon on the innovation map.',
+  },
+  {
+    icon: BarChart2,
+    title: 'Track your impact',
+    desc: 'See how many people read your article. Your contributor profile stays live as a portfolio of your published work over time.',
+  },
+  {
+    icon: Star,
+    title: 'It is completely free',
+    desc: 'No fees, no exclusivity, no gatekeeping. Submit your story, get editorial feedback, and publish on a platform that cares about this region.',
+  },
 ]
 
 const stats = [
@@ -58,8 +92,6 @@ export default async function ContributePage() {
 
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="relative min-h-[600px] lg:min-h-[92vh] flex items-center overflow-hidden">
-
-        {/* Background image */}
         <Image
           src="/contribute-hero.jpg"
           alt="Northern Luzon mountains"
@@ -68,37 +100,30 @@ export default async function ContributePage() {
           className="object-cover object-center"
           sizes="100vw"
         />
-
-        {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/20" />
-        {/* Bottom fade to white */}
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent" />
 
         <div className="relative z-10 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 py-20 lg:py-0">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
-            {/* ── Left: text ── */}
+            {/* Left: text */}
             <div>
-              {/* Badge */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs font-bold uppercase tracking-wider mb-7">
                 <PenLine className="h-3.5 w-3.5 text-[#00cc6a]" />
                 Contributor Portal
               </div>
 
-              {/* Headline */}
               <h1 className="text-4xl sm:text-5xl lg:text-[3.25rem] font-black text-white leading-[1.08] mb-5">
                 The Home for Startup<br />
                 Stories and Innovation<br />
                 <span className="text-[#00cc6a]">in Northern Luzon.</span>
               </h1>
 
-              {/* Subtext */}
               <p className="text-base text-white/70 max-w-md leading-relaxed mb-8">
                 Share stories, insights, and ideas that spotlight founders, programs,
                 and innovations across Cordillera, Cagayan Valley, Ilocos, and Pangasinan.
               </p>
 
-              {/* CTAs */}
               <div className="flex items-center gap-3 flex-wrap mb-10">
                 <Link
                   href="/contribute/signup"
@@ -114,7 +139,6 @@ export default async function ContributePage() {
                 </Link>
               </div>
 
-              {/* Stats */}
               <div className="grid grid-cols-4 gap-3">
                 {stats.map((s) => (
                   <div key={s.label} className="flex flex-col items-start gap-1.5 p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/15">
@@ -126,7 +150,7 @@ export default async function ContributePage() {
               </div>
             </div>
 
-            {/* ── Right: real article cards ── */}
+            {/* Right: real article cards */}
             <div className="hidden lg:flex flex-col gap-3 items-end">
               {articles.length > 0 ? articles.map((article, i) => (
                 <Link
@@ -139,13 +163,7 @@ export default async function ContributePage() {
                   <div className="flex gap-3 p-4">
                     {article.cover_image ? (
                       <div className="relative shrink-0 w-16 h-16 rounded-xl overflow-hidden">
-                        <Image
-                          src={article.cover_image}
-                          alt={article.title}
-                          fill
-                          className="object-cover"
-                          sizes="64px"
-                        />
+                        <Image src={article.cover_image} alt={article.title} fill className="object-cover" sizes="64px" />
                       </div>
                     ) : (
                       <div className="shrink-0 w-16 h-16 rounded-xl bg-gradient-to-br from-zinc-200 to-zinc-300" />
@@ -154,17 +172,12 @@ export default async function ContributePage() {
                       <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full mb-1.5 inline-block ${categoryColor[article.category] ?? 'text-zinc-600 bg-zinc-100'}`}>
                         {categoryLabel[article.category] ?? article.category}
                       </span>
-                      <p className="text-xs font-bold text-zinc-900 leading-snug line-clamp-2 mb-1.5">
-                        {article.title}
-                      </p>
-                      <p className="text-[10px] text-zinc-400">
-                        By {article.author}
-                      </p>
+                      <p className="text-xs font-bold text-zinc-900 leading-snug line-clamp-2 mb-1.5">{article.title}</p>
+                      <p className="text-[10px] text-zinc-400">By {article.author}</p>
                     </div>
                   </div>
                 </Link>
               )) : (
-                // Fallback placeholder cards if no articles yet
                 ['Founder Story', 'Ecosystem News', 'Innovation Recap'].map((label, i) => (
                   <div
                     key={label}
@@ -183,8 +196,6 @@ export default async function ContributePage() {
                   </div>
                 ))
               )}
-
-              {/* Region tags */}
               <div className="flex flex-wrap gap-2 mt-2 justify-end">
                 {['Cordillera', 'Cagayan Valley', 'Ilocos Region', 'Pangasinan'].map((r) => (
                   <span key={r} className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 text-[11px] font-semibold text-white">
@@ -198,7 +209,7 @@ export default async function ContributePage() {
         </div>
       </section>
 
-      {/* ── Content types ─────────────────────────────────────── */}
+      {/* ── What you can submit ───────────────────────────────── */}
       <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
         <p className="text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">What you can submit</p>
         <h2 className="text-2xl font-black text-zinc-900 mb-8">Five types of content we publish</h2>
@@ -217,6 +228,29 @@ export default async function ContributePage() {
         </div>
       </section>
 
+      {/* ── Why contribute ────────────────────────────────────── */}
+      <section className="bg-zinc-50 border-y border-zinc-100">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+          <p className="text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">Why it matters</p>
+          <h2 className="text-2xl font-black text-zinc-900 mb-3">What you get when you contribute</h2>
+          <p className="text-sm text-zinc-500 mb-10 max-w-xl leading-relaxed">
+            Contributing to Amianan Ventures is more than publishing an article. It is a way to build
+            your presence, grow your network, and leave a mark on the regional innovation story.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {values.map((v) => (
+              <div key={v.title} className="bg-white rounded-2xl border border-zinc-100 p-5 hover:border-[#00a855]/20 hover:shadow-sm transition-all group">
+                <div className="w-10 h-10 rounded-xl bg-[#00a855]/8 flex items-center justify-center mb-4 group-hover:bg-[#00a855]/15 transition-colors">
+                  <v.icon className="h-5 w-5 text-[#00a855]" />
+                </div>
+                <p className="text-sm font-bold text-zinc-900 mb-1.5">{v.title}</p>
+                <p className="text-xs text-zinc-500 leading-relaxed">{v.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── How it works ──────────────────────────────────────── */}
       <section className="bg-[#042212] relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
@@ -226,19 +260,32 @@ export default async function ContributePage() {
         <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
           <p className="text-xs font-black uppercase tracking-widest text-[#00cc6a] mb-2">Simple process</p>
           <h2 className="text-2xl font-black text-white mb-12">How it works</h2>
+
+          {/* Steps */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {steps.map((s, i) => (
               <div key={s.step} className="relative">
+                {/* Connector line — rendered between steps on desktop */}
                 {i < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-4 left-full w-full h-px bg-white/10 -translate-x-4" />
+                  <div
+                    className="hidden lg:block absolute h-px bg-white/15"
+                    style={{ top: '18px', left: 'calc(100% + 4px)', right: '-100%', width: 'calc(100% - 8px)' }}
+                  />
                 )}
-                <div className="flex items-center gap-2.5 mb-4">
-                  <span className="text-xs font-black text-[#00cc6a]">{s.step}</span>
-                  <div className="flex-1 h-px bg-white/10" />
+
+                {/* Step number row */}
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-9 h-9 rounded-full border border-[#00cc6a]/40 bg-[#00cc6a]/10 flex items-center justify-center shrink-0">
+                    <span className="text-xs font-black text-[#00cc6a]">{s.step}</span>
+                  </div>
+                  <div className="flex-1 h-px bg-white/10 lg:hidden" />
                 </div>
+
+                {/* Icon */}
                 <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center mb-4">
                   <s.icon className="h-4 w-4 text-white" />
                 </div>
+
                 <p className="text-sm font-bold text-white mb-1.5">{s.title}</p>
                 <p className="text-xs text-white/50 leading-relaxed">{s.desc}</p>
               </div>
