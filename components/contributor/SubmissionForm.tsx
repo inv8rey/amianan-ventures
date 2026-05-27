@@ -2,7 +2,9 @@
 
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { Loader2, Mic2, Lightbulb, BookOpen, Building2, FlaskConical, FileText, Link2, ChevronLeft, ChevronRight, Check, Save, CalendarClock } from 'lucide-react'
+import {
+  Loader2, Save, Send, FileText, Link2, Check, CalendarClock,
+} from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 import {
@@ -16,57 +18,23 @@ import {
 } from '@/types/contributor'
 import dynamic from 'next/dynamic'
 
-const RichTextEditor = dynamic(() => import('@/components/admin/RichTextEditor').then(m => m.RichTextEditor), {
-  ssr: false,
-  loading: () => <div className="h-64 rounded-lg border border-zinc-200 bg-zinc-50 animate-pulse" />,
-})
-
-const CONTENT_ICONS: Record<ContentType, React.ElementType> = {
-  founder_story: Mic2,
-  opinion_essay: Lightbulb,
-  program_recap: BookOpen,
-  ecosystem_spotlight: Building2,
-  field_notes: FlaskConical,
-}
+const RichTextEditor = dynamic(
+  () => import('@/components/admin/RichTextEditor').then((m) => m.RichTextEditor),
+  { ssr: false, loading: () => <div className="h-64 rounded-lg border border-zinc-200 bg-zinc-50 animate-pulse" /> }
+)
 
 interface SubmissionFormProps {
   contributorId: string
   editSubmission?: ContributorSubmission
 }
 
-interface FormData {
-  contentType: ContentType | ''
-  headline: string
-  summary: string
-  region: string
-  sector: string
-  draftType: DraftType
-  draftContent: string
-  gdocsUrl: string
-}
-
-const INITIAL: FormData = {
-  contentType: '',
-  headline: '',
-  summary: '',
-  region: '',
-  sector: '',
-  draftType: 'text',
-  draftContent: '',
-  gdocsUrl: '',
-}
-
-const STEPS = ['Content Type', 'Your Article', 'Review & Submit']
-
-// Convert UTC ISO string to local datetime-local input value (YYYY-MM-DDTHH:mm)
+// Convert UTC ISO to local datetime-local value (YYYY-MM-DDTHH:mm)
 function toLocalDatetimeInput(isoString: string): string {
   const d = new Date(isoString)
   const offset = d.getTimezoneOffset()
-  const local = new Date(d.getTime() - offset * 60000)
-  return local.toISOString().slice(0, 16)
+  return new Date(d.getTime() - offset * 60000).toISOString().slice(0, 16)
 }
 
-// Min datetime for scheduling: 1 hour from now
 function minScheduleTime(): string {
   return toLocalDatetimeInput(new Date(Date.now() + 3600000).toISOString())
 }
@@ -76,73 +44,56 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
   const isEdit = !!editSubmission
   const isDraftEdit = editSubmission?.status === 'draft'
 
-  const [step, setStep] = useState(0)
-  const [form, setForm] = useState<FormData>(
-    editSubmission
-      ? {
-          contentType: editSubmission.content_type,
-          headline: editSubmission.headline,
-          summary: editSubmission.summary,
-          region: editSubmission.region ?? '',
-          sector: editSubmission.sector ?? '',
-          draftType: editSubmission.draft_type,
-          draftContent: editSubmission.draft_content ?? '',
-          gdocsUrl: editSubmission.gdocs_url ?? '',
-        }
-      : INITIAL
+  // ── Form state ─────────────────────────────────────────────────
+  const [contentType, setContentType] = useState<ContentType | ''>(
+    editSubmission?.content_type ?? ''
   )
-
+  const [headline, setHeadline] = useState(editSubmission?.headline ?? '')
+  const [summary, setSummary] = useState(editSubmission?.summary ?? '')
+  const [region, setRegion] = useState(editSubmission?.region ?? '')
+  const [sector, setSector] = useState(editSubmission?.sector ?? '')
+  const [draftType, setDraftType] = useState<DraftType>(editSubmission?.draft_type ?? 'text')
+  const [draftContent, setDraftContent] = useState(editSubmission?.draft_content ?? '')
+  const [gdocsUrl, setGdocsUrl] = useState(editSubmission?.gdocs_url ?? '')
   const [scheduleType, setScheduleType] = useState<'immediate' | 'scheduled'>(
     editSubmission?.scheduled_for ? 'scheduled' : 'immediate'
   )
   const [scheduledFor, setScheduledFor] = useState(
     editSubmission?.scheduled_for ? toLocalDatetimeInput(editSubmission.scheduled_for) : ''
   )
-
   const [agreed1, setAgreed1] = useState(false)
   const [agreed2, setAgreed2] = useState(false)
+
+  // ── Save state ──────────────────────────────────────────────────
   const [submitting, setSubmitting] = useState(false)
   const [draftSaving, setDraftSaving] = useState(false)
-  // Track saved draft id (for new drafts that haven't been saved before)
   const [savedDraftId, setSavedDraftId] = useState<string | null>(
-    editSubmission?.status === 'draft' ? editSubmission.id : null
+    isDraftEdit ? (editSubmission?.id ?? null) : null
   )
 
-  function set(key: keyof FormData, value: string) {
-    setForm((f) => ({ ...f, [key]: value }))
-  }
+  const handleContent = useCallback((html: string) => setDraftContent(html), [])
 
-  const handleContent = useCallback((html: string) => set('draftContent', html), [])
+  const hasContent = draftType === 'gdocs' ? !!gdocsUrl.trim() : !!draftContent.trim()
+  const canSubmit =
+    !!contentType && !!headline.trim() && !!summary.trim() && hasContent && agreed1 && agreed2
+  const canSaveDraft = !!headline.trim()
 
-  function canAdvance(): boolean {
-    if (step === 0) return !!form.contentType
-    if (step === 1) {
-      const hasContent = form.draftType === 'gdocs' ? !!form.gdocsUrl.trim() : !!form.draftContent.trim()
-      return !!form.headline.trim() && !!form.summary.trim() && hasContent
-    }
-    return true
-  }
-
-  // ── Save Draft ─────────────────────────────────────────────────
+  // ── Save Draft ──────────────────────────────────────────────────
   async function handleSaveDraft() {
-    if (!form.headline.trim()) {
-      toast.error('Enter a headline first to save your draft')
-      return
-    }
-
+    if (!canSaveDraft) { toast.error('Enter a headline to save your draft'); return }
     setDraftSaving(true)
     const supabase = createClient()
 
     const payload = {
       contributor_id: contributorId,
-      content_type: form.contentType || ('founder_story' as ContentType),
-      headline: form.headline.trim(),
-      summary: form.summary.trim() || '',
-      region: form.region || null,
-      sector: form.sector || null,
-      draft_type: form.draftType,
-      draft_content: form.draftType === 'text' ? form.draftContent : null,
-      gdocs_url: form.draftType === 'gdocs' ? form.gdocsUrl.trim() : null,
+      content_type: contentType || ('founder_story' as ContentType),
+      headline: headline.trim(),
+      summary: summary.trim(),
+      region: region || null,
+      sector: sector || null,
+      draft_type: draftType,
+      draft_content: draftType === 'text' ? draftContent : null,
+      gdocs_url: draftType === 'gdocs' ? gdocsUrl.trim() : null,
       status: 'draft',
       scheduled_for: null,
     }
@@ -150,17 +101,10 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
     const targetId = savedDraftId ?? (isEdit && isDraftEdit ? editSubmission?.id : null)
 
     if (targetId) {
-      const { error } = await supabase
-        .from('contributor_submissions')
-        .update(payload)
-        .eq('id', targetId)
+      const { error } = await supabase.from('contributor_submissions').update(payload).eq('id', targetId)
       if (error) { toast.error('Could not save draft: ' + error.message); setDraftSaving(false); return }
     } else {
-      const { data, error } = await supabase
-        .from('contributor_submissions')
-        .insert(payload)
-        .select('id')
-        .single()
+      const { data, error } = await supabase.from('contributor_submissions').insert(payload).select('id').single()
       if (error) { toast.error('Could not save draft: ' + error.message); setDraftSaving(false); return }
       setSavedDraftId(data.id)
     }
@@ -169,15 +113,15 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
     setDraftSaving(false)
   }
 
-  // ── Submit for review ──────────────────────────────────────────
+  // ── Submit for Review ───────────────────────────────────────────
   async function handleSubmit() {
-    if (!agreed1 || !agreed2) {
-      toast.error('Please check both confirmation boxes to continue')
-      return
-    }
+    if (!contentType) { toast.error('Select a content type'); return }
+    if (!headline.trim()) { toast.error('Headline is required'); return }
+    if (!summary.trim()) { toast.error('Summary is required'); return }
+    if (!hasContent) { toast.error('Add your article content or a Google Docs link'); return }
+    if (!agreed1 || !agreed2) { toast.error('Please check both confirmation boxes'); return }
     if (scheduleType === 'scheduled' && !scheduledFor) {
-      toast.error('Please select a publish date or choose "Publish when approved"')
-      return
+      toast.error('Select a publish date or choose "Publish when approved"'); return
     }
 
     setSubmitting(true)
@@ -185,14 +129,14 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
 
     const payload = {
       contributor_id: contributorId,
-      content_type: form.contentType,
-      headline: form.headline.trim(),
-      summary: form.summary.trim(),
-      region: form.region || null,
-      sector: form.sector || null,
-      draft_type: form.draftType,
-      draft_content: form.draftType === 'text' ? form.draftContent : null,
-      gdocs_url: form.draftType === 'gdocs' ? form.gdocsUrl.trim() : null,
+      content_type: contentType,
+      headline: headline.trim(),
+      summary: summary.trim(),
+      region: region || null,
+      sector: sector || null,
+      draft_type: draftType,
+      draft_content: draftType === 'text' ? draftContent : null,
+      gdocs_url: draftType === 'gdocs' ? gdocsUrl.trim() : null,
       status: 'submitted',
       submitted_at: new Date().toISOString(),
       scheduled_for: scheduleType === 'scheduled' && scheduledFor
@@ -200,413 +144,300 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
         : null,
     }
 
-    // Use savedDraftId if we saved a draft first, else editSubmission id
     const updateId = savedDraftId ?? (isEdit ? editSubmission?.id : null)
     let submissionId: string
 
     if (updateId) {
-      const { error } = await supabase
-        .from('contributor_submissions')
-        .update(payload)
-        .eq('id', updateId)
+      const { error } = await supabase.from('contributor_submissions').update(payload).eq('id', updateId)
       if (error) { toast.error('Save failed: ' + error.message); setSubmitting(false); return }
       submissionId = updateId
     } else {
-      const { data, error } = await supabase
-        .from('contributor_submissions')
-        .insert(payload)
-        .select('id')
-        .single()
+      const { data, error } = await supabase.from('contributor_submissions').insert(payload).select('id').single()
       if (error) { toast.error('Submission failed: ' + error.message); setSubmitting(false); return }
       submissionId = data.id
     }
 
-    // Send emails via API
     await fetch('/api/contributor/send-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        type: 'submission_received',
-        submissionId,
-        headline: form.headline.trim(),
-      }),
+      body: JSON.stringify({ type: 'submission_received', submissionId, headline: headline.trim() }),
     }).catch(() => {})
 
     const isResubmit = isEdit && !isDraftEdit
-    toast.success(isResubmit ? 'Resubmitted successfully!' : 'Submission received! We\'ll review it shortly.')
+    toast.success(isResubmit ? 'Resubmitted successfully!' : 'Submitted! We\'ll review it shortly.')
     router.push(`/submissions/${submissionId}`)
   }
 
-  const showSaveDraft = step >= 1
-
   return (
-    <div className="max-w-2xl mx-auto">
-      {/* Step indicator */}
-      <div className="flex items-center gap-0 mb-8">
-        {STEPS.map((label, i) => (
-          <div key={i} className="flex items-center flex-1">
-            <div className="flex items-center gap-2">
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold transition-colors ${
-                i < step ? 'bg-[#00a855] text-white' :
-                i === step ? 'bg-black text-white' :
-                'bg-zinc-200 text-zinc-500'
-              }`}>
-                {i < step ? <Check className="h-3 w-3" /> : i + 1}
-              </div>
-              <span className={`text-xs font-semibold hidden sm:block ${
-                i === step ? 'text-zinc-900' : i < step ? 'text-[#00a855]' : 'text-zinc-400'
-              }`}>{label}</span>
-            </div>
-            {i < STEPS.length - 1 && (
-              <div className={`flex-1 h-px mx-2 ${i < step ? 'bg-[#00a855]' : 'bg-zinc-200'}`} />
-            )}
-          </div>
-        ))}
-      </div>
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-      {/* ── Step 0: Content Type ─────────────────────────────────────────── */}
-      {step === 0 && (
-        <div>
-          <h2 className="text-lg font-black text-zinc-900 mb-1">What are you submitting?</h2>
-          <p className="text-sm text-zinc-500 mb-6">Choose the format that best fits your piece</p>
-          <div className="space-y-3">
-            {(Object.keys(CONTENT_TYPE_LABELS) as ContentType[]).map((type) => {
-              const Icon = CONTENT_ICONS[type]
-              const selected = form.contentType === type
-              return (
-                <button
-                  key={type}
-                  type="button"
-                  onClick={() => set('contentType', type)}
-                  className={`w-full flex items-start gap-3.5 p-4 rounded-xl border-2 text-left transition-all ${
-                    selected
-                      ? 'border-black bg-zinc-50'
-                      : 'border-zinc-200 hover:border-zinc-300'
-                  }`}
-                >
-                  <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
-                    selected ? 'bg-black' : 'bg-zinc-100'
-                  }`}>
-                    <Icon className={`h-4 w-4 ${selected ? 'text-[#00cc6a]' : 'text-zinc-500'}`} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className={`text-sm font-bold ${selected ? 'text-zinc-900' : 'text-zinc-700'}`}>
-                      {CONTENT_TYPE_LABELS[type]}
-                    </p>
-                    <p className="text-xs text-zinc-500 mt-0.5 leading-relaxed">
-                      {CONTENT_TYPE_DESCRIPTIONS[type]}
-                    </p>
-                  </div>
-                  <div className={`w-4 h-4 rounded-full border-2 shrink-0 mt-0.5 flex items-center justify-center ${
-                    selected ? 'border-black bg-black' : 'border-zinc-300'
-                  }`}>
-                    {selected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                  </div>
-                </button>
-              )
-            })}
-          </div>
-        </div>
-      )}
+      {/* ── Left: Main content ─────────────────────────────────── */}
+      <div className="lg:col-span-2 space-y-5">
 
-      {/* ── Step 1: Article Details ──────────────────────────────────────── */}
-      {step === 1 && (
-        <div className="space-y-5">
-          <div>
-            <h2 className="text-lg font-black text-zinc-900 mb-1">Your article</h2>
-            <p className="text-sm text-zinc-500">Tell us what you&apos;re writing about</p>
-          </div>
-
-          {/* Headline */}
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-semibold text-zinc-700 uppercase tracking-wider">
-                Headline <span className="text-red-500">*</span>
-              </label>
-              <span className={`text-[10px] ${form.headline.length > 100 ? 'text-orange-500' : 'text-zinc-400'}`}>
-                {form.headline.length}/120
-              </span>
-            </div>
+        {/* Headline */}
+        <div className="space-y-1.5">
+          <label className="block text-sm font-semibold text-zinc-700">
+            Headline <span className="text-red-500">*</span>
+          </label>
+          <div className="relative">
             <input
               type="text"
-              value={form.headline}
-              onChange={(e) => set('headline', e.target.value.slice(0, 120))}
+              value={headline}
+              onChange={(e) => setHeadline(e.target.value.slice(0, 120))}
               maxLength={120}
               placeholder="Write a compelling headline for your article"
-              className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:border-zinc-400 focus:bg-white transition-colors"
+              className="w-full rounded-lg border border-zinc-200 bg-white px-3.5 py-2.5 text-base font-medium text-zinc-900 placeholder-zinc-400 outline-none focus:border-zinc-400 transition-colors"
             />
+            <span className={`absolute right-3 top-1/2 -translate-y-1/2 text-[10px] ${headline.length > 100 ? 'text-orange-500' : 'text-zinc-300'}`}>
+              {headline.length}/120
+            </span>
           </div>
+        </div>
 
-          {/* Summary */}
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-semibold text-zinc-700 uppercase tracking-wider">
-                Summary / Pitch <span className="text-red-500">*</span>
-              </label>
-              <span className={`text-[10px] ${form.summary.length > 450 ? 'text-orange-500' : 'text-zinc-400'}`}>
-                {form.summary.length}/500
-              </span>
-            </div>
+        {/* Summary */}
+        <div className="space-y-1.5">
+          <label className="block text-sm font-semibold text-zinc-700">
+            Summary / Pitch <span className="text-red-500">*</span>
+          </label>
+          <div className="relative">
             <textarea
-              value={form.summary}
-              onChange={(e) => set('summary', e.target.value.slice(0, 500))}
+              value={summary}
+              onChange={(e) => setSummary(e.target.value.slice(0, 500))}
               maxLength={500}
               rows={3}
               placeholder="What is this piece about and why should readers care?"
-              className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:border-zinc-400 focus:bg-white transition-colors resize-none"
+              className="w-full rounded-lg border border-zinc-200 bg-white px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:border-zinc-400 transition-colors resize-none"
             />
-          </div>
-
-          {/* Region + Sector */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1.5">
-                Region
-              </label>
-              <select
-                value={form.region}
-                onChange={(e) => set('region', e.target.value)}
-                className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2.5 text-sm text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition-colors"
-              >
-                <option value="">All regions</option>
-                {CONTRIBUTOR_REGIONS.map((r) => (
-                  <option key={r.value} value={r.value}>{r.label}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1.5">
-                Sector
-              </label>
-              <select
-                value={form.sector}
-                onChange={(e) => set('sector', e.target.value)}
-                className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2.5 text-sm text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition-colors"
-              >
-                <option value="">Select sector</option>
-                {SECTORS.map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Draft toggle */}
-          <div>
-            <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-2">
-              Draft Content <span className="text-red-500">*</span>
-            </label>
-            <div className="flex rounded-lg border border-zinc-200 overflow-hidden mb-3 w-fit">
-              <button
-                type="button"
-                onClick={() => set('draftType', 'text')}
-                className={`flex items-center gap-1.5 px-4 py-2 text-xs font-semibold transition-colors ${
-                  form.draftType === 'text' ? 'bg-black text-white' : 'text-zinc-500 hover:bg-zinc-50'
-                }`}
-              >
-                <FileText className="h-3.5 w-3.5" /> Paste Text
-              </button>
-              <button
-                type="button"
-                onClick={() => set('draftType', 'gdocs')}
-                className={`flex items-center gap-1.5 px-4 py-2 text-xs font-semibold transition-colors ${
-                  form.draftType === 'gdocs' ? 'bg-black text-white' : 'text-zinc-500 hover:bg-zinc-50'
-                }`}
-              >
-                <Link2 className="h-3.5 w-3.5" /> Google Docs
-              </button>
-            </div>
-
-            {form.draftType === 'text' ? (
-              <RichTextEditor
-                value={form.draftContent}
-                onChange={handleContent}
-                placeholder="Write or paste your article here…"
-              />
-            ) : (
-              <div>
-                <input
-                  type="url"
-                  value={form.gdocsUrl}
-                  onChange={(e) => set('gdocsUrl', e.target.value)}
-                  placeholder="https://docs.google.com/document/d/..."
-                  className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:border-zinc-400 focus:bg-white transition-colors"
-                />
-                <p className="text-xs text-zinc-400 mt-1.5">
-                  Make sure your doc is set to &quot;Anyone with the link can view&quot;
-                </p>
-              </div>
-            )}
+            <span className={`absolute right-3 bottom-3 text-[10px] ${summary.length > 450 ? 'text-orange-500' : 'text-zinc-300'}`}>
+              {summary.length}/500
+            </span>
           </div>
         </div>
-      )}
 
-      {/* ── Step 2: Review ───────────────────────────────────────────────── */}
-      {step === 2 && (
-        <div>
-          <h2 className="text-lg font-black text-zinc-900 mb-1">Review your submission</h2>
-          <p className="text-sm text-zinc-500 mb-6">Check everything looks good before submitting</p>
+        {/* Draft Content */}
+        <div className="space-y-2">
+          <label className="block text-sm font-semibold text-zinc-700">
+            Content <span className="text-red-500">*</span>
+          </label>
 
-          <div className="rounded-xl border border-zinc-200 bg-white divide-y divide-zinc-100 mb-5">
-            <div className="px-4 py-3 flex items-start gap-3">
-              <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider w-24 shrink-0 pt-0.5">Type</span>
-              <span className="text-sm font-semibold text-zinc-900">{CONTENT_TYPE_LABELS[form.contentType as ContentType]}</span>
-            </div>
-            <div className="px-4 py-3 flex items-start gap-3">
-              <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider w-24 shrink-0 pt-0.5">Headline</span>
-              <span className="text-sm text-zinc-900">{form.headline}</span>
-            </div>
-            <div className="px-4 py-3 flex items-start gap-3">
-              <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider w-24 shrink-0 pt-0.5">Summary</span>
-              <span className="text-sm text-zinc-600 leading-relaxed">{form.summary}</span>
-            </div>
-            {(form.region || form.sector) && (
-              <div className="px-4 py-3 flex items-start gap-3">
-                <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider w-24 shrink-0 pt-0.5">Tags</span>
-                <div className="flex flex-wrap gap-1.5">
-                  {form.region && (
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 font-medium capitalize">
-                      {form.region.replace('-', ' ')}
-                    </span>
-                  )}
-                  {form.sector && (
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 font-medium">
-                      {form.sector}
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
-            <div className="px-4 py-3 flex items-start gap-3">
-              <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider w-24 shrink-0 pt-0.5">Draft</span>
-              <span className="text-sm text-zinc-600">
-                {form.draftType === 'gdocs' ? (
-                  <a href={form.gdocsUrl} target="_blank" rel="noopener noreferrer" className="text-[#00a855] hover:underline truncate block max-w-xs">
-                    {form.gdocsUrl}
-                  </a>
-                ) : (
-                  <span className="text-zinc-500">Rich text content included ({form.draftContent.length} characters)</span>
-                )}
-              </span>
-            </div>
+          {/* Toggle */}
+          <div className="flex rounded-lg border border-zinc-200 overflow-hidden w-fit">
+            <button
+              type="button"
+              onClick={() => setDraftType('text')}
+              className={`flex items-center gap-1.5 px-4 py-2 text-xs font-semibold transition-colors ${
+                draftType === 'text' ? 'bg-black text-white' : 'text-zinc-500 hover:bg-zinc-50'
+              }`}
+            >
+              <FileText className="h-3.5 w-3.5" /> Write / Paste Text
+            </button>
+            <button
+              type="button"
+              onClick={() => setDraftType('gdocs')}
+              className={`flex items-center gap-1.5 px-4 py-2 text-xs font-semibold transition-colors ${
+                draftType === 'gdocs' ? 'bg-black text-white' : 'text-zinc-500 hover:bg-zinc-50'
+              }`}
+            >
+              <Link2 className="h-3.5 w-3.5" /> Google Docs Link
+            </button>
           </div>
 
-          {/* ── Publish Timing ── */}
-          <div className="rounded-xl border border-zinc-200 bg-white p-4 mb-5">
-            <div className="flex items-center gap-2 mb-3">
-              <CalendarClock className="h-3.5 w-3.5 text-zinc-500" />
-              <p className="text-xs font-bold text-zinc-700 uppercase tracking-wider">Publish Timing</p>
+          {draftType === 'text' ? (
+            <RichTextEditor
+              value={draftContent}
+              onChange={handleContent}
+              placeholder="Start writing your article…"
+            />
+          ) : (
+            <div className="space-y-1.5">
+              <input
+                type="url"
+                value={gdocsUrl}
+                onChange={(e) => setGdocsUrl(e.target.value)}
+                placeholder="https://docs.google.com/document/d/..."
+                className="w-full rounded-lg border border-zinc-200 bg-white px-3.5 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:border-zinc-400 transition-colors"
+              />
+              <p className="text-xs text-zinc-400">
+                Make sure the doc is set to &quot;Anyone with the link can view&quot;
+              </p>
             </div>
-            <div className="space-y-2.5">
-              <label className="flex items-center gap-2.5 cursor-pointer">
-                <input
-                  type="radio"
-                  checked={scheduleType === 'immediate'}
-                  onChange={() => setScheduleType('immediate')}
-                  className="w-3.5 h-3.5 accent-black"
-                />
-                <div>
-                  <span className="text-sm font-medium text-zinc-800">Publish when admin approves</span>
-                  <p className="text-[11px] text-zinc-400 leading-none mt-0.5">Your article goes live as soon as it&apos;s reviewed and approved.</p>
-                </div>
-              </label>
-              <label className="flex items-center gap-2.5 cursor-pointer">
-                <input
-                  type="radio"
-                  checked={scheduleType === 'scheduled'}
-                  onChange={() => setScheduleType('scheduled')}
-                  className="w-3.5 h-3.5 accent-black"
-                />
-                <div>
-                  <span className="text-sm font-medium text-zinc-800">Schedule a publish date</span>
-                  <p className="text-[11px] text-zinc-400 leading-none mt-0.5">Article publishes automatically at your chosen time (after approval).</p>
-                </div>
-              </label>
-              {scheduleType === 'scheduled' && (
-                <div className="ml-6 pt-1">
-                  <input
-                    type="datetime-local"
-                    value={scheduledFor}
-                    onChange={(e) => setScheduledFor(e.target.value)}
-                    min={minScheduleTime()}
-                    className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition-colors"
-                  />
-                </div>
-              )}
-            </div>
-          </div>
+          )}
+        </div>
+
+      </div>
+
+      {/* ── Right: Sidebar ─────────────────────────────────────── */}
+      <div className="space-y-4">
+
+        {/* Submit panel */}
+        <div className="rounded-xl border border-zinc-200 bg-white p-4 space-y-4">
+          <h3 className="text-sm font-bold text-zinc-900">Submit</h3>
 
           {/* Agreement checkboxes */}
-          <div className="space-y-3 mb-6">
+          <div className="space-y-2.5">
             {[
-              { checked: agreed1, set: setAgreed1, text: 'I confirm this is original work and I have the right to publish it.' },
-              { checked: agreed2, set: setAgreed2, text: 'I understand Amianan Innovation Ventures may edit my submission for clarity and style.' },
+              { checked: agreed1, set: setAgreed1, text: 'This is my original work and I have the right to publish it.' },
+              { checked: agreed2, set: setAgreed2, text: 'Amianan Innovation Ventures may edit for clarity and style.' },
             ].map(({ checked, set: setChecked, text }, i) => (
-              <label key={i} className="flex items-start gap-3 cursor-pointer">
+              <label key={i} className="flex items-start gap-2.5 cursor-pointer">
                 <div
                   onClick={() => setChecked(!checked)}
-                  className={`w-5 h-5 rounded border-2 shrink-0 mt-0.5 flex items-center justify-center transition-colors cursor-pointer ${
+                  className={`w-4 h-4 rounded border-2 shrink-0 mt-0.5 flex items-center justify-center transition-colors cursor-pointer ${
                     checked ? 'bg-black border-black' : 'border-zinc-300'
                   }`}
                 >
-                  {checked && <Check className="h-3 w-3 text-white" />}
+                  {checked && <Check className="h-2.5 w-2.5 text-white" />}
                 </div>
-                <span className="text-sm text-zinc-600 leading-relaxed">{text}</span>
+                <span className="text-xs text-zinc-500 leading-relaxed">{text}</span>
               </label>
             ))}
           </div>
+
+          {/* Action buttons */}
+          <div className="flex flex-col gap-2">
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={handleSaveDraft}
+                disabled={draftSaving || submitting || !canSaveDraft}
+                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-600 hover:border-zinc-400 hover:text-zinc-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                {draftSaving
+                  ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  : <Save className="h-3.5 w-3.5" />
+                }
+                Save Draft
+              </button>
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={submitting || draftSaving || !canSubmit}
+                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#00cc6a] text-black text-xs font-bold hover:bg-[#00b85e] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                {submitting
+                  ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  : <Send className="h-3.5 w-3.5" />
+                }
+                {isEdit && !isDraftEdit ? 'Resubmit' : 'Submit'}
+              </button>
+            </div>
+            {savedDraftId && !submitting && (
+              <p className="text-[10px] text-zinc-400 text-center">Draft saved ✓</p>
+            )}
+          </div>
         </div>
-      )}
 
-      {/* Navigation buttons */}
-      <div className="flex items-center justify-between mt-8 pt-6 border-t border-zinc-200">
-        <button
-          type="button"
-          onClick={() => setStep((s) => s - 1)}
-          disabled={step === 0}
-          className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-zinc-200 text-sm font-semibold text-zinc-600 hover:border-zinc-400 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-        >
-          <ChevronLeft className="h-4 w-4" /> Back
-        </button>
+        {/* Settings panel */}
+        <div className="rounded-xl border border-zinc-200 bg-white p-4 space-y-3">
+          <h3 className="text-sm font-bold text-zinc-900">Settings</h3>
 
-        <div className="flex items-center gap-2">
-          {/* Save Draft — available from step 1 onwards */}
-          {showSaveDraft && (
-            <button
-              type="button"
-              onClick={handleSaveDraft}
-              disabled={draftSaving || submitting}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-zinc-200 text-sm font-semibold text-zinc-600 hover:border-zinc-400 hover:text-zinc-900 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          {/* Content Type */}
+          <div className="space-y-1.5">
+            <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+              Content Type <span className="text-red-500">*</span>
+            </label>
+            <select
+              value={contentType}
+              onChange={(e) => setContentType(e.target.value as ContentType)}
+              className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition-colors"
             >
-              {draftSaving
-                ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                : <Save className="h-3.5 w-3.5" />
-              }
-              Save Draft
-            </button>
-          )}
+              <option value="">Select type…</option>
+              {(Object.entries(CONTENT_TYPE_LABELS) as [ContentType, string][]).map(([v, l]) => (
+                <option key={v} value={v} title={CONTENT_TYPE_DESCRIPTIONS[v]}>{l}</option>
+              ))}
+            </select>
+            {contentType && (
+              <p className="text-[11px] text-zinc-400 leading-snug">
+                {CONTENT_TYPE_DESCRIPTIONS[contentType]}
+              </p>
+            )}
+          </div>
 
-          {step < 2 ? (
-            <button
-              type="button"
-              onClick={() => setStep((s) => s + 1)}
-              disabled={!canAdvance()}
-              className="flex items-center gap-1.5 px-5 py-2 rounded-lg bg-black text-white text-sm font-semibold hover:bg-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          {/* Region */}
+          <div className="space-y-1.5">
+            <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+              Region
+            </label>
+            <select
+              value={region}
+              onChange={(e) => setRegion(e.target.value)}
+              className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition-colors"
             >
-              Continue <ChevronRight className="h-4 w-4" />
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={handleSubmit}
-              disabled={submitting || !agreed1 || !agreed2}
-              className="flex items-center gap-2 px-5 py-2 rounded-lg bg-black text-white text-sm font-semibold hover:bg-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              <option value="">All regions</option>
+              {CONTRIBUTOR_REGIONS.map((r) => (
+                <option key={r.value} value={r.value}>{r.label}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Sector */}
+          <div className="space-y-1.5">
+            <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+              Sector
+            </label>
+            <select
+              value={sector}
+              onChange={(e) => setSector(e.target.value)}
+              className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition-colors"
             >
-              {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
-              {isEdit && !isDraftEdit ? 'Resubmit' : 'Submit for Review'}
-            </button>
-          )}
+              <option value="">Select sector</option>
+              {SECTORS.map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+          </div>
         </div>
+
+        {/* Publish Timing panel */}
+        <div className="rounded-xl border border-zinc-200 bg-white p-4 space-y-3">
+          <div className="flex items-center gap-2">
+            <CalendarClock className="h-3.5 w-3.5 text-zinc-400" />
+            <h3 className="text-sm font-bold text-zinc-900">Publish Timing</h3>
+          </div>
+
+          <div className="space-y-2.5">
+            <label className="flex items-start gap-2.5 cursor-pointer">
+              <input
+                type="radio"
+                checked={scheduleType === 'immediate'}
+                onChange={() => setScheduleType('immediate')}
+                className="mt-0.5 w-3.5 h-3.5 accent-black"
+              />
+              <div>
+                <span className="text-xs font-semibold text-zinc-700">Publish when approved</span>
+                <p className="text-[11px] text-zinc-400 leading-snug mt-0.5">
+                  Goes live as soon as the editor approves it.
+                </p>
+              </div>
+            </label>
+
+            <label className="flex items-start gap-2.5 cursor-pointer">
+              <input
+                type="radio"
+                checked={scheduleType === 'scheduled'}
+                onChange={() => setScheduleType('scheduled')}
+                className="mt-0.5 w-3.5 h-3.5 accent-black"
+              />
+              <div>
+                <span className="text-xs font-semibold text-zinc-700">Schedule a date</span>
+                <p className="text-[11px] text-zinc-400 leading-snug mt-0.5">
+                  Auto-publishes at your chosen time after approval.
+                </p>
+              </div>
+            </label>
+
+            {scheduleType === 'scheduled' && (
+              <input
+                type="datetime-local"
+                value={scheduledFor}
+                onChange={(e) => setScheduledFor(e.target.value)}
+                min={minScheduleTime()}
+                className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400 focus:bg-white transition-colors"
+              />
+            )}
+          </div>
+        </div>
+
       </div>
     </div>
   )
