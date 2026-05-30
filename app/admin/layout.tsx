@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { LayoutDashboard, FileText, Calendar, Building2, Upload, ImageIcon, Inbox, Mail, BarChart2, PenLine, Users, Target } from 'lucide-react'
+import { LayoutDashboard, FileText, Calendar, Building2, Upload, ImageIcon, Inbox, Mail, BarChart2, PenLine, Users, Target, Settings2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { revalidatePath } from 'next/cache'
@@ -67,6 +67,7 @@ const navItems = [
   { href: '/admin/submissions', label: 'Submissions', icon: Inbox, exact: false },
   { href: '/admin/newsletter', label: 'Newsletter', icon: Mail, exact: false },
   { href: '/admin/import', label: 'Import CSV', icon: Upload, exact: false },
+  { href: '/admin/settings', label: 'Settings', icon: Settings2, exact: false },
 ]
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
