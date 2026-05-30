@@ -3,15 +3,21 @@
 import { revalidatePath } from 'next/cache'
 import { createServiceClient } from '@/lib/supabase/service'
 
-export type AnnouncementInput = {
-  enabled: boolean
+export type BgColor = 'green' | 'dark' | 'amber' | 'black' | 'white'
+
+export type Announcement = {
   message: string
   link_text: string
   link_url: string
-  bg_color: 'green' | 'dark' | 'amber' | 'black' | 'white'
+  bg_color: BgColor
 }
 
-export async function saveAnnouncement(input: AnnouncementInput) {
+export type AnnouncementBarInput = {
+  enabled: boolean
+  announcements: Announcement[]
+}
+
+export async function saveAnnouncement(input: AnnouncementBarInput) {
   try {
     const supabase = createServiceClient()
     const { error } = await supabase

@@ -1,19 +1,13 @@
 import { Megaphone } from 'lucide-react'
 import { createServiceClient } from '@/lib/supabase/service'
 import { AnnouncementForm } from './AnnouncementForm'
-import type { AnnouncementInput } from './actions'
+import type { AnnouncementBarInput, Announcement } from './actions'
 
 export const dynamic = 'force-dynamic'
 
-const DEFAULT: AnnouncementInput = {
-  enabled: false,
-  message: '',
-  link_text: '',
-  link_url: '',
-  bg_color: 'green',
-}
+const DEFAULT: AnnouncementBarInput = { enabled: false, announcements: [] }
 
-async function getAnnouncement(): Promise<AnnouncementInput> {
+async function getAnnouncement(): Promise<AnnouncementBarInput> {
   try {
     const supabase = createServiceClient()
     const { data } = await supabase
@@ -21,8 +15,26 @@ async function getAnnouncement(): Promise<AnnouncementInput> {
       .select('value')
       .eq('key', 'announcement_bar')
       .single()
-    if (!data) return DEFAULT
-    return { ...DEFAULT, ...data.value }
+
+    if (!data?.value) return DEFAULT
+
+    const v = data.value as Record<string, unknown>
+
+    // Backwards compat: old single-message shape
+    if (typeof v.message === 'string') {
+      const single: Announcement = {
+        message:   v.message as string,
+        link_text: (v.link_text as string) ?? '',
+        link_url:  (v.link_url as string) ?? '',
+        bg_color:  (v.bg_color as Announcement['bg_color']) ?? 'green',
+      }
+      return { enabled: !!(v.enabled), announcements: [single] }
+    }
+
+    return {
+      enabled: !!(v.enabled),
+      announcements: Array.isArray(v.announcements) ? v.announcements as Announcement[] : [],
+    }
   } catch {
     return DEFAULT
   }
