@@ -15,6 +15,7 @@ export function ReportForm({ initial }: { initial: Partial<ReportInput> & { id?:
 
   const [title, setTitle]           = useState(initial.title ?? '')
   const [slug, setSlug]             = useState(initial.slug ?? '')
+  const [author, setAuthor]         = useState(initial.author ?? '')
   const [description, setDesc]      = useState(initial.description ?? '')
   const [coverUrl, setCoverUrl]     = useState(initial.cover_image_url ?? '')
   const [fileUrl, setFileUrl]       = useState(initial.file_url ?? '')
@@ -36,7 +37,7 @@ export function ReportForm({ initial }: { initial: Partial<ReportInput> & { id?:
     startTransition(async () => {
       const result = await saveReport({
         id: initial.id,
-        title, slug, description,
+        title, slug, author, description,
         cover_image_url: coverUrl,
         file_url: fileUrl,
         is_published: published,
@@ -91,6 +92,18 @@ export function ReportForm({ initial }: { initial: Partial<ReportInput> & { id?:
             placeholder="baguio-startup-ecosystem-2026"
           />
         </div>
+      </div>
+
+      <div>
+        <label className="block text-xs font-semibold text-zinc-600 mb-1">
+          Author <span className="text-zinc-400 font-normal">(defaults to "Amianan Ventures Research" if blank)</span>
+        </label>
+        <input
+          className="w-full border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+          placeholder="Leandro Gepilano · Amianan Ventures"
+        />
       </div>
 
       <div>

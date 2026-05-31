@@ -7,6 +7,7 @@ export type ReportInput = {
   id?: string
   title: string
   slug: string
+  author: string
   description: string
   cover_image_url: string
   file_url: string
@@ -21,6 +22,7 @@ export async function saveReport(input: ReportInput) {
     const payload = {
       title: input.title.trim(),
       slug: input.slug.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+      author: input.author.trim() || null,
       description: input.description.trim() || null,
       cover_image_url: input.cover_image_url.trim() || null,
       file_url: input.file_url.trim(),

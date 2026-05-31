@@ -43,6 +43,7 @@ export default async function EditReportPage({ params }: { params: Promise<{ id:
         id: report.id,
         title: report.title,
         slug: report.slug,
+        author: report.author ?? '',
         description: report.description ?? '',
         cover_image_url: report.cover_image_url ?? '',
         file_url: report.file_url,
