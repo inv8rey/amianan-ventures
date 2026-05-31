@@ -102,8 +102,16 @@ export default async function EcosystemPulseDownloadPage({
 
             {/* Description */}
             {report.description && (
-              <div className="prose-article">
-                <p className="text-zinc-600 leading-relaxed">{report.description}</p>
+              <div className="space-y-4">
+                {report.description
+                  .split(/\n\n|\n/)
+                  .map((para: string) => para.trim())
+                  .filter(Boolean)
+                  .map((para: string, i: number) => (
+                    <p key={i} className="text-base text-zinc-600 leading-relaxed">
+                      {para}
+                    </p>
+                  ))}
               </div>
             )}
 
