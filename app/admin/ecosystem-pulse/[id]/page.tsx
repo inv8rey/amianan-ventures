@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Users } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase/service'
 import { ReportForm } from '../ReportForm'
@@ -30,7 +30,15 @@ export default async function EditReportPage({ params }: { params: Promise<{ id:
       <Link href="/admin/ecosystem-pulse" className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-400 hover:text-zinc-700 transition-colors mb-6 uppercase tracking-wider">
         <ArrowLeft className="h-3.5 w-3.5" /> Ecosystem Pulse
       </Link>
-      <h1 className="text-xl font-bold mb-6">Edit Report</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-xl font-bold">Edit Report</h1>
+        <Link
+          href={`/admin/ecosystem-pulse/${id}/leads`}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-zinc-200 rounded-lg text-xs font-semibold text-zinc-600 hover:bg-zinc-50 transition-colors"
+        >
+          <Users className="h-3.5 w-3.5" /> View Leads
+        </Link>
+      </div>
       <ReportForm initial={{
         id: report.id,
         title: report.title,

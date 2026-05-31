@@ -102,12 +102,20 @@ export default async function EcosystemPulseAdmin() {
                     {r.published_at ? format(new Date(r.published_at), 'MMM d, yyyy') : '—'}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <Link
-                      href={`/admin/ecosystem-pulse/${r.id}`}
-                      className="text-xs font-semibold text-zinc-500 hover:text-zinc-900 transition-colors"
-                    >
-                      Edit →
-                    </Link>
+                    <div className="flex items-center justify-end gap-3">
+                      <Link
+                        href={`/admin/ecosystem-pulse/${r.id}/leads`}
+                        className="text-xs font-semibold text-[#00a855] hover:text-[#008a44] transition-colors"
+                      >
+                        Leads
+                      </Link>
+                      <Link
+                        href={`/admin/ecosystem-pulse/${r.id}`}
+                        className="text-xs font-semibold text-zinc-500 hover:text-zinc-900 transition-colors"
+                      >
+                        Edit →
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               ))}

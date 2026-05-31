@@ -12,7 +12,7 @@ export async function POST(request: Request) {
 
     const supabase = createServiceClient()
 
-    // Fetch the report to get title and file_url
+    // Fetch the report
     const { data: report, error: reportErr } = await supabase
       .from('ecosystem_reports')
       .select('id, title, file_url, is_published')
@@ -24,30 +24,50 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Report not found.' }, { status: 404 })
     }
 
-    // Save lead (upsert by email+report to avoid duplicates)
+    // Save lead
     const { error: leadErr } = await supabase
       .from('report_downloads')
       .upsert(
-        { report_id: reportId, email: email.toLowerCase().trim(), name: name.trim(), organization: organization?.trim() ?? null },
+        {
+          report_id: reportId,
+          email: email.toLowerCase().trim(),
+          name: name.trim(),
+          organization: organization?.trim() ?? null,
+        },
         { onConflict: 'report_id,email' },
       )
 
     if (leadErr) {
       console.error('[ecosystem-pulse] lead save error:', leadErr.message)
-      // Don't block the user — still send email
     }
 
-    // Send download email
-    await sendReportDownloadLink({
+    // Send email — capture result and surface errors
+    const emailResult = await sendReportDownloadLink({
       to: email.trim(),
       name: name.trim(),
       reportTitle: report.title,
       downloadUrl: report.file_url,
     })
 
+    // Resend returns { data, error } — check for failure
+    if (emailResult && 'error' in emailResult && emailResult.error) {
+      const resendError = emailResult.error as { message?: string; name?: string }
+      console.error('[ecosystem-pulse] Resend error:', resendError)
+
+      // Friendly message for the most common cause (unverified domain)
+      const msg = resendError.message ?? String(resendError)
+      if (msg.toLowerCase().includes('domain') || msg.toLowerCase().includes('from')) {
+        return NextResponse.json(
+          { error: 'Email sending is not fully configured. Please contact the site admin.' },
+          { status: 500 },
+        )
+      }
+      return NextResponse.json({ error: `Failed to send email: ${msg}` }, { status: 500 })
+    }
+
     return NextResponse.json({ ok: true })
   } catch (e) {
-    console.error('[ecosystem-pulse] error:', e)
-    return NextResponse.json({ error: 'Something went wrong.' }, { status: 500 })
+    console.error('[ecosystem-pulse] unexpected error:', e)
+    return NextResponse.json({ error: 'Something went wrong. Please try again.' }, { status: 500 })
   }
 }
