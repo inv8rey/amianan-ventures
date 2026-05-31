@@ -12,6 +12,7 @@ import {
 import { EcosystemSection } from '@/components/site/EcosystemSection'
 import { FeaturedListings } from '@/components/site/FeaturedListings'
 import { NewsletterSignup } from '@/components/site/NewsletterSignup'
+import { EcosystemPulseWidget } from '@/components/site/EcosystemPulseWidget'
 import type { Article, DirectoryEntry, DirectoryType, Event, Location } from '@/types'
 import { ROLE_LABELS, type ContributorRole, type ContentType } from '@/types/contributor'
 
@@ -175,7 +176,7 @@ function HeroColumn({ featured, below }: { featured: Article; below: Article[] }
 }
 
 // ─── Right: Latest + Events + Top Contributors stacked ────────
-function RightColumn({ latest, events, topContributors }: { latest: Article[]; events: Event[]; topContributors: PublicContributor[] }) {
+function RightColumn({ latest, events, topContributors, ecosystemReports }: { latest: Article[]; events: Event[]; topContributors: PublicContributor[]; ecosystemReports: EcosystemReport[] }) {
   return (
     <div className="space-y-7 divide-y divide-zinc-200">
       {/* Latest */}
@@ -304,6 +305,9 @@ function RightColumn({ latest, events, topContributors }: { latest: Article[]; e
           </Link>
         </div>
       )}
+
+      {/* Ecosystem Pulse */}
+      <EcosystemPulseWidget reports={ecosystemReports} />
     </div>
   )
 }
@@ -625,6 +629,32 @@ function ContributorsStrip({ contributors }: { contributors: PublicContributor[]
 }
 
 // ─── Page ──────────────────────────────────────────────────────
+// ─── Ecosystem reports ────────────────────────────────────────
+interface EcosystemReport {
+  id: string
+  title: string
+  slug: string
+  description: string | null
+  cover_image_url: string | null
+  published_at: string | null
+}
+
+async function getEcosystemReports(): Promise<EcosystemReport[]> {
+  try {
+    const { createServiceClient } = await import('@/lib/supabase/service')
+    const supabase = createServiceClient()
+    const { data } = await supabase
+      .from('ecosystem_reports')
+      .select('id, title, slug, description, cover_image_url, published_at')
+      .eq('is_published', true)
+      .order('published_at', { ascending: false })
+      .limit(3)
+    return data ?? []
+  } catch {
+    return []
+  }
+}
+
 async function getPublishedContributors(): Promise<PublicContributor[]> {
   try {
     const { createServiceClient } = await import('@/lib/supabase/service')
@@ -675,6 +705,7 @@ export default async function HomePage() {
     featuredListings,
     contributors,
     ecosystemContributions,
+    ecosystemReports,
   ] = await Promise.all([
     getFeaturedArticles(1),
     getPublishedArticles(18, 'news'),
@@ -683,6 +714,7 @@ export default async function HomePage() {
     getFeaturedListings().catch(() => []),
     getPublishedContributors(),
     getEcosystemContributions(),
+    getEcosystemReports(),
   ])
 
   // Directory might not exist yet — fail gracefully
@@ -731,7 +763,7 @@ export default async function HomePage() {
 
           {/* RIGHT: Latest + Events + Top Contributors */}
           <div className="hidden lg:block">
-            <RightColumn latest={latestAll} events={upcomingEvents} topContributors={contributors} />
+            <RightColumn latest={latestAll} events={upcomingEvents} topContributors={contributors} ecosystemReports={ecosystemReports} />
           </div>
 
           {/* Mobile: compact latest */}

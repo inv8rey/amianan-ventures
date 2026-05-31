@@ -177,6 +177,34 @@ export async function sendPublished(
 
 // ── Editor notification ──────────────────────────────────────────────────────
 
+export async function sendReportDownloadLink({
+  to,
+  name,
+  reportTitle,
+  downloadUrl,
+}: {
+  to: string
+  name: string
+  reportTitle: string
+  downloadUrl: string
+}) {
+  return getResend().emails.send({
+    from: `Amianan Ventures <${FROM}>`,
+    to,
+    subject: `Your download: ${reportTitle}`,
+    html: baseHtml(`
+      ${h1(`Here's your report, ${name.split(' ')[0]}!`)}
+      ${p(`Thank you for your interest in the Amianan Ventures Ecosystem Pulse series. Your requested report is ready to download.`)}
+      <div style="background:#f9fafb;border-radius:8px;padding:14px 16px;margin:16px 0;border-left:3px solid #00cc6a">
+        <p style="margin:0;font-size:13px;font-weight:700;color:#111827">${reportTitle}</p>
+        <p style="margin:4px 0 0;font-size:11px;color:#6b7280">Ecosystem Pulse · Amianan Ventures</p>
+      </div>
+      ${btn(downloadUrl, 'Download Report')}
+      ${p(`<span style="font-size:12px;color:#9ca3af">If the button doesn't work, copy and paste this link: <a href="${downloadUrl}" style="color:#00a855">${downloadUrl}</a></span>`)}
+    `),
+  })
+}
+
 export async function sendEditorAlert({
   contributor,
   headline,
