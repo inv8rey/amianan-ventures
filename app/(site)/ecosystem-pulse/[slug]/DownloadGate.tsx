@@ -45,10 +45,16 @@ export function DownloadGate({ reportId, reportTitle }: { reportId: string; repo
   }
 
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-6 sm:p-8">
-      <h3 className="text-base font-black text-zinc-900 mb-1">Get the full report</h3>
-      <p className="text-xs text-zinc-500 mb-6">
-        Enter your details below and we'll send the download link to your email.
+    <div className="rounded-2xl border-2 border-zinc-900 bg-white overflow-hidden shadow-lg">
+      {/* Card header band */}
+      <div className="bg-zinc-900 px-6 py-4">
+        <h3 className="text-sm font-black text-white uppercase tracking-wider">Get the full report</h3>
+        <p className="text-[11px] text-white/50 mt-0.5">Free · Instant email delivery</p>
+      </div>
+
+      <div className="p-6">
+      <p className="text-xs text-zinc-500 mb-5">
+        Enter your details and we'll send the download link straight to your inbox.
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -107,6 +113,7 @@ export function DownloadGate({ reportId, reportTitle }: { reportId: string; repo
           You may receive occasional updates from Amianan Ventures.
         </p>
       </form>
+      </div>
     </div>
   )
 }

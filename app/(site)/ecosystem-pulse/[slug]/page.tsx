@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { format } from 'date-fns'
-import { ArrowLeft, BarChart2 } from 'lucide-react'
+import { ArrowLeft, BarChart2, FileText, BookOpen, MapPin } from 'lucide-react'
 import { createServiceClient } from '@/lib/supabase/service'
 import { DownloadGate } from './DownloadGate'
 
@@ -54,88 +54,129 @@ export default async function EcosystemPulseDownloadPage({
 
   return (
     <div className="bg-white min-h-screen">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-10">
 
-        {/* Back link */}
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-400 hover:text-zinc-700 transition-colors mb-8 uppercase tracking-wider"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" /> Amianan Ventures
-        </Link>
+      {/* ── Hero band ── */}
+      <div className="bg-[#042212] text-white">
+        <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-16 py-12 lg:py-16">
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10 xl:gap-14">
+          {/* Back link */}
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-white/40 hover:text-white/80 transition-colors mb-8 uppercase tracking-widest"
+          >
+            <ArrowLeft className="h-3 w-3" /> Amianan Ventures
+          </Link>
 
-          {/* Left — report info */}
-          <div>
-            {/* Label */}
-            <div className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-[#00a855] mb-4">
-              <BarChart2 className="h-3.5 w-3.5" />
+          {/* Series label */}
+          <div className="flex items-center gap-2 mb-5">
+            <BarChart2 className="h-4 w-4 text-[#00cc6a]" />
+            <span className="text-[11px] font-black uppercase tracking-widest text-[#00cc6a]">
               Ecosystem Pulse
-            </div>
+            </span>
+          </div>
 
-            {/* Title */}
-            <h1 className="text-3xl sm:text-4xl font-black text-zinc-900 leading-tight tracking-tight mb-4">
-              {report.title}
-            </h1>
+          {/* Title */}
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight max-w-3xl mb-6">
+            {report.title}
+          </h1>
 
+          {/* Meta row */}
+          <div className="flex flex-wrap items-center gap-5 text-xs text-white/50">
             {report.published_at && (
-              <p className="text-xs text-zinc-400 mb-6">
+              <span className="flex items-center gap-1.5">
+                <span className="w-1 h-1 rounded-full bg-[#00cc6a]" />
                 Published {format(new Date(report.published_at), 'MMMM yyyy')}
-              </p>
+              </span>
             )}
+            <span className="flex items-center gap-1.5">
+              <span className="w-1 h-1 rounded-full bg-[#00cc6a]" />
+              Free to download
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-1 h-1 rounded-full bg-[#00cc6a]" />
+              Original research
+            </span>
+            <span className="flex items-center gap-1.5">
+              <MapPin className="h-3 w-3" />
+              Northern Luzon
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Body: cover + description + form ── */}
+      <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-16 py-12 lg:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12 xl:gap-20">
+
+          {/* Left — cover + description */}
+          <div className="min-w-0">
 
             {/* Cover image */}
             {report.cover_image_url && (
-              <div className="relative w-full rounded-2xl overflow-hidden mb-6 shadow-sm" style={{ aspectRatio: '16/9' }}>
+              <div className="relative w-full rounded-2xl overflow-hidden mb-10 shadow-md border border-zinc-100" style={{ aspectRatio: '16/9' }}>
                 <Image
                   src={report.cover_image_url}
                   alt={report.title}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 55vw"
+                  sizes="(max-width: 1024px) 100vw, 58vw"
                   priority
                   unoptimized
                 />
               </div>
             )}
 
-            {/* Description */}
+            {/* What's inside label */}
             {report.description && (
-              <div className="space-y-4">
+              <div className="mb-5 flex items-center gap-2">
+                <span className="w-0.5 h-5 bg-[#00cc6a] rounded-full" />
+                <span className="text-[11px] font-black uppercase tracking-widest text-zinc-400">
+                  About this report
+                </span>
+              </div>
+            )}
+
+            {/* Description paragraphs */}
+            {report.description && (
+              <div className="space-y-5">
                 {report.description
                   .split(/\n\n|\n/)
                   .map((para: string) => para.trim())
                   .filter(Boolean)
                   .map((para: string, i: number) => (
-                    <p key={i} className="text-base text-zinc-600 leading-relaxed">
+                    <p key={i} className="text-base sm:text-[17px] text-zinc-600 leading-relaxed">
                       {para}
                     </p>
                   ))}
               </div>
             )}
 
-            {/* Trust signals */}
-            <div className="mt-8 flex flex-wrap gap-4 text-xs text-zinc-400">
-              <span className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#00cc6a]" />
-                Free to download
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#00cc6a]" />
-                Original research
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#00cc6a]" />
-                Northern Luzon focused
-              </span>
+            {/* What you'll get chips */}
+            <div className="mt-10 pt-8 border-t border-zinc-100">
+              <p className="text-[11px] font-black uppercase tracking-widest text-zinc-400 mb-4">What's inside</p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { icon: FileText, label: 'Full PDF Report' },
+                  { icon: BarChart2, label: 'Data & Charts' },
+                  { icon: BookOpen, label: 'Strategic Insights' },
+                  { icon: MapPin,   label: 'Northern Luzon Focus' },
+                ].map(({ icon: Icon, label }) => (
+                  <span key={label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-zinc-50 border border-zinc-200 text-xs font-semibold text-zinc-600">
+                    <Icon className="h-3 w-3 text-[#00a855]" />
+                    {label}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Right — download gate */}
-          <div className="lg:pt-16">
-            <DownloadGate reportId={report.id} reportTitle={report.title} />
+          {/* Right — sticky download gate */}
+          <div>
+            <div className="sticky top-6">
+              <DownloadGate reportId={report.id} reportTitle={report.title} />
+            </div>
           </div>
+
         </div>
       </div>
     </div>
