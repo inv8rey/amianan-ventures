@@ -1,4 +1,5 @@
-import { Megaphone } from 'lucide-react'
+import Link from 'next/link'
+import { Megaphone, Upload, ArrowRight } from 'lucide-react'
 import { createServiceClient } from '@/lib/supabase/service'
 import { AnnouncementForm } from './AnnouncementForm'
 import type { AnnouncementBarInput, Announcement } from './actions'
@@ -57,6 +58,28 @@ export default async function SettingsPage() {
           <h2 className="text-sm font-bold text-zinc-900">Announcement Bar</h2>
         </div>
         <AnnouncementForm initial={announcement} />
+      </section>
+
+      {/* Import CSV */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2">
+          <Upload className="h-4 w-4 text-zinc-400" />
+          <h2 className="text-sm font-bold text-zinc-900">Import CSV</h2>
+        </div>
+        <div className="rounded-xl border border-zinc-200 bg-white p-5 flex items-center justify-between gap-4">
+          <div>
+            <p className="text-sm font-semibold text-zinc-900">Bulk Import from Framer CSV</p>
+            <p className="text-xs text-zinc-500 mt-0.5 leading-relaxed">
+              Upload a Framer CMS export to bulk-import articles and directory listings. Duplicates are automatically skipped.
+            </p>
+          </div>
+          <Link
+            href="/admin/import"
+            className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-zinc-900 text-white text-xs font-bold hover:bg-zinc-700 transition-colors"
+          >
+            Open Import <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
       </section>
     </div>
   )

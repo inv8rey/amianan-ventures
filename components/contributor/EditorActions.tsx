@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
-import { Loader2, CheckCircle, MessageSquare, XCircle, Globe, Clock, Trash2 } from 'lucide-react'
+import { Loader2, CheckCircle, MessageSquare, XCircle, Globe, Clock, Trash2, ExternalLink, Eye } from 'lucide-react'
 import { toast } from 'sonner'
 import { format } from 'date-fns'
 import type { ContributorSubmission, SubmissionStatus } from '@/types/contributor'
@@ -210,14 +210,55 @@ export function EditorActions({ submission }: EditorActionsProps) {
             {(saving || isPending) ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Globe className="h-3.5 w-3.5" />}
             {isScheduledFuture ? 'Publish Now Instead' : 'Publish Now'}
           </button>
+
+          {/* Preview + live links (if auto-published on approve) */}
+          {submission.published_url && (
+            <div className="rounded-md border border-emerald-500/20 bg-emerald-500/5 p-3 space-y-1.5">
+              <p className="text-[10px] font-semibold text-emerald-400 uppercase tracking-wider">Article Links</p>
+              <a href={submission.published_url} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 hover:underline transition-colors">
+                <ExternalLink className="h-3 w-3 shrink-0" /> View Live Article
+              </a>
+            </div>
+          )}
+          {!submission.published_url && submission.gdocs_url && (
+            <a href={submission.gdocs_url} target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground hover:underline transition-colors">
+              <Eye className="h-3 w-3 shrink-0" /> Preview Draft (Google Doc)
+            </a>
+          )}
         </div>
       )}
 
       {/* Closed states */}
       {isClosed && (
-        <p className="text-xs text-muted-foreground text-center py-2">
-          This submission is {status === 'rejected' ? 'rejected' : 'published'} — no further actions.
-        </p>
+        <div className="space-y-2">
+          {status === 'published' ? (
+            <div className="rounded-md border border-emerald-500/30 bg-emerald-500/5 p-3 space-y-2">
+              <p className="text-xs font-semibold text-emerald-400">✓ Published</p>
+              {submission.published_url ? (
+                <div className="space-y-1.5">
+                  <a href={submission.published_url} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 hover:underline transition-colors">
+                    <ExternalLink className="h-3 w-3 shrink-0" /> View Live Article
+                  </a>
+                  {submission.gdocs_url && (
+                    <a href={submission.gdocs_url} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground hover:underline transition-colors">
+                      <Eye className="h-3 w-3 shrink-0" /> View Original Draft
+                    </a>
+                  )}
+                </div>
+              ) : (
+                <p className="text-[11px] text-muted-foreground">No URL saved — set it in the article editor.</p>
+              )}
+            </div>
+          ) : (
+            <p className="text-xs text-muted-foreground text-center py-2">
+              This submission was rejected — no further actions.
+            </p>
+          )}
+        </div>
       )}
 
       {/* ── Danger Zone ────────────────────────────────────────── */}
