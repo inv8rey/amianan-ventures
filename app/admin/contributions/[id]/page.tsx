@@ -185,6 +185,7 @@ export default async function EditorReviewPage({
             submissionId={submission.id}
             publishedUrl={submission.published_url ?? null}
             isPublished={currentStatus === 'published'}
+            status={currentStatus}
           />
 
           {/* Contributor card */}

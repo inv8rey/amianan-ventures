@@ -7,21 +7,26 @@ interface ContributionLinksCardProps {
   submissionId: string
   publishedUrl: string | null
   isPublished: boolean
+  status: string
 }
 
 export function ContributionLinksCard({
   submissionId,
   publishedUrl: initialPublishedUrl,
   isPublished,
+  status,
 }: ContributionLinksCardProps) {
   const [copied, setCopied]       = useState<'preview' | 'live' | null>(null)
-  const [liveUrl, setLiveUrl]     = useState(initialPublishedUrl ?? '')
+
+  const siteUrl     = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://amiananventures.org'
+  const previewUrl  = `${siteUrl}/preview/${submissionId}`
+  // URL is always predictable — contributions always live at /contributions/[id]
+  const expectedUrl = `${siteUrl}/contributions/${submissionId}`
+
+  const [liveUrl, setLiveUrl]     = useState(initialPublishedUrl ?? expectedUrl)
   const [saving, setSaving]       = useState(false)
   const [saved, setSaved]         = useState(false)
   const [saveError, setSaveError] = useState('')
-
-  const siteUrl    = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://amiananventures.org'
-  const previewUrl = `${siteUrl}/preview/${submissionId}`
 
   function copy(url: string, type: 'preview' | 'live') {
     navigator.clipboard.writeText(url).then(() => {
@@ -53,7 +58,7 @@ export function ContributionLinksCard({
     }
   }
 
-  const urlIsDirty = liveUrl.trim() !== (initialPublishedUrl ?? '')
+  const urlIsDirty = liveUrl.trim() !== (initialPublishedUrl ?? expectedUrl)
 
   return (
     <div className="rounded-lg border border-border/40 bg-card p-4 space-y-3">
@@ -140,11 +145,13 @@ export function ContributionLinksCard({
           )}
         </div>
 
-        {!liveUrl.trim() && !isPublished && (
-          <p className="text-[10px] text-amber-500">Not live yet — publish first.</p>
-        )}
-        {!liveUrl.trim() && isPublished && (
-          <p className="text-[10px] text-amber-500">Published — paste the live URL above.</p>
+        {/* Status hint below the input */}
+        {isPublished ? (
+          <p className="text-[10px] text-emerald-500 font-semibold">✓ Live</p>
+        ) : status === 'approved' ? (
+          <p className="text-[10px] text-amber-500">Scheduled — URL activates when published.</p>
+        ) : (
+          <p className="text-[10px] text-muted-foreground">Not live yet — URL will activate on publish.</p>
         )}
       </div>
     </div>
