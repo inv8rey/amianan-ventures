@@ -132,7 +132,7 @@ export function ArticlesBulkTable({ articles }: { articles: Article[] }) {
                   className="rounded border-border cursor-pointer accent-primary"
                 />
               </th>
-              <th className="text-left px-4 py-3 font-medium text-muted-foreground">
+              <th className="text-left px-4 py-3 font-medium text-muted-foreground w-[36%]">
                 <button
                   onClick={() => toggleSort('title')}
                   className="flex items-center gap-1 hover:text-foreground transition-colors"
@@ -167,9 +167,9 @@ export function ArticlesBulkTable({ articles }: { articles: Article[] }) {
                     className="rounded border-border cursor-pointer accent-primary"
                   />
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-3 max-w-0">
                   <div>
-                    <p className="font-medium line-clamp-1">{article.title}</p>
+                    <p className="font-medium truncate" title={article.title}>{article.title}</p>
                     {article.featured && (
                       <span className="text-[10px] text-primary">★ Featured</span>
                     )}
@@ -180,10 +180,17 @@ export function ArticlesBulkTable({ articles }: { articles: Article[] }) {
                     {article.category.replace('-', ' ')}
                   </span>
                 </td>
-                <td className="px-4 py-3 hidden md:table-cell text-muted-foreground">
-                  {article.published_at
-                    ? format(new Date(article.published_at), 'MMM d, yyyy')
-                    : format(new Date(article.created_at), 'MMM d, yyyy')}
+                <td className="px-4 py-3 hidden md:table-cell text-muted-foreground whitespace-nowrap">
+                  <p className="text-xs">
+                    {article.published_at
+                      ? format(new Date(article.published_at), 'MMM d, yyyy')
+                      : format(new Date(article.created_at), 'MMM d, yyyy')}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground/60">
+                    {article.published_at
+                      ? format(new Date(article.published_at), 'h:mm a')
+                      : format(new Date(article.created_at), 'h:mm a')}
+                  </p>
                 </td>
                 <td className="px-4 py-3">
                   {(() => {
