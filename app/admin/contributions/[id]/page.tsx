@@ -15,6 +15,7 @@ import {
   type ContributorRole,
 } from '@/types/contributor'
 import { EditorActions } from '@/components/contributor/EditorActions'
+import { ContributionLinksCard } from '@/components/contributor/ContributionLinksCard'
 
 export default async function EditorReviewPage({
   params,
@@ -179,6 +180,13 @@ export default async function EditorReviewPage({
 
         {/* Sidebar — right 1/3 */}
         <div className="space-y-4">
+          {/* Links card */}
+          <ContributionLinksCard
+            submissionId={submission.id}
+            publishedUrl={submission.published_url ?? null}
+            isPublished={currentStatus === 'published'}
+          />
+
           {/* Contributor card */}
           <div className="rounded-lg border border-border/40 bg-card p-4">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Contributor</p>
