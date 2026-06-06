@@ -84,6 +84,8 @@ async function runReport(token: string, propertyId: string, body: object) {
 export interface Ga4Stats {
   totalPageviews: number
   totalSessions: number
+  avgSessionDuration: number   // seconds
+  avgPageviewsPerSession: number
   topPages: { page: string; views: number }[]
   sources: { source: string; sessions: number; pct: number }[]
   dailyViews: { date: string; views: number }[]
@@ -100,7 +102,12 @@ export async function fetchGa4Stats(): Promise<Ga4Stats | null> {
     // Overview totals — no dimension
     runReport(token, propertyId, {
       dateRanges: [{ startDate: '30daysAgo', endDate: 'today' }],
-      metrics: [{ name: 'screenPageViews' }, { name: 'sessions' }],
+      metrics: [
+        { name: 'screenPageViews' },
+        { name: 'sessions' },
+        { name: 'averageSessionDuration' },
+        { name: 'screenPageViewsPerSession' },
+      ],
     }),
 
     // Top pages
@@ -129,8 +136,10 @@ export async function fetchGa4Stats(): Promise<Ga4Stats | null> {
     }),
   ])
 
-  const totalPageviews = parseInt(overviewData?.rows?.[0]?.metricValues?.[0]?.value ?? '0')
-  const totalSessions = parseInt(overviewData?.rows?.[0]?.metricValues?.[1]?.value ?? '0')
+  const totalPageviews        = parseInt(overviewData?.rows?.[0]?.metricValues?.[0]?.value ?? '0')
+  const totalSessions         = parseInt(overviewData?.rows?.[0]?.metricValues?.[1]?.value ?? '0')
+  const avgSessionDuration    = parseFloat(overviewData?.rows?.[0]?.metricValues?.[2]?.value ?? '0')
+  const avgPageviewsPerSession = parseFloat(overviewData?.rows?.[0]?.metricValues?.[3]?.value ?? '0')
 
   const topPages = (topPagesData?.rows ?? []).map((r) => ({
     page: r.dimensionValues?.[0]?.value ?? '',
@@ -154,5 +163,5 @@ export async function fetchGa4Stats(): Promise<Ga4Stats | null> {
     return { date, views: parseInt(r.metricValues[0].value) }
   })
 
-  return { totalPageviews, totalSessions, topPages, sources, dailyViews }
+  return { totalPageviews, totalSessions, avgSessionDuration, avgPageviewsPerSession, topPages, sources, dailyViews }
 }

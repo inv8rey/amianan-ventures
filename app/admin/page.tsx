@@ -1,15 +1,17 @@
 import Link from 'next/link'
 import {
-  FileText, Calendar, Building2, PlusCircle, ExternalLink,
-  Inbox, Mail, ImageIcon, Globe, Users, Eye, TrendingUp,
-  BarChart2, ArrowUpRight, Settings, Activity,
+  FileText, Calendar, Building2, ExternalLink,
+  Inbox, Mail, Globe, Users, Eye, BarChart2,
+  ArrowUpRight, Settings, Activity, Clock, TrendingUp,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { fetchGa4Stats } from '@/lib/ga4'
 import { format } from 'date-fns'
+import { ViewsChart } from '@/components/admin/ViewsChart'
 import type { Article } from '@/types'
 
-export const revalidate = 300 // 5-minute cache for GA4
+// Always fresh — no cache
+export const dynamic = 'force-dynamic'
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -29,6 +31,14 @@ function fmt(n: number) {
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M'
   if (n >= 1_000)     return (n / 1_000).toFixed(1) + 'K'
   return n.toLocaleString()
+}
+
+function fmtDuration(seconds: number) {
+  if (seconds <= 0) return '—'
+  const m = Math.floor(seconds / 60)
+  const s = Math.round(seconds % 60)
+  if (m === 0) return `${s}s`
+  return `${m}m ${s}s`
 }
 
 function Bar({ pct, color = 'bg-primary' }: { pct: number; color?: string }) {
@@ -85,12 +95,15 @@ export default async function AdminDashboard() {
     supabase.from('articles').select('views').eq('status', 'published'),
   ])
 
-  const totalViews = (allPublished ?? []).reduce((s, a) => s + ((a as Article).views ?? 0), 0)
+  const totalViews   = (allPublished ?? []).reduce((s, a) => s + ((a as Article).views ?? 0), 0)
+  const avgArticleViews = publishedCount && publishedCount > 0
+    ? Math.round(totalViews / publishedCount)
+    : 0
 
-  // Publishing activity chart (last 6 months)
+  // Publishing activity (last 6 months)
   const monthlyMap: Record<string, number> = {}
   for (let i = 0; i < 6; i++) {
-    const d = new Date(now.getFullYear(), now.getMonth() - 5 + i, 1)
+    const d   = new Date(now.getFullYear(), now.getMonth() - 5 + i, 1)
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
     monthlyMap[key] = 0
   }
@@ -120,19 +133,16 @@ export default async function AdminDashboard() {
         <div>
           <h1 className="text-2xl font-bold">Dashboard</h1>
           <p className="text-muted-foreground text-sm mt-1">
-            {ga4 ? 'Amianan Ventures CMS · GA4 connected' : 'Amianan Ventures CMS'}
+            {ga4 ? 'Amianan Ventures CMS · GA4 connected · Live' : 'Amianan Ventures CMS · Live'}
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          {ga4 && <span className="text-xs text-muted-foreground bg-muted/60 px-3 py-1.5 rounded-full">Refreshes every 5 min</span>}
-          <Link href="/" target="_blank"
-            className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
-            View site <ExternalLink className="h-3.5 w-3.5" />
-          </Link>
-        </div>
+        <Link href="/" target="_blank"
+          className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+          View site <ExternalLink className="h-3.5 w-3.5" />
+        </Link>
       </div>
 
-      {/* ── Content stats ───────────────────────────────────────────── */}
+      {/* ── Row 1: Content stats ─────────────────────────────────────── */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         {[
           { label: 'Total Articles',     value: articleCount   ?? 0, icon: FileText,  color: 'text-primary',    href: '/admin/articles',    sub: `${publishedCount ?? 0} published · ${draftCount ?? 0} draft` },
@@ -153,8 +163,9 @@ export default async function AdminDashboard() {
         ))}
       </div>
 
-      {/* ── GA4 traffic stats ───────────────────────────────────────── */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      {/* ── Row 2: GA4 + content metrics ────────────────────────────── */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+
         <div className="rounded-lg border border-border/40 bg-card p-4">
           <div className="flex items-center justify-between mb-2">
             <p className="text-xs text-muted-foreground font-medium">Pageviews (30d)</p>
@@ -163,54 +174,58 @@ export default async function AdminDashboard() {
           <p className="text-2xl font-bold">{ga4 ? fmt(ga4.totalPageviews) : '—'}</p>
           {!ga4Ready && <p className="text-[10px] text-muted-foreground mt-1">GA4 not set up</p>}
         </div>
+
         <div className="rounded-lg border border-border/40 bg-card p-4">
           <div className="flex items-center justify-between mb-2">
             <p className="text-xs text-muted-foreground font-medium">Sessions (30d)</p>
             <Users className="h-3.5 w-3.5 text-purple-400" />
           </div>
           <p className="text-2xl font-bold">{ga4 ? fmt(ga4.totalSessions) : '—'}</p>
-          {!ga4Ready && <p className="text-[10px] text-muted-foreground mt-1">GA4 not set up</p>}
         </div>
+
         <div className="rounded-lg border border-border/40 bg-card p-4">
           <div className="flex items-center justify-between mb-2">
             <p className="text-xs text-muted-foreground font-medium">Total Article Views</p>
             <Eye className="h-3.5 w-3.5 text-amber-400" />
           </div>
           <p className="text-2xl font-bold">{fmt(totalViews)}</p>
-          <p className="text-[10px] text-muted-foreground mt-1">all time, all articles</p>
+          <p className="text-[10px] text-muted-foreground mt-1">all time</p>
         </div>
+
         <div className="rounded-lg border border-border/40 bg-card p-4">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-xs text-muted-foreground font-medium">Scheduled Articles</p>
-            <BarChart2 className="h-3.5 w-3.5 text-amber-400" />
+            <p className="text-xs text-muted-foreground font-medium">Avg. Article Views</p>
+            <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />
           </div>
-          <p className="text-2xl font-bold">{scheduledCount ?? 0}</p>
-          <p className="text-[10px] text-muted-foreground mt-1">{draftCount ?? 0} in draft</p>
+          <p className="text-2xl font-bold">{fmt(avgArticleViews)}</p>
+          <p className="text-[10px] text-muted-foreground mt-1">per published article</p>
+        </div>
+
+        <div className="rounded-lg border border-border/40 bg-card p-4">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-xs text-muted-foreground font-medium">Avg. Read Time</p>
+            <Clock className="h-3.5 w-3.5 text-pink-400" />
+          </div>
+          <p className="text-2xl font-bold">{ga4 ? fmtDuration(ga4.avgSessionDuration) : '—'}</p>
+          <p className="text-[10px] text-muted-foreground mt-1">per session (30d)</p>
+        </div>
+
+        <div className="rounded-lg border border-border/40 bg-card p-4">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-xs text-muted-foreground font-medium">Pages / Session</p>
+            <BarChart2 className="h-3.5 w-3.5 text-cyan-400" />
+          </div>
+          <p className="text-2xl font-bold">
+            {ga4 ? ga4.avgPageviewsPerSession.toFixed(1) : '—'}
+          </p>
+          <p className="text-[10px] text-muted-foreground mt-1">avg pages per visit</p>
         </div>
       </div>
 
-      {/* ── Quick actions ────────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {[
-          { href: '/admin/articles/new',          label: 'New Article',  sub: 'Write a news story or founder story',        color: 'text-primary',    bg: 'bg-primary/10 group-hover:bg-primary/20' },
-          { href: '/admin/events/new',             label: 'New Event',    sub: 'Add an upcoming event or workshop',           color: 'text-emerald-400', bg: 'bg-emerald-500/10 group-hover:bg-emerald-500/20' },
-          { href: '/admin/directory/new',          label: 'New Listing',  sub: 'Add a startup, program, or organization',     color: 'text-blue-400',   bg: 'bg-blue-500/10 group-hover:bg-blue-500/20' },
-          { href: '/admin/featured-listings/new',  label: 'New Featured', sub: 'Add a sponsored or partner listing',          color: 'text-orange-400', bg: 'bg-orange-500/10 group-hover:bg-orange-500/20' },
-        ].map((action) => (
-          <Link key={action.href} href={action.href}
-            className="flex items-center gap-3 p-4 rounded-lg border border-border/40 bg-card hover:border-border transition-colors group">
-            <div className={`flex h-9 w-9 items-center justify-center rounded-lg transition-colors ${action.bg}`}>
-              <PlusCircle className={`h-4.5 w-4.5 ${action.color}`} />
-            </div>
-            <div>
-              <p className="text-sm font-semibold">{action.label}</p>
-              <p className="text-xs text-muted-foreground">{action.sub}</p>
-            </div>
-          </Link>
-        ))}
-      </div>
+      {/* ── Row 3: Article Views Line Chart ─────────────────────────── */}
+      <ViewsChart />
 
-      {/* ── Traffic Sources + Content Breakdown ─────────────────────── */}
+      {/* ── Row 4: Traffic Sources + Content Breakdown ──────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         {/* Traffic Sources */}
@@ -236,7 +251,6 @@ export default async function AdminDashboard() {
             <div className="flex flex-col items-center justify-center h-32 text-center">
               <Globe className="h-6 w-6 text-muted-foreground/40 mb-2" />
               <p className="text-sm text-muted-foreground">GA4 not connected</p>
-              <p className="text-xs text-muted-foreground mt-1">Set up GA4 to see traffic sources</p>
             </div>
           )}
         </div>
@@ -292,7 +306,8 @@ export default async function AdminDashboard() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-2xl font-bold text-primary">{submissionCount ?? 0}</span>
-                  <Link href="/admin/submissions" className="text-[10px] text-primary hover:underline flex items-center gap-0.5">
+                  <Link href="/admin/submissions"
+                    className="text-[10px] text-primary hover:underline flex items-center gap-0.5">
                     View <ArrowUpRight className="h-3 w-3" />
                   </Link>
                 </div>
@@ -302,7 +317,7 @@ export default async function AdminDashboard() {
         </div>
       </div>
 
-      {/* ── Top Articles + GA4 Top Pages ─────────────────────────────── */}
+      {/* ── Row 5: Top Articles + GA4 Top Pages ─────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         <div className="rounded-lg border border-border/40 bg-card">
@@ -364,7 +379,7 @@ export default async function AdminDashboard() {
         </div>
       </div>
 
-      {/* ── Publishing Activity ──────────────────────────────────────── */}
+      {/* ── Row 6: Publishing Activity ───────────────────────────────── */}
       <div className="rounded-lg border border-border/40 bg-card p-5">
         <div className="flex items-center gap-2 mb-5">
           <BarChart2 className="h-4 w-4 text-muted-foreground" />
@@ -387,7 +402,7 @@ export default async function AdminDashboard() {
         </div>
       </div>
 
-      {/* ── Recent Articles + Recent Directory ──────────────────────── */}
+      {/* ── Row 7: Recent Articles + Recent Directory ────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="rounded-lg border border-border/40 bg-card">
           <div className="flex items-center justify-between p-4 border-b border-border/40">
@@ -400,7 +415,8 @@ export default async function AdminDashboard() {
                 className="flex items-center justify-between px-4 py-3 hover:bg-muted/30 transition-colors">
                 <div className="min-w-0">
                   <p className="text-sm font-medium truncate">{article.title}</p>
-                  <p className="text-xs text-muted-foreground capitalize">{article.category.replace('-', ' ')}
+                  <p className="text-xs text-muted-foreground capitalize">
+                    {article.category.replace('-', ' ')}
                     {article.published_at && ` · ${format(new Date(article.published_at), 'MMM d')}`}
                   </p>
                 </div>
@@ -457,11 +473,11 @@ export default async function AdminDashboard() {
             <div className="space-y-2">
               <p className="text-sm font-semibold text-amber-300">Connect GA4 for Traffic Analytics</p>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                To see pageviews, sessions, and traffic sources add these 3 environment variables in Vercel:
+                Add these 3 environment variables in Vercel to see pageviews, sessions, and traffic sources:
               </p>
               <div className="space-y-1 font-mono text-xs">
                 {[
-                  ['GA4_PROPERTY_ID',          'your numeric property ID (e.g. 123456789)'],
+                  ['GA4_PROPERTY_ID',          'your numeric property ID'],
                   ['GA4_SERVICE_ACCOUNT_EMAIL', 'service account email from Google Cloud'],
                   ['GA4_PRIVATE_KEY',           'the private_key field from your service account JSON'],
                 ].map(([key, desc]) => (
