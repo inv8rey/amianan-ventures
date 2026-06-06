@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { format } from 'date-fns'
-import { ArrowLeft, ExternalLink, Globe, MapPin } from 'lucide-react'
+import { ArrowLeft, ExternalLink, Globe, MapPin, Clock } from 'lucide-react'
 import {
   CONTENT_TYPE_LABELS,
   ROLE_LABELS,
@@ -29,14 +29,14 @@ async function getContribution(id: string) {
       .from('contributor_submissions')
       .select(`
         id, headline, summary, content_type, draft_type, draft_content, gdocs_url,
-        cover_image_url, region, sector, published_at, published_url,
+        cover_image_url, region, sector, status, published_at, scheduled_for, published_url,
         contributor_profiles (
           id, display_name, full_name, role, organization, region,
           bio, photo_url, linkedin_url, facebook_url, website_url
         )
       `)
       .eq('id', id)
-      .eq('status', 'published')
+      .in('status', ['published', 'approved']) // approved = scheduled, still accessible at URL
       .single()
     return data
   } catch {
@@ -134,8 +134,9 @@ export default async function ContributionPage({
         website_url: string | null
       } | null
 
-  const contentType = contribution.content_type as ContentType
-  const typeStyle = TYPE_COLORS[contentType] ?? 'text-zinc-600 bg-zinc-50 border-zinc-200'
+  const contentType  = contribution.content_type as ContentType
+  const typeStyle    = TYPE_COLORS[contentType] ?? 'text-zinc-600 bg-zinc-50 border-zinc-200'
+  const isScheduled  = (contribution as { status: string }).status === 'approved'
 
   return (
     <div className="bg-white">
@@ -151,6 +152,21 @@ export default async function ContributionPage({
             >
               <ArrowLeft className="h-3.5 w-3.5" /> Amianan Ventures
             </Link>
+
+            {/* ── Scheduled banner ── */}
+            {isScheduled && (
+              <div className="flex items-center gap-2.5 px-4 py-3 mb-8 rounded-xl border border-amber-200 bg-amber-50 text-amber-700">
+                <Clock className="h-4 w-4 shrink-0" />
+                <p className="text-sm font-semibold">
+                  Scheduled — this article is not yet publicly listed.
+                  {(contribution as { scheduled_for?: string | null }).scheduled_for && (
+                    <span className="font-normal text-amber-600">
+                      {' '}Publishing on {format(new Date((contribution as { scheduled_for: string }).scheduled_for), 'MMMM d, yyyy · h:mm a')}.
+                    </span>
+                  )}
+                </p>
+              </div>
+            )}
 
             {/* ── Article header ── */}
             <div className="mb-8">
