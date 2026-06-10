@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { format } from 'date-fns'
-import { Check, X, Trash2, ExternalLink } from 'lucide-react'
+import { Trash2, ExternalLink, Search } from 'lucide-react'
 
 interface Comment {
   id: string
@@ -11,86 +11,58 @@ interface Comment {
   author_name: string
   author_email: string
   content: string
-  status: string
   created_at: string
 }
 
-const STATUS_STYLES: Record<string, string> = {
-  pending:  'text-amber-700 bg-amber-50 border-amber-200',
-  approved: 'text-green-700 bg-green-50 border-green-200',
-  rejected: 'text-red-600 bg-red-50 border-red-200',
-}
-
-const FILTERS = ['all', 'pending', 'approved', 'rejected'] as const
-type Filter = typeof FILTERS[number]
-
 export function CommentsModerationTable({ initialComments }: { initialComments: Comment[] }) {
   const [comments, setComments] = useState<Comment[]>(initialComments)
-  const [filter, setFilter]     = useState<Filter>('pending')
-  const [loading, setLoading]   = useState<string | null>(null)
+  const [deleting, setDeleting] = useState<string | null>(null)
+  const [search, setSearch]     = useState('')
 
-  const filtered = filter === 'all' ? comments : comments.filter(c => c.status === filter)
+  const filtered = search.trim()
+    ? comments.filter(c =>
+        c.author_name.toLowerCase().includes(search.toLowerCase()) ||
+        c.author_email.toLowerCase().includes(search.toLowerCase()) ||
+        c.content.toLowerCase().includes(search.toLowerCase())
+      )
+    : comments
 
   function articleUrl(c: Comment) {
     return c.article_type === 'contribution'
       ? `/contributions/${c.article_id}`
-      : `/news/${c.article_id}` // slug-based articles
-  }
-
-  async function updateStatus(id: string, status: 'approved' | 'rejected') {
-    setLoading(id)
-    try {
-      const res = await fetch('/api/admin/comments', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, status }),
-      })
-      if (res.ok) {
-        setComments(prev => prev.map(c => c.id === id ? { ...c, status } : c))
-      }
-    } finally {
-      setLoading(null)
-    }
+      : `/news/${c.article_id}`
   }
 
   async function deleteComment(id: string) {
-    if (!confirm('Delete this comment permanently?')) return
-    setLoading(id)
+    if (!confirm('Delete this comment?')) return
+    setDeleting(id)
     try {
       const res = await fetch(`/api/admin/comments?id=${id}`, { method: 'DELETE' })
-      if (res.ok) {
-        setComments(prev => prev.filter(c => c.id !== id))
-      }
+      if (res.ok) setComments(prev => prev.filter(c => c.id !== id))
     } finally {
-      setLoading(null)
+      setDeleting(null)
     }
   }
 
   return (
     <div>
-      {/* Filter tabs */}
-      <div className="flex items-center gap-1 mb-5 flex-wrap">
-        {FILTERS.map(f => {
-          const count = f === 'all' ? comments.length : comments.filter(c => c.status === f).length
-          return (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`px-3 py-1.5 rounded-md text-xs font-semibold capitalize transition-colors ${
-                filter === f
-                  ? 'bg-foreground text-background'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-              }`}
-            >
-              {f} ({count})
-            </button>
-          )
-        })}
+      {/* Search */}
+      <div className="relative mb-5 max-w-sm">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+        <input
+          type="text"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search by name, email, or content…"
+          className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-border/60 bg-background focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-colors"
+        />
       </div>
 
       {filtered.length === 0 ? (
         <div className="rounded-lg border border-border/40 bg-card p-12 text-center">
-          <p className="text-sm text-muted-foreground">No {filter === 'all' ? '' : filter} comments.</p>
+          <p className="text-sm text-muted-foreground">
+            {search ? 'No comments match your search.' : 'No comments yet.'}
+          </p>
         </div>
       ) : (
         <div className="rounded-lg border border-border/40 bg-card overflow-hidden">
@@ -101,8 +73,7 @@ export function CommentsModerationTable({ initialComments }: { initialComments: 
                 <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-3">Comment</th>
                 <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-3 whitespace-nowrap">Article</th>
                 <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-3 whitespace-nowrap">Date</th>
-                <th className="text-left text-xs font-semibold text-muted-foreground px-4 py-3">Status</th>
-                <th className="text-right text-xs font-semibold text-muted-foreground px-4 py-3">Actions</th>
+                <th className="w-12" />
               </tr>
             </thead>
             <tbody className="divide-y divide-border/30">
@@ -115,7 +86,7 @@ export function CommentsModerationTable({ initialComments }: { initialComments: 
                   </td>
 
                   {/* Comment */}
-                  <td className="px-4 py-3 align-top max-w-xs">
+                  <td className="px-4 py-3 align-top max-w-sm">
                     <p className="text-sm text-foreground/80 line-clamp-3 leading-relaxed">{c.content}</p>
                   </td>
 
@@ -138,45 +109,16 @@ export function CommentsModerationTable({ initialComments }: { initialComments: 
                     <p className="text-[10px] text-muted-foreground/60">{format(new Date(c.created_at), 'h:mm a')}</p>
                   </td>
 
-                  {/* Status */}
-                  <td className="px-4 py-3 align-top">
-                    <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide border ${STATUS_STYLES[c.status] ?? ''}`}>
-                      {c.status}
-                    </span>
-                  </td>
-
-                  {/* Actions */}
-                  <td className="px-4 py-3 align-top">
-                    <div className="flex items-center justify-end gap-1">
-                      {c.status !== 'approved' && (
-                        <button
-                          onClick={() => updateStatus(c.id, 'approved')}
-                          disabled={loading === c.id}
-                          title="Approve"
-                          className="p-1.5 rounded-md text-green-600 hover:bg-green-50 disabled:opacity-40 transition-colors"
-                        >
-                          <Check className="h-4 w-4" />
-                        </button>
-                      )}
-                      {c.status !== 'rejected' && (
-                        <button
-                          onClick={() => updateStatus(c.id, 'rejected')}
-                          disabled={loading === c.id}
-                          title="Reject"
-                          className="p-1.5 rounded-md text-red-500 hover:bg-red-50 disabled:opacity-40 transition-colors"
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
-                      )}
-                      <button
-                        onClick={() => deleteComment(c.id)}
-                        disabled={loading === c.id}
-                        title="Delete"
-                        className="p-1.5 rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-50 disabled:opacity-40 transition-colors"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
+                  {/* Delete */}
+                  <td className="px-4 py-3 align-top text-right">
+                    <button
+                      onClick={() => deleteComment(c.id)}
+                      disabled={deleting === c.id}
+                      title="Delete comment"
+                      className="p-1.5 rounded-md text-muted-foreground hover:text-red-500 hover:bg-red-50 disabled:opacity-40 transition-colors"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
                   </td>
                 </tr>
               ))}

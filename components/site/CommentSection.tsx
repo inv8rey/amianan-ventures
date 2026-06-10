@@ -125,9 +125,9 @@ export function CommentSection({ articleType, articleId }: Props) {
           <div className="flex items-start gap-3 py-4">
             <CheckCircle2 className="h-5 w-5 text-[#00a855] shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-bold text-zinc-900">Comment submitted!</p>
+              <p className="text-sm font-bold text-zinc-900">Comment posted!</p>
               <p className="text-xs text-zinc-500 mt-0.5">
-                Your comment is pending review and will appear once approved.
+                Your comment is now live on this article.
               </p>
               <button
                 onClick={() => setSubmitted(false)}
@@ -197,7 +197,7 @@ export function CommentSection({ articleType, articleId }: Props) {
 
             <div className="flex items-center justify-between gap-4">
               <p className="text-[11px] text-zinc-400 leading-relaxed">
-                Comments are reviewed before appearing publicly.
+                Your comment will appear immediately.
               </p>
               <button
                 type="submit"

@@ -80,25 +80,21 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   // ── Notification badge counts ──────────────────────────────
   let contributionsBadge = 0
   let submissionsBadge = 0
-  let commentsBadge = 0
   try {
     const url  = process.env.NEXT_PUBLIC_SUPABASE_URL!
     const key  = process.env.SUPABASE_SERVICE_ROLE_KEY!
     const supa = createAdminClient(url, key, { auth: { persistSession: false } })
-    const [{ count: c1 }, { count: c2 }, { count: c3 }] = await Promise.all([
+    const [{ count: c1 }, { count: c2 }] = await Promise.all([
       supa.from('contributor_submissions').select('id', { count: 'exact', head: true }).eq('status', 'submitted'),
       supa.from('form_submissions').select('id', { count: 'exact', head: true }).eq('status', 'new'),
-      supa.from('article_comments').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
     ])
     contributionsBadge = c1 ?? 0
     submissionsBadge   = c2 ?? 0
-    commentsBadge      = c3 ?? 0
   } catch { /* non-critical — skip badges on error */ }
 
   const badgeMap: Record<string, number> = {
     '/admin/contributions': contributionsBadge,
     '/admin/submissions':   submissionsBadge,
-    '/admin/comments':      commentsBadge,
   }
 
   return (

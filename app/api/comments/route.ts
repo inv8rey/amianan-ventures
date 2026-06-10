@@ -65,7 +65,7 @@ export async function POST(req: Request) {
       author_name:  authorName.trim(),
       author_email: authorEmail.trim().toLowerCase(),
       content:      content.trim(),
-      status:       'pending',
+      status:       'approved',
     })
 
     if (error) throw error
