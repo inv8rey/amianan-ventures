@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { format } from 'date-fns'
 import { ArrowLeft, Clock, User, MapPin } from 'lucide-react'
 import { SubmitStoryBanner } from '@/components/site/SubmitStoryBanner'
+import { CommentSection } from '@/components/site/CommentSection'
 import { ViewTracker } from '@/components/admin/ViewTracker'
 import { getArticleBySlug, getPublishedArticles } from '@/lib/queries'
 import { createBuildClient } from '@/lib/supabase/build'
@@ -137,6 +138,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
             {/* Submit Story Banner */}
             <SubmitStoryBanner />
+
+            {/* Comments */}
+            <CommentSection articleType="article" articleId={article.slug} />
           </article>
 
           {/* ── Sidebar: 6 similar stories ── */}

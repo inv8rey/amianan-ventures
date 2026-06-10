@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { LayoutDashboard, FileText, Calendar, Building2, ImageIcon, Inbox, Mail, PenLine, Settings2, TrendingUp } from 'lucide-react'
+import { LayoutDashboard, FileText, Calendar, Building2, ImageIcon, Inbox, Mail, PenLine, Settings2, TrendingUp, MessageCircle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { revalidatePath } from 'next/cache'
@@ -61,6 +61,7 @@ const navItems = [
   { href: '/admin/directory',        label: 'Directory',        icon: Building2,       exact: false },
   { href: '/admin/featured-listings',label: 'Featured Listings',icon: ImageIcon,       exact: false },
   { href: '/admin/contributions',    label: 'Contributions',    icon: PenLine,         exact: false },
+  { href: '/admin/comments',         label: 'Comments',         icon: MessageCircle,   exact: false },
   { href: '/admin/ecosystem-pulse',  label: 'Ecosystem Pulse',  icon: TrendingUp,      exact: false },
   { href: '/admin/submissions',      label: 'Submissions',      icon: Inbox,           exact: false },
   { href: '/admin/newsletter',       label: 'Newsletter',       icon: Mail,            exact: false },
@@ -79,21 +80,25 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   // ── Notification badge counts ──────────────────────────────
   let contributionsBadge = 0
   let submissionsBadge = 0
+  let commentsBadge = 0
   try {
     const url  = process.env.NEXT_PUBLIC_SUPABASE_URL!
     const key  = process.env.SUPABASE_SERVICE_ROLE_KEY!
     const supa = createAdminClient(url, key, { auth: { persistSession: false } })
-    const [{ count: c1 }, { count: c2 }] = await Promise.all([
+    const [{ count: c1 }, { count: c2 }, { count: c3 }] = await Promise.all([
       supa.from('contributor_submissions').select('id', { count: 'exact', head: true }).eq('status', 'submitted'),
       supa.from('form_submissions').select('id', { count: 'exact', head: true }).eq('status', 'new'),
+      supa.from('article_comments').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
     ])
     contributionsBadge = c1 ?? 0
     submissionsBadge   = c2 ?? 0
+    commentsBadge      = c3 ?? 0
   } catch { /* non-critical — skip badges on error */ }
 
   const badgeMap: Record<string, number> = {
     '/admin/contributions': contributionsBadge,
     '/admin/submissions':   submissionsBadge,
+    '/admin/comments':      commentsBadge,
   }
 
   return (

@@ -10,6 +10,7 @@ import {
   type ContentType,
   type ContributorRole,
 } from '@/types/contributor'
+import { CommentSection } from '@/components/site/CommentSection'
 
 export const dynamic = 'force-dynamic'
 
@@ -299,6 +300,9 @@ export default async function ContributionPage({
                 <p className="text-zinc-400 text-sm text-center py-8">No content available.</p>
               )}
             </div>
+
+            {/* Comments */}
+            <CommentSection articleType="contribution" articleId={id} />
 
             {/* ── Footer CTA ── */}
             <div className="mt-16 pt-8 border-t border-zinc-100">
