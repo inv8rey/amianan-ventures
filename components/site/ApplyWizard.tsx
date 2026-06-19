@@ -65,6 +65,13 @@ export function ApplyWizard() {
       setLoading(false)
       return
     }
+    // Supabase returns a stub user (empty identities, no real auth.users row)
+    // when the email is already registered — anti-enumeration behavior.
+    if (authData.user.identities?.length === 0) {
+      toast.error('This email is already registered. Please log in instead.')
+      setLoading(false)
+      return
+    }
 
     const res = await fetch('/api/spotlight/start', {
       method: 'POST',
