@@ -7,7 +7,7 @@ import {
   Mail, FileEdit, Monitor, Images, IdCard, FileBadge2, Gift, ShieldCheck,
   MailCheck, Smartphone, Rocket, QrCode, ChevronRight, Clock, Landmark, CreditCard,
   PenSquare, Send, Headset, MessageCircle, Globe2,
-  Handshake, FileStack, Megaphone, Store, TrendingUp, Star, User,
+  Handshake, FileStack, Megaphone, Store, TrendingUp, Star, User, Download,
 } from 'lucide-react'
 import { SpotlightApplicationForm } from '@/components/site/SpotlightApplicationForm'
 import { createServiceClient } from '@/lib/supabase/service'
@@ -219,6 +219,41 @@ export default async function GetFeaturedPage() {
 
       {/* Spacer for overlapping stat bar */}
       <div className="h-12 sm:h-8" />
+
+      {/* ── Brochure CTA ───────────────────────────────────────── */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-6">
+        <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-5 sm:p-6 flex items-center gap-5 flex-wrap sm:flex-nowrap">
+          {/* Thumbnail */}
+          <div className="relative w-16 h-20 sm:w-20 sm:h-24 rounded-lg overflow-hidden shrink-0 shadow-sm border border-zinc-200 bg-[#0a3a22]">
+            <Image
+              src="/get-featured-hero.png"
+              alt="Get Featured brochure"
+              fill
+              className="object-cover opacity-50"
+              sizes="80px"
+            />
+            <div className="absolute inset-0 flex flex-col items-center justify-center px-1.5 text-center">
+              <span className="text-[9px] font-black text-white uppercase tracking-wider leading-tight">Get<br />Featured</span>
+            </div>
+          </div>
+
+          {/* Text */}
+          <div className="flex-1 min-w-[200px]">
+            <p className="text-base font-black text-zinc-900 mb-1">Want the full details?</p>
+            <p className="text-sm text-zinc-500">See package inclusions, examples, pricing, and featured stories.</p>
+          </div>
+
+          {/* CTA */}
+          <a
+            href="/get-featured-brochure.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border-2 border-[#00a855] text-[#00a855] font-bold text-sm hover:bg-[#00a855] hover:text-white transition-colors shrink-0"
+          >
+            <Download className="h-4 w-4" /> View Brochure / Flyer
+          </a>
+        </div>
+      </div>
 
       {/* ── Who this is for ───────────────────────────────────── */}
       <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20 text-center">
