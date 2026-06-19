@@ -7,12 +7,14 @@ const TYPE_LABELS: Record<FormSubmissionType, string> = {
   startup: 'Submit Startup',
   partner: 'Partner Inquiry',
   'founder-story': 'Founder Story',
+  spotlight: 'Get Featured',
 }
 
 const TYPE_COLORS: Record<FormSubmissionType, string> = {
   startup: 'bg-blue-500/15 text-blue-400',
   partner: 'bg-emerald-500/15 text-emerald-400',
   'founder-story': 'bg-amber-500/15 text-amber-400',
+  spotlight: 'bg-purple-500/15 text-purple-400',
 }
 
 /** Safely render any extra_data value as a string */
@@ -77,7 +79,7 @@ export default async function SubmissionsPage() {
             <p className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">SQL — run in Supabase SQL Editor</p>
             <pre className="text-xs text-muted-foreground overflow-x-auto whitespace-pre-wrap leading-relaxed">{`CREATE TABLE IF NOT EXISTS form_submissions (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  type text NOT NULL CHECK (type IN ('startup', 'partner', 'founder-story')),
+  type text NOT NULL CHECK (type IN ('startup', 'partner', 'founder-story', 'spotlight')),
   name text NOT NULL,
   email text NOT NULL,
   organization text,

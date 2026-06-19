@@ -49,6 +49,11 @@ export function Footer() {
           <div>
             <h4 className="text-[10px] font-black mb-4 text-white uppercase tracking-widest">Submit</h4>
             <ul className="space-y-2.5">
+              <li>
+                <Link href="/get-featured" className="text-sm text-zinc-400 hover:text-[#00cc6a] transition-colors">
+                  Get Featured
+                </Link>
+              </li>
               {[
                 { href: 'https://airtable.com/appYUrRsmwImGgG3C/pagsOvlAtunXtZ5Og/form', label: 'List a startup' },
                 { href: 'https://airtable.com/appYUrRsmwImGgG3C/pagjZcduZUZQd759K/form', label: 'Share your story' },
