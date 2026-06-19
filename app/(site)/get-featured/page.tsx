@@ -9,7 +9,6 @@ import {
   PenSquare, Send, Headset, MessageCircle, Globe2,
   Handshake, FileStack, Megaphone, Store, TrendingUp, User, Download, Shield,
 } from 'lucide-react'
-import { SpotlightApplicationForm } from '@/components/site/SpotlightApplicationForm'
 import { createServiceClient } from '@/lib/supabase/service'
 
 interface SpotlightExample {
@@ -151,12 +150,12 @@ export default async function GetFeaturedPage() {
               the future of <span className="text-[#00a855] font-semibold">Northern Luzon.</span>
             </p>
             <div className="flex items-center gap-3 flex-wrap">
-              <a
-                href="#apply"
+              <Link
+                href="/get-featured/apply"
                 className="inline-flex items-center gap-2 px-6 py-3.5 rounded-lg bg-[#0a3a22] text-white font-bold text-sm hover:bg-[#042212] transition-colors"
               >
                 Apply for a Feature <ArrowRight className="h-4 w-4" />
-              </a>
+              </Link>
               <Link
                 href="/news"
                 className="inline-flex items-center px-6 py-3.5 rounded-lg border-2 border-zinc-900 text-zinc-900 font-bold text-sm hover:bg-zinc-900 hover:text-white transition-colors"
@@ -358,12 +357,12 @@ export default async function GetFeaturedPage() {
               <p className="text-sm text-white/40 leading-relaxed mb-8">
                 After the founding batch closes, the rate increases.
               </p>
-              <a
-                href="#apply"
+              <Link
+                href="/get-featured/apply"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-[#00cc6a] text-black font-bold text-sm hover:bg-[#00b85e] transition-colors mb-3"
               >
                 Apply Now <ArrowRight className="h-4 w-4" />
-              </a>
+              </Link>
               <p className="flex items-center gap-1.5 text-xs text-white/40">
                 <Lock className="h-3 w-3" /> Limited slots only
               </p>
@@ -584,18 +583,34 @@ export default async function GetFeaturedPage() {
           {/* Two-column layout */}
           <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-6">
 
-            {/* Left: form card */}
-            <div className="rounded-2xl border border-zinc-200 bg-white p-6 sm:p-8">
+            {/* Left: CTA card */}
+            <div className="rounded-2xl border border-zinc-200 bg-white p-6 sm:p-8 flex flex-col">
               <div className="flex items-center gap-3 mb-7">
                 <div className="w-11 h-11 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
                   <FileEdit className="h-5 w-5 text-[#00a855]" />
                 </div>
                 <div>
                   <p className="text-base font-black text-zinc-900">Feature Application</p>
-                  <p className="text-xs text-zinc-500">Fill out the form below and we&apos;ll get back to you.</p>
+                  <p className="text-xs text-zinc-500">A guided, 5-step application — takes less than 5 minutes.</p>
                 </div>
               </div>
-              <SpotlightApplicationForm />
+              <div className="flex-1 flex flex-col items-start justify-center py-6">
+                <p className="text-xl font-black text-zinc-900 leading-tight mb-3">
+                  Let&apos;s tell your story.
+                </p>
+                <p className="text-sm text-zinc-500 leading-relaxed mb-8 max-w-sm">
+                  We&apos;ll walk you through your business details, your story, and what happens next — step by step.
+                </p>
+                <Link
+                  href="/get-featured/apply"
+                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-[#0a3a22] text-white font-bold text-sm hover:bg-[#042212] transition-colors"
+                >
+                  Start Application <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+              <p className="flex items-center gap-1.5 text-xs text-zinc-400">
+                <Lock className="h-3 w-3" /> Payment is requested only after your application has been reviewed and approved.
+              </p>
             </div>
 
             {/* Right: stacked info cards */}
