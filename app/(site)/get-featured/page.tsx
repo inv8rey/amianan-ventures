@@ -3,10 +3,11 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {
   ArrowRight, BookOpen, Eye, Users, FileText, Image as ImageIcon,
-  Quote, Layers, BadgeCheck, Award, Globe, Lock,
+  Quote, Layers, BadgeCheck, Award, Lock,
   Mail, FileEdit, Monitor, Images, IdCard, FileBadge2, Gift, ShieldCheck,
   MailCheck, Smartphone, Rocket, QrCode, ChevronRight, Clock, Landmark, CreditCard,
   PenSquare, Send, Headset, MessageCircle, Globe2,
+  Handshake, FileStack, Megaphone, Store, TrendingUp, Star, User,
 } from 'lucide-react'
 import { SpotlightApplicationForm } from '@/components/site/SpotlightApplicationForm'
 import { createServiceClient } from '@/lib/supabase/service'
@@ -62,10 +63,24 @@ const assets = [
   { icon: BadgeCheck,  title: 'Featured Startup Badge', desc: 'A digital badge for your website, social bios, pitch decks, and grant applications.' },
 ]
 
-const reasons = [
-  { icon: Globe, title: 'A story you can use everywhere', desc: 'The published article is a permanent, linkable record of your business. Attach it to DOST and DTI grant applications, investor presentations, and customer conversations.' },
-  { icon: Lock,  title: 'Content you own', desc: 'The carousel, quote card, and badge are yours — not locked to Amianan\'s platform. Post them on your own channels and reuse them across your marketing anytime.' },
-  { icon: Award, title: 'A permanent place in Northern Luzon\'s innovation story', desc: 'The startup directory is the region\'s growing public record of founders and businesses. Being listed early means being part of the foundation.' },
+const credibilityBadges = [
+  { icon: FileText, label: 'Published Story' },
+  { icon: User,     label: 'Founder Profile' },
+  { icon: Star,     label: 'Professional Feature' },
+]
+
+const opportunityFlow = [
+  { icon: Handshake,  label: 'Partnerships' },
+  { icon: Megaphone,  label: 'Media Exposure' },
+  { icon: TrendingUp, label: 'Grants & Funding' },
+  { icon: Store,      label: 'New Customers' },
+]
+
+const assetMockups = [
+  { label: 'Quote Card' },
+  { label: 'Carousel Post' },
+  { label: 'Startup Story' },
+  { label: 'Directory Listing' },
 ]
 
 const included = [
@@ -227,20 +242,156 @@ export default async function GetFeaturedPage() {
         </div>
       </section>
 
-      {/* ── Why founders get featured ─────────────────────────── */}
-      <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-        <p className="text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">Why it matters</p>
-        <h2 className="text-2xl sm:text-3xl font-black text-zinc-900 mb-10">Why Founders Get Featured</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {reasons.map((r) => (
-            <div key={r.title}>
-              <div className="w-11 h-11 rounded-xl bg-zinc-900 flex items-center justify-center mb-4">
-                <r.icon className="h-5 w-5 text-[#00cc6a]" />
+      {/* ── Why founders choose Amianan Ventures ──────────────── */}
+      <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+        <div className="text-center mb-12">
+          <p className="text-xs font-black uppercase tracking-widest text-[#00a855] mb-3">Why Founders Choose Amianan Ventures</p>
+          <h2 className="text-2xl sm:text-3xl lg:text-[2.25rem] font-black text-zinc-900 leading-tight max-w-3xl mx-auto mb-4">
+            Build Credibility. Increase Visibility.<br />Unlock Opportunities. Create Assets.
+          </h2>
+          <p className="text-sm sm:text-base text-zinc-500">Professional storytelling that helps your business grow.</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+          {/* 01 — Build Credibility */}
+          <div className="rounded-2xl border border-zinc-200 bg-white p-7">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-11 h-11 rounded-full bg-[#0a3a22] flex items-center justify-center shrink-0">
+                <Award className="h-5 w-5 text-[#00cc6a]" />
               </div>
-              <p className="text-sm font-bold text-zinc-900 mb-2">{r.title}</p>
-              <p className="text-xs text-zinc-500 leading-relaxed">{r.desc}</p>
+              <span className="text-2xl font-black text-zinc-200">01</span>
             </div>
-          ))}
+            <p className="text-lg font-black text-zinc-900 mb-2">Build Credibility</p>
+            <p className="text-sm text-zinc-500 leading-relaxed mb-6 max-w-sm">
+              A professionally published feature helps people understand who you are, what you do, and why your work matters.
+            </p>
+            <div className="flex items-center gap-5 flex-wrap">
+              {credibilityBadges.map((b) => (
+                <div key={b.label} className="flex flex-col items-center gap-1.5 text-center w-20">
+                  <div className="w-10 h-10 rounded-full bg-[#00a855]/10 flex items-center justify-center">
+                    <b.icon className="h-4 w-4 text-[#00a855]" />
+                  </div>
+                  <span className="text-[10px] font-semibold text-zinc-600 leading-tight">{b.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 02 — Increase Visibility */}
+          <div className="rounded-2xl border border-zinc-200 bg-white p-7">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-11 h-11 rounded-full bg-[#0a3a22] flex items-center justify-center shrink-0">
+                <Eye className="h-5 w-5 text-[#00cc6a]" />
+              </div>
+              <span className="text-2xl font-black text-zinc-200">02</span>
+            </div>
+            <p className="text-lg font-black text-zinc-900 mb-2">Increase Visibility</p>
+            <p className="text-sm text-zinc-500 leading-relaxed mb-6 max-w-sm">
+              Get discovered by customers, founders, partners, institutions, and ecosystem leaders across Northern Luzon.
+            </p>
+
+            {/* Website mockup */}
+            <div className="rounded-xl border border-zinc-200 overflow-hidden">
+              <div className="flex items-center justify-between px-3 py-2 border-b border-zinc-100 bg-white">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-4 h-4 rounded-sm bg-[#0a3a22]" />
+                  <span className="text-[9px] font-black text-zinc-700">AMIANAN</span>
+                </div>
+                <span className="text-[8px] font-bold px-2 py-1 rounded-full bg-[#00cc6a] text-black">Submit Your Story</span>
+              </div>
+              <div className="p-3 bg-zinc-50">
+                <p className="text-xs font-black text-zinc-900 leading-snug">Stories of Innovation<br />from Northern Luzon</p>
+                <p className="text-[9px] text-zinc-400 mt-1">Real founders. Real impact.</p>
+                <div className="grid grid-cols-3 gap-1.5 mt-2.5">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="aspect-[4/3] rounded bg-gradient-to-br from-zinc-200 to-zinc-300" />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 03 — Unlock Opportunities */}
+          <div className="rounded-2xl border border-zinc-200 bg-white p-7">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-11 h-11 rounded-full bg-[#0a3a22] flex items-center justify-center shrink-0">
+                <Handshake className="h-5 w-5 text-[#00cc6a]" />
+              </div>
+              <span className="text-2xl font-black text-zinc-200">03</span>
+            </div>
+            <p className="text-lg font-black text-zinc-900 mb-2">Unlock Opportunities</p>
+            <p className="text-sm text-zinc-500 leading-relaxed mb-7 max-w-sm">
+              Great stories attract conversations. Conversations create opportunities.
+            </p>
+
+            {/* Flow diagram */}
+            <div className="flex items-center justify-between gap-1">
+              {opportunityFlow.map((f, i) => (
+                <div key={f.label} className="flex items-center flex-1">
+                  <div className="flex flex-col items-center gap-1.5 text-center">
+                    <div className="w-11 h-11 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
+                      <f.icon className="h-4 w-4 text-[#00a855]" />
+                    </div>
+                    <span className="text-[9px] font-semibold text-zinc-600 leading-tight max-w-[64px]">{f.label}</span>
+                  </div>
+                  {i < opportunityFlow.length - 1 && (
+                    <div className="flex-1 h-px border-t border-dashed border-zinc-300 mx-1 mb-4" />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 04 — Create Reusable Business Assets */}
+          <div className="rounded-2xl border border-zinc-200 bg-white p-7">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-11 h-11 rounded-full bg-[#0a3a22] flex items-center justify-center shrink-0">
+                <FileStack className="h-5 w-5 text-[#00cc6a]" />
+              </div>
+              <span className="text-2xl font-black text-zinc-200">04</span>
+            </div>
+            <p className="text-lg font-black text-zinc-900 mb-2">Create Reusable Business Assets</p>
+            <p className="text-sm text-zinc-500 leading-relaxed mb-6 max-w-sm">
+              Get professional content you can use long after your feature is published.
+            </p>
+
+            {/* Asset mockup row */}
+            <div className="grid grid-cols-4 gap-2">
+              <div className="rounded-lg bg-[#06301c] p-2.5 flex flex-col justify-between aspect-[3/4]">
+                <Quote className="h-3.5 w-3.5 text-[#00cc6a]" />
+                <p className="text-[7px] text-white/70 leading-snug">&ldquo;We believe great stories build communities.&rdquo;</p>
+              </div>
+              <div className="rounded-lg border border-zinc-200 bg-white p-2 flex flex-col gap-1 aspect-[3/4]">
+                <div className="w-4 h-4 rounded-full bg-zinc-200" />
+                <div className="flex-1 rounded bg-gradient-to-br from-zinc-100 to-zinc-200" />
+              </div>
+              <div className="rounded-lg border border-zinc-200 bg-white p-2 flex flex-col gap-1 aspect-[3/4]">
+                <span className="text-[7px] font-black text-zinc-700">Featured Story</span>
+                <div className="flex-1 rounded bg-gradient-to-br from-zinc-100 to-zinc-200" />
+              </div>
+              <div className="rounded-lg border border-zinc-200 bg-white overflow-hidden flex flex-col aspect-[3/4]">
+                <span className="text-[6px] font-black text-white bg-[#00a855] text-center py-0.5">FEATURED</span>
+                <div className="flex-1 flex items-center justify-center">
+                  <BadgeCheck className="h-4 w-4 text-zinc-300" />
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-4 gap-2 mt-1.5">
+              {assetMockups.map((a) => (
+                <span key={a.label} className="text-[8px] font-semibold text-zinc-500 text-center leading-tight">{a.label}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Trust bar */}
+        <div className="mt-6 flex items-center justify-center gap-2.5 rounded-xl bg-[#00a855]/8 px-5 py-4 text-center flex-wrap">
+          <ShieldCheck className="h-4 w-4 text-[#00a855] shrink-0" />
+          <p className="text-sm text-zinc-700">
+            <span className="font-black text-zinc-900">Professional. Trusted. Purposeful.</span>{' '}
+            We&apos;re committed to telling stories that inspire, inform, and drive positive impact.
+          </p>
         </div>
       </section>
 
