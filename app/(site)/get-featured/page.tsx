@@ -3,11 +3,38 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {
   ArrowRight, BookOpen, Eye, Users, FileText, Image as ImageIcon,
-  Quote, Layers, BadgeCheck, Award, Globe, Lock, MapPin,
+  Quote, Layers, BadgeCheck, Award, Globe, Lock,
   Mail, FileEdit, Monitor, Images, IdCard, FileBadge2, Gift, ShieldCheck,
   MailCheck, Smartphone, Rocket, QrCode, ChevronRight, Clock, Landmark, CreditCard,
+  PenSquare, Send, Headset, MessageCircle, Globe2,
 } from 'lucide-react'
 import { SpotlightApplicationForm } from '@/components/site/SpotlightApplicationForm'
+import { createServiceClient } from '@/lib/supabase/service'
+
+interface SpotlightExample {
+  name: string
+  sector: string | null
+  logo_url: string | null
+}
+
+// Pulls real, currently-listed directory entries to show as examples —
+// no fabricated business names or photos.
+async function getSpotlightExamples(): Promise<SpotlightExample[]> {
+  try {
+    const supabase = createServiceClient()
+    const { data } = await supabase
+      .from('directory')
+      .select('name, sector, logo_url')
+      .eq('status', 'published')
+      .eq('type', 'startup')
+      .not('logo_url', 'is', null)
+      .order('created_at', { ascending: false })
+      .limit(4)
+    return data ?? []
+  } catch {
+    return []
+  }
+}
 
 export const metadata: Metadata = {
   title: 'Get Featured — Amianan Startup Spotlight',
@@ -86,7 +113,16 @@ const paymentMethods = [
   { name: 'UnionBank', color: '#F47920' },
 ]
 
-export default function GetFeaturedPage() {
+const nextSteps = [
+  { icon: FileEdit,    title: 'Application Review', desc: 'Our team reviews your application within 1–3 business days.' },
+  { icon: CreditCard,  title: 'Approval & Payment', desc: 'If approved, we’ll send payment instructions. Founding rate is reserved for approved applicants.' },
+  { icon: PenSquare,   title: 'Story Production', desc: 'We’ll conduct an interview and create your story and content assets.' },
+  { icon: Send,        title: 'Publication', desc: 'Your story goes live on Amianan Ventures and we promote it across our channels.' },
+]
+
+export default async function GetFeaturedPage() {
+  const spotlightExamples = await getSpotlightExamples()
+
   return (
     <div className="min-h-screen bg-white">
 
@@ -456,32 +492,103 @@ export default function GetFeaturedPage() {
 
       {/* ── Apply form ─────────────────────────────────────────── */}
       <section id="apply" className="bg-zinc-50 border-t border-zinc-100">
-        <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-          <div className="mb-10 text-center">
-            <p className="text-xs font-black uppercase tracking-widest text-[#00a855] mb-2">Apply now</p>
-            <h2 className="text-2xl sm:text-3xl font-black text-zinc-900 mb-3">Apply for a Feature</h2>
-            <p className="text-sm text-zinc-500 leading-relaxed max-w-md mx-auto">
-              Tell us about your business. We&apos;ll schedule a 30-minute intake conversation
-              and walk you through the rest.
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+
+          {/* Header */}
+          <div className="text-center mb-12">
+            <p className="text-xs font-black uppercase tracking-widest text-[#00a855] mb-3">Apply to Be Featured</p>
+            <h2 className="text-3xl sm:text-4xl font-black text-zinc-900 leading-tight mb-4">
+              Tell Your Story.<br />We&apos;ll Handle The Rest.
+            </h2>
+            <p className="text-sm sm:text-base text-zinc-500 max-w-md mx-auto leading-relaxed">
+              Share your journey with Northern Luzon&apos;s innovation and business community.
             </p>
           </div>
-          <SpotlightApplicationForm />
-        </div>
-      </section>
 
-      {/* ── Questions footer ──────────────────────────────────── */}
-      <section className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-14 text-center">
-        <p className="text-sm text-zinc-500 mb-2">Questions?</p>
-        <a
-          href="mailto:amiananventures@gmail.com"
-          className="inline-flex items-center gap-2 text-base font-bold text-zinc-900 hover:text-[#00a855] transition-colors"
-        >
-          <Mail className="h-4 w-4" /> amiananventures@gmail.com
-        </a>
-        <p className="text-xs text-zinc-400 mt-6 flex items-center justify-center gap-1.5">
-          <MapPin className="h-3 w-3" /> Amianan Ventures is Northern Luzon&apos;s platform for founders, innovators, and ecosystem builders.
-        </p>
-        <p className="text-xs text-zinc-400 mt-1 italic">Built from the Mountains.</p>
+          {/* Two-column layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-6">
+
+            {/* Left: form card */}
+            <div className="rounded-2xl border border-zinc-200 bg-white p-6 sm:p-8">
+              <div className="flex items-center gap-3 mb-7">
+                <div className="w-11 h-11 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
+                  <FileEdit className="h-5 w-5 text-[#00a855]" />
+                </div>
+                <div>
+                  <p className="text-base font-black text-zinc-900">Feature Application</p>
+                  <p className="text-xs text-zinc-500">Fill out the form below and we&apos;ll get back to you.</p>
+                </div>
+              </div>
+              <SpotlightApplicationForm />
+            </div>
+
+            {/* Right: stacked info cards */}
+            <div className="flex flex-col gap-5">
+
+              {/* Stories from founders like you */}
+              {spotlightExamples.length > 0 && (
+                <div className="rounded-2xl border border-[#00a855]/15 bg-[#00a855]/[0.04] p-6">
+                  <p className="text-sm font-black text-zinc-900 mb-4">Stories from founders like you</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    {spotlightExamples.map((ex) => (
+                      <div key={ex.name} className="flex flex-col gap-2">
+                        <div className="relative aspect-square rounded-lg bg-white border border-zinc-100 overflow-hidden flex items-center justify-center">
+                          {ex.logo_url ? (
+                            <Image src={ex.logo_url} alt={ex.name} fill className="object-contain p-3" sizes="120px" unoptimized />
+                          ) : (
+                            <span className="text-lg font-black text-zinc-300">{ex.name.charAt(0)}</span>
+                          )}
+                        </div>
+                        <p className="text-xs font-bold text-zinc-900 leading-snug line-clamp-2">{ex.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* What happens next */}
+              <div className="rounded-2xl border border-zinc-200 bg-white p-6">
+                <p className="text-sm font-black text-zinc-900 mb-5">What happens next?</p>
+                <div className="space-y-0">
+                  {nextSteps.map((s, i) => (
+                    <div key={s.title} className="flex gap-3.5">
+                      <div className="flex flex-col items-center shrink-0">
+                        <div className="w-7 h-7 rounded-full bg-[#0a3a22] flex items-center justify-center">
+                          <span className="text-[11px] font-black text-white">{i + 1}</span>
+                        </div>
+                        {i < nextSteps.length - 1 && <div className="w-px flex-1 bg-zinc-200 my-1" />}
+                      </div>
+                      <div className="pb-5">
+                        <p className="text-sm font-bold text-zinc-900 mb-0.5">{s.title}</p>
+                        <p className="text-xs text-zinc-500 leading-relaxed">{s.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Need help */}
+              <div className="rounded-2xl border border-zinc-200 bg-white p-6 relative overflow-hidden">
+                <p className="text-sm font-black text-zinc-900 mb-1">Need help?</p>
+                <p className="text-xs text-zinc-500 mb-4">We&apos;re here to help you every step of the way.</p>
+                <div className="space-y-2.5">
+                  <a href="mailto:amiananventures@gmail.com" className="flex items-center gap-2 text-sm font-semibold text-zinc-700 hover:text-[#00a855] transition-colors">
+                    <Mail className="h-4 w-4 text-[#00a855] shrink-0" /> amiananventures@gmail.com
+                  </a>
+                  <a href="https://www.facebook.com/amiananventures" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-semibold text-zinc-700 hover:text-[#00a855] transition-colors">
+                    <MessageCircle className="h-4 w-4 text-[#00a855] shrink-0" /> Message us on Facebook
+                  </a>
+                  <a href="https://amiananventures.org" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-semibold text-zinc-700 hover:text-[#00a855] transition-colors">
+                    <Globe2 className="h-4 w-4 text-[#00a855] shrink-0" /> amiananventures.org
+                  </a>
+                </div>
+                <Headset className="absolute -right-3 -bottom-3 h-20 w-20 text-[#00a855]/8" />
+              </div>
+            </div>
+          </div>
+
+          <p className="text-xs text-zinc-400 italic text-center mt-12">Built from the Mountains.</p>
+        </div>
       </section>
 
     </div>

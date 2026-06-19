@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ArrowRight, Loader2, CheckCircle2 } from 'lucide-react'
+import { ArrowRight, Loader2, CheckCircle2, Lock } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
 const REGIONS = ['Cordillera', 'Cagayan Valley', 'Ilocos Region', 'Pangasinan', 'National']
@@ -15,6 +15,7 @@ export function SpotlightApplicationForm() {
     website: '',
     region: '',
     message: '',
+    why_feature: '',
   })
   const [state, setState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
@@ -37,6 +38,7 @@ export function SpotlightApplicationForm() {
         phone: form.phone,
         website: form.website,
         region: form.region,
+        why_feature: form.why_feature,
       },
     })
 
@@ -54,8 +56,8 @@ export function SpotlightApplicationForm() {
         <CheckCircle2 className="h-12 w-12 text-[#00cc6a] mx-auto mb-4" />
         <h3 className="text-xl font-black text-zinc-900 mb-2">Application Received!</h3>
         <p className="text-sm text-zinc-500 max-w-md mx-auto leading-relaxed">
-          Thanks for applying, <strong>{form.contact_name || 'founder'}</strong>. We&apos;ll reach out at{' '}
-          <strong>{form.email}</strong> within 2–3 business days to schedule your intake conversation.
+          Thanks for applying, <strong>{form.contact_name || 'founder'}</strong>. We&apos;ll review your
+          application and reach out at <strong>{form.email}</strong> within 1–3 business days.
         </p>
       </div>
     )
@@ -114,12 +116,12 @@ export function SpotlightApplicationForm() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-semibold text-zinc-700 mb-1.5">Website / Social Media</label>
+          <label className="block text-sm font-semibold text-zinc-700 mb-1.5">Website / Facebook Page</label>
           <input
             type="text"
             value={form.website}
             onChange={(e) => set('website', e.target.value)}
-            placeholder="facebook.com/yourbusiness"
+            placeholder="e.g. facebook.com/yourbusiness"
             className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#00cc6a]/40 focus:border-[#00cc6a] transition-colors"
           />
         </div>
@@ -140,13 +142,25 @@ export function SpotlightApplicationForm() {
       </div>
 
       <div>
-        <label className="block text-sm font-semibold text-zinc-700 mb-1.5">Tell us about your business *</label>
+        <label className="block text-sm font-semibold text-zinc-700 mb-1.5">Tell us about your business. *</label>
         <textarea
           required
           rows={4}
           value={form.message}
           onChange={(e) => set('message', e.target.value)}
-          placeholder="What do you do, who do you serve, and what makes your story worth telling?"
+          placeholder="What does your business do, who do you serve, and what makes it unique?"
+          className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#00cc6a]/40 focus:border-[#00cc6a] transition-colors resize-none"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-semibold text-zinc-700 mb-1.5">Why should we feature your story? *</label>
+        <textarea
+          required
+          rows={4}
+          value={form.why_feature}
+          onChange={(e) => set('why_feature', e.target.value)}
+          placeholder="What makes your journey inspiring or worth sharing?"
           className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#00cc6a]/40 focus:border-[#00cc6a] transition-colors resize-none"
         />
       </div>
@@ -158,14 +172,17 @@ export function SpotlightApplicationForm() {
       <button
         type="submit"
         disabled={state === 'loading'}
-        className="inline-flex items-center gap-2 bg-[#00cc6a] text-black px-7 py-3.5 rounded-lg font-bold text-sm hover:bg-[#00b85e] transition-colors disabled:opacity-60"
+        className="w-full inline-flex items-center justify-center gap-2 bg-[#0a3a22] text-white px-7 py-3.5 rounded-lg font-bold text-sm hover:bg-[#042212] transition-colors disabled:opacity-60"
       >
         {state === 'loading' ? (
           <Loader2 className="h-4 w-4 animate-spin" />
         ) : (
-          <>Submit Application <ArrowRight className="h-4 w-4" /></>
+          <>Apply for a Feature <ArrowRight className="h-4 w-4" /></>
         )}
       </button>
+      <p className="flex items-center justify-center gap-1.5 text-xs text-zinc-400">
+        <Lock className="h-3 w-3" /> Payment is requested only after your application has been reviewed and approved.
+      </p>
     </form>
   )
 }
