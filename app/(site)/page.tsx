@@ -1,11 +1,10 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { format } from 'date-fns'
-import { ArrowRight, ChevronRight, Calendar, MapPin, Briefcase } from 'lucide-react'
+import { ArrowRight, ChevronRight, MapPin, Briefcase } from 'lucide-react'
 import {
   getFeaturedArticles,
   getPublishedArticles,
-  getPublishedEvents,
   getAllDirectoryEntries,
   getFeaturedListings,
 } from '@/lib/queries'
@@ -13,7 +12,7 @@ import { EcosystemSection } from '@/components/site/EcosystemSection'
 import { FeaturedListings } from '@/components/site/FeaturedListings'
 import { NewsletterSignup } from '@/components/site/NewsletterSignup'
 import { EcosystemPulseWidget } from '@/components/site/EcosystemPulseWidget'
-import type { Article, DirectoryEntry, DirectoryType, Event, Location } from '@/types'
+import type { Article, DirectoryEntry, DirectoryType, Location } from '@/types'
 import { ROLE_LABELS, type ContributorRole, type ContentType } from '@/types/contributor'
 
 // ─── Ecosystem contributions types ────────────────────────────
@@ -175,8 +174,8 @@ function HeroColumn({ featured, below }: { featured: Article; below: Article[] }
   )
 }
 
-// ─── Right: Latest + Events + Top Contributors stacked ────────
-function RightColumn({ latest, events, topContributors, ecosystemReports }: { latest: Article[]; events: Event[]; topContributors: PublicContributor[]; ecosystemReports: EcosystemReport[] }) {
+// ─── Right: Latest + Featured Startups + Top Contributors stacked ────────
+function RightColumn({ latest, featuredStartups, topContributors, ecosystemReports }: { latest: Article[]; featuredStartups: DirectoryEntry[]; topContributors: PublicContributor[]; ecosystemReports: EcosystemReport[] }) {
   return (
     <div className="space-y-7 divide-y divide-zinc-200">
       {/* Latest */}
@@ -217,41 +216,70 @@ function RightColumn({ latest, events, topContributors, ecosystemReports }: { la
         </Link>
       </div>
 
-      {/* Events */}
-      <div className="pt-7">
-        <div className="flex items-center gap-2 mb-3 pb-2 border-b-2 border-black">
-          <span className="w-1 h-4 bg-[#00cc6a] rounded-full" />
-          <span className="text-xs font-black uppercase tracking-widest text-black">Upcoming Events</span>
-        </div>
-        <div className="space-y-4">
-          {events.slice(0, 4).map((event) => (
-            <Link key={event.id} href={`/events/${event.slug}`} className="group flex gap-3">
-              <div className="shrink-0 text-center w-10">
-                <div className="text-[10px] font-bold text-[#00a855] uppercase leading-none">
-                  {new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Manila', month: 'short' }).format(new Date(event.date))}
+      {/* Featured Startups */}
+      {featuredStartups.length > 0 && (
+        <div className="pt-7">
+          <div className="flex items-center gap-2 mb-3 pb-2 border-b-2 border-black">
+            <span className="w-1 h-4 bg-[#00cc6a] rounded-full" />
+            <span className="text-xs font-black uppercase tracking-widest text-black">Featured Startups</span>
+          </div>
+          <div className="space-y-3">
+            {featuredStartups.map((startup) => (
+              <div key={startup.id} className="flex items-center gap-3">
+                {/* Logo */}
+                <div className="shrink-0 w-9 h-9 rounded-lg border border-zinc-200 bg-zinc-50 overflow-hidden flex items-center justify-center">
+                  {startup.logo_url ? (
+                    <Image
+                      src={startup.logo_url}
+                      alt={startup.name}
+                      width={36}
+                      height={36}
+                      className="object-contain"
+                      unoptimized
+                    />
+                  ) : (
+                    <Briefcase className="h-4 w-4 text-zinc-300" />
+                  )}
                 </div>
-                <div className="text-lg font-black text-zinc-900 leading-tight">
-                  {new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Manila', day: 'numeric' }).format(new Date(event.date))}
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  {startup.website ? (
+                    <a
+                      href={startup.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-bold text-zinc-800 hover:text-[#00a855] transition-colors truncate block leading-snug"
+                    >
+                      {startup.name}
+                    </a>
+                  ) : (
+                    <p className="text-xs font-bold text-zinc-800 truncate leading-snug">{startup.name}</p>
+                  )}
+                  <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                    {startup.sector && (
+                      <span className="text-[10px] text-zinc-400 truncate">{startup.sector}</span>
+                    )}
+                    {startup.city && (
+                      <>
+                        {startup.sector && <span className="text-zinc-200">·</span>}
+                        <span className="text-[10px] text-zinc-400 flex items-center gap-0.5 truncate">
+                          <MapPin className="h-2.5 w-2.5 shrink-0" />{startup.city}
+                        </span>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
-              <div className="min-w-0">
-                <p className="text-xs font-semibold text-zinc-800 group-hover:text-[#00a855] transition-colors line-clamp-2 leading-snug">
-                  {event.title}
-                </p>
-                <p className="text-[10px] text-zinc-400 mt-0.5 flex items-center gap-1 truncate">
-                  <MapPin className="h-2.5 w-2.5 shrink-0" />{event.location}
-                </p>
-              </div>
-            </Link>
-          ))}
-          {events.length === 0 && (
-            <p className="text-xs text-zinc-400">No upcoming events</p>
-          )}
+            ))}
+          </div>
+          <Link
+            href="/ecosystem"
+            className="mt-4 flex items-center gap-1 text-[10px] font-bold text-zinc-500 hover:text-black uppercase tracking-wider transition-colors"
+          >
+            Explore ecosystem <ChevronRight className="h-3 w-3" />
+          </Link>
         </div>
-        <Link href="/events" className="mt-3 flex items-center gap-1 text-[10px] font-bold text-zinc-500 hover:text-black uppercase tracking-wider transition-colors">
-          View all events <ChevronRight className="h-3 w-3" />
-        </Link>
-      </div>
+      )}
 
       {/* Top Contributors */}
       {topContributors.length > 0 && (
@@ -701,7 +729,6 @@ export default async function HomePage() {
     featured,
     latestAll,
     founderStories,
-    upcomingEvents,
     featuredListings,
     contributors,
     ecosystemContributions,
@@ -710,7 +737,6 @@ export default async function HomePage() {
     getFeaturedArticles(1),
     getPublishedArticles(18, 'news'),
     getPublishedArticles(4, 'founder-stories'),
-    getPublishedEvents(true),
     getFeaturedListings().catch(() => []),
     getPublishedContributors(),
     getEcosystemContributions(),
@@ -761,9 +787,9 @@ export default async function HomePage() {
             )}
           </div>
 
-          {/* RIGHT: Latest + Events + Top Contributors */}
+          {/* RIGHT: Latest + Featured Startups + Top Contributors */}
           <div className="hidden lg:block">
-            <RightColumn latest={latestAll} events={upcomingEvents} topContributors={contributors} ecosystemReports={ecosystemReports} />
+            <RightColumn latest={latestAll} featuredStartups={entriesByType.startup.slice(0, 4)} topContributors={contributors} ecosystemReports={ecosystemReports} />
           </div>
 
           {/* Mobile: compact latest */}
