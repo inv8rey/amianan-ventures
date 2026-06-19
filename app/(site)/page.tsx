@@ -97,70 +97,80 @@ function ArticleTag({ article }: { article: Article }) {
   )
 }
 
-// ─── Left: Full-bleed featured hero with text overlay ─────────
-function HeroColumn({ featured }: { featured: Article }) {
+// ─── Left: Featured hero + 2 below ────────────────────────────
+function HeroColumn({ featured, below }: { featured: Article; below: Article[] }) {
   const href = `/${featured.category}/${featured.slug}`
   return (
-    <Link
-      href={href}
-      className="group relative flex flex-col justify-end rounded-xl overflow-hidden bg-zinc-900"
-      style={{ minHeight: '480px' }}
-    >
-      {/* Background image */}
-      {featured.cover_image && (
-        <Image
-          src={featured.cover_image}
-          alt={featured.title}
-          fill
-          priority
-          className="object-cover group-hover:scale-[1.03] transition-transform duration-700"
-          sizes="(max-width: 1024px) 100vw, 65vw"
-        />
-      )}
-
-      {/* Gradient overlay — stronger at bottom */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-
-      {/* Content */}
-      <div className="relative z-10 p-6 sm:p-8">
-        {/* Badges */}
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-[10px] font-black bg-[#00cc6a] text-black px-2.5 py-1 rounded uppercase tracking-wider">
-            Featured
-          </span>
-          {featured.location && (
-            <span className="text-[10px] font-bold text-white/60 uppercase tracking-wider">
-              · {locationLabel[featured.location]}
-            </span>
-          )}
-        </div>
-
-        {/* Title */}
-        <h1 className="text-2xl sm:text-3xl lg:text-[2rem] xl:text-[2.25rem] font-black text-white leading-tight mb-3 group-hover:text-[#00cc6a] transition-colors tracking-tight">
-          {featured.title}
-        </h1>
-
-        {/* Excerpt */}
-        {featured.excerpt && (
-          <p className="text-sm text-white/65 leading-relaxed line-clamp-2 mb-4 max-w-2xl">
-            {featured.excerpt}
-          </p>
+    <div>
+      <Link href={href} className="group block mb-6">
+        {featured.cover_image && (
+          <div className="relative aspect-[16/9] rounded-xl overflow-hidden bg-zinc-100 mb-4">
+            <Image
+              src={featured.cover_image}
+              alt={featured.title}
+              fill
+              priority
+              className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
+              sizes="(max-width: 1024px) 100vw, 65vw"
+            />
+          </div>
         )}
-
-        {/* Meta */}
-        <div className="flex items-center gap-2 text-xs text-white/40">
-          {featured.published_at && (
-            <span>{format(new Date(featured.published_at), 'MMMM d, yyyy')}</span>
-          )}
-          {featured.author && (
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-[10px] font-black text-[#00cc6a] uppercase tracking-wider">Featured</span>
+          {featured.location && (
             <>
-              <span>·</span>
-              <span>{featured.author}</span>
+              <span className="text-zinc-300">·</span>
+              <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">
+                {locationLabel[featured.location]}
+              </span>
             </>
           )}
         </div>
-      </div>
-    </Link>
+        <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-normal text-zinc-900 leading-tight mb-2 group-hover:text-[#00a855] transition-colors">
+          {featured.title}
+        </h1>
+        <p className="text-sm text-zinc-500 leading-relaxed line-clamp-2 mb-3">{featured.excerpt}</p>
+        <div className="text-xs text-zinc-400">
+          By <span className="font-semibold text-zinc-600">{featured.author}</span>
+          {featured.published_at && <span className="ml-2">{formatDate(featured.published_at)}</span>}
+        </div>
+      </Link>
+
+      {below.length > 0 && (
+        <div className="grid grid-cols-2 gap-4 pt-5 border-t border-zinc-200">
+          {below.slice(0, 2).map((article) => (
+            <Link key={article.id} href={`/${article.category}/${article.slug}`} className="group">
+              {article.cover_image && (
+                <div className="relative aspect-video rounded-lg overflow-hidden bg-zinc-100 mb-2">
+                  <Image
+                    src={article.cover_image}
+                    alt={article.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    sizes="25vw"
+                  />
+                </div>
+              )}
+              <div className="flex items-center gap-2 mb-1">
+                <ArticleTag article={article} />
+                {article.location && (
+                  <>
+                    <span className="text-zinc-300">·</span>
+                    <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">
+                      {locationLabel[article.location]}
+                    </span>
+                  </>
+                )}
+              </div>
+              <h3 className="text-sm font-bold text-zinc-800 group-hover:text-[#00a855] transition-colors leading-snug line-clamp-2">
+                {article.title}
+              </h3>
+              <p className="text-[11px] text-zinc-400 mt-1">{formatDate(article.published_at)}</p>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -168,60 +178,39 @@ function HeroColumn({ featured }: { featured: Article }) {
 function RightColumn({ latest, featuredStartups, topContributors, ecosystemReports }: { latest: Article[]; featuredStartups: DirectoryEntry[]; topContributors: PublicContributor[]; ecosystemReports: EcosystemReport[] }) {
   return (
     <div className="space-y-7 divide-y divide-zinc-200">
-      {/* Latest News */}
+      {/* Latest */}
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-sm font-black uppercase tracking-widest text-zinc-900">Latest News</span>
-          <Link
-            href="/news"
-            className="text-[10px] font-bold text-[#00a855] hover:underline uppercase tracking-wider flex items-center gap-0.5"
-          >
-            View all news <ArrowRight className="h-3 w-3" />
-          </Link>
+        <div className="flex items-center gap-2 mb-3 pb-2 border-b-2 border-black">
+          <span className="w-1 h-4 bg-[#00cc6a] rounded-full" />
+          <span className="text-xs font-black uppercase tracking-widest text-black">Latest</span>
         </div>
-        <div className="h-px bg-zinc-200 mb-1" />
         <div className="divide-y divide-zinc-100">
-          {latest.slice(0, 6).map((article) => (
+          {latest.slice(0, 7).map((article) => (
             <Link
               key={article.id}
               href={`/${article.category}/${article.slug}`}
-              className="group flex items-start gap-3 py-3.5"
+              className="group flex flex-col gap-0.5 py-3 hover:bg-zinc-50 px-1 -mx-1 rounded transition-colors"
             >
-              {/* Text */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5 mb-1 flex-wrap">
-                  <ArticleTag article={article} />
-                  {article.location && (
-                    <span className="text-[10px] text-zinc-400 font-medium">
-                      · {locationLabel[article.location]}
-                    </span>
-                  )}
-                  <span className="text-[10px] text-zinc-400 ml-auto whitespace-nowrap">
-                    {formatDate(article.published_at)}
+              <div className="flex items-center gap-1.5">
+                <ArticleTag article={article} />
+                {article.location && (
+                  <span className="text-[10px] text-zinc-400 font-medium">
+                    · {locationLabel[article.location]}
                   </span>
-                </div>
-                <h4 className="text-[13px] font-semibold text-zinc-800 group-hover:text-[#00a855] transition-colors leading-snug line-clamp-2">
-                  {article.title}
-                </h4>
+                )}
+                <span className="text-[10px] text-zinc-400 font-medium ml-auto">
+                  {formatDate(article.published_at)}
+                </span>
               </div>
-              {/* Thumbnail */}
-              {article.cover_image && (
-                <div className="relative shrink-0 w-[72px] h-[50px] rounded overflow-hidden bg-zinc-100">
-                  <Image
-                    src={article.cover_image}
-                    alt={article.title}
-                    fill
-                    className="object-cover"
-                    sizes="72px"
-                  />
-                </div>
-              )}
+              <span className="text-xs font-semibold text-zinc-800 group-hover:text-[#00a855] transition-colors leading-snug line-clamp-2">
+                {article.title}
+              </span>
             </Link>
           ))}
         </div>
         <Link
           href="/news"
-          className="mt-2 flex items-center gap-1 text-xs font-bold text-[#00a855] hover:underline transition-colors"
+          className="mt-3 flex items-center gap-1 text-[10px] font-bold text-zinc-500 hover:text-black uppercase tracking-wider transition-colors"
         >
           All news <ArrowRight className="h-3 w-3" />
         </Link>
@@ -758,7 +747,8 @@ export default async function HomePage() {
   const directoryAll = await getAllDirectoryEntries(300).catch(() => [] as DirectoryEntry[])
 
   const featuredArticle = featured[0] ?? latestAll[0]
-  const recentArticles = latestAll.filter((a) => a.id !== featuredArticle?.id).slice(0, 6)
+  const heroBelow = latestAll.filter((a) => a.id !== featuredArticle?.id).slice(0, 2)
+  const recentArticles = latestAll.filter((a) => a.id !== featuredArticle?.id).slice(2, 8)
 
   // Fisher-Yates shuffle (server-side, so it re-randomizes on each ISR revalidation)
   function shuffle<T>(arr: T[]): T[] {
@@ -786,19 +776,19 @@ export default async function HomePage() {
 
       {/* ── 2-column hero ─── */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-7">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-0 xl:gap-0">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8 xl:gap-12">
 
           {/* LEFT: Featured hero */}
-          <div className="border-r-0 lg:border-r border-zinc-200 lg:pr-8">
+          <div className="border-r-0 lg:border-r border-zinc-200 lg:pr-10">
             {featuredArticle ? (
-              <HeroColumn featured={featuredArticle} />
+              <HeroColumn featured={featuredArticle} below={heroBelow} />
             ) : (
               <div className="py-20 text-center text-zinc-400 text-sm">No articles published yet.</div>
             )}
           </div>
 
           {/* RIGHT: Latest + Featured Startups + Top Contributors */}
-          <div className="hidden lg:block lg:pl-8">
+          <div className="hidden lg:block">
             <RightColumn latest={latestAll} featuredStartups={entriesByType.startup.slice(0, 4)} topContributors={contributors} ecosystemReports={ecosystemReports} />
           </div>
 
