@@ -1,10 +1,11 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { format } from 'date-fns'
 import { ArrowLeft, ExternalLink } from 'lucide-react'
 import {
-  STATUS_LABELS, STATUS_COLORS, PAYMENT_METHOD_LABELS,
+  STATUS_LABELS, STATUS_COLORS, PAYMENT_METHOD_LABELS, STORY_QUESTIONS,
   type SpotlightApplication, type SpotlightStatus, type PaymentMethod,
 } from '@/types/spotlight'
 import { SpotlightEditorActions } from '@/components/contributor/SpotlightEditorActions'
@@ -72,13 +73,15 @@ export default async function SpotlightReviewPage({
             </p>
           </div>
 
-          {/* Business info */}
+          {/* About them */}
           <div className="rounded-lg border border-border/40 bg-card p-4 space-y-2">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Business Information</p>
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">About Them</p>
             <Row label="Contact" value={application.contact_name} />
+            <Row label="Role" value={application.role} />
             <Row label="Email" value={application.email} />
             <Row label="Phone" value={application.phone} />
             <Row label="Website" value={application.website} />
+            <Row label="LinkedIn / Facebook" value={application.social_link} />
             <Row label="Industry" value={application.industry} />
             <Row label="Region" value={application.region} />
           </div>
@@ -86,11 +89,23 @@ export default async function SpotlightReviewPage({
           {/* Story */}
           <div className="rounded-lg border border-border/40 bg-card p-4 space-y-3">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Story</p>
-            <StoryBlock label="What does the business do?" value={application.what_you_do} />
-            <StoryBlock label="What problem are they solving?" value={application.problem} />
-            <StoryBlock label="What impact are they creating?" value={application.impact} />
-            <StoryBlock label="Why should they be featured?" value={application.why_feature} />
+            {STORY_QUESTIONS.map((q, i) => (
+              <StoryBlock key={q.key} label={`${i + 1}. ${q.label}`} value={application.story_answers?.[q.key] ?? null} />
+            ))}
+            {application.promo && <StoryBlock label="Anything to promote?" value={application.promo} />}
           </div>
+
+          {/* Photos & Assets */}
+          {(application.founder_photo_url || application.startup_logo_url || application.product_photo_url) && (
+            <div className="rounded-lg border border-border/40 bg-card p-4">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Photos &amp; Assets</p>
+              <div className="grid grid-cols-3 gap-3">
+                {application.founder_photo_url && <AssetThumb label="Founder" url={application.founder_photo_url} />}
+                {application.startup_logo_url && <AssetThumb label="Logo" url={application.startup_logo_url} />}
+                {application.product_photo_url && <AssetThumb label="Product" url={application.product_photo_url} />}
+              </div>
+            </div>
+          )}
 
           {/* Payment */}
           {application.payment_method && (
@@ -148,5 +163,16 @@ function StoryBlock({ label, value }: { label: string; value: string | null }) {
       <p className="text-[11px] font-semibold text-muted-foreground mb-1">{label}</p>
       <p className="text-sm leading-relaxed">{value}</p>
     </div>
+  )
+}
+
+function AssetThumb({ label, url }: { label: string; url: string }) {
+  return (
+    <a href={url} target="_blank" rel="noopener noreferrer" className="block">
+      <div className="relative aspect-square rounded-lg overflow-hidden bg-muted border border-border/40">
+        <Image src={url} alt={label} fill className="object-cover" sizes="120px" unoptimized />
+      </div>
+      <p className="text-[10px] text-muted-foreground text-center mt-1">{label}</p>
+    </a>
   )
 }

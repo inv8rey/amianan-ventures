@@ -12,6 +12,8 @@ export type SpotlightStatus =
 
 export type PaymentMethod = 'gcash' | 'maya' | 'bdo' | 'bpi' | 'unionbank'
 
+export type StoryQuestionKey = 'q1' | 'q2' | 'q3' | 'q4' | 'q5' | 'q6' | 'q7' | 'q8'
+
 export interface SpotlightApplication {
   id: string
   contributor_id: string
@@ -22,10 +24,13 @@ export interface SpotlightApplication {
   website: string | null
   industry: string | null
   region: string | null
-  what_you_do: string | null
-  problem: string | null
-  impact: string | null
-  why_feature: string | null
+  role: string | null
+  social_link: string | null
+  story_answers: Partial<Record<StoryQuestionKey, string>> | null
+  founder_photo_url: string | null
+  startup_logo_url: string | null
+  product_photo_url: string | null
+  promo: string | null
   package: string
   amount_php: number
   status: SpotlightStatus
@@ -42,6 +47,20 @@ export interface SpotlightApplication {
   created_at: string
   updated_at: string
 }
+
+// Same questions used on the public /founder-story submission form —
+// the Get Featured package produces this same feature story, so the
+// application collects identical story inputs.
+export const STORY_QUESTIONS: { key: StoryQuestionKey; label: string }[] = [
+  { key: 'q1', label: 'How did the idea for your startup begin?' },
+  { key: 'q2', label: 'What problem are you trying to solve?' },
+  { key: 'q3', label: 'What does your startup actually do?' },
+  { key: 'q4', label: 'What have you built or done so far?' },
+  { key: 'q5', label: 'What has been the biggest challenge in building your startup?' },
+  { key: 'q6', label: 'What keeps you motivated to continue building this startup?' },
+  { key: 'q7', label: 'What are you working toward in the next 6 to 12 months?' },
+  { key: 'q8', label: 'What advice would you give someone starting their first startup in the region?' },
+]
 
 export const STATUS_LABELS: Record<SpotlightStatus, string> = {
   draft: 'Draft',
