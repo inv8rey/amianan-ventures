@@ -14,24 +14,42 @@ import { createServiceClient } from '@/lib/supabase/service'
 
 interface SpotlightExample {
   name: string
-  sector: string | null
   logo_url: string | null
+  slug: string
 }
 
-// Pulls real, currently-listed directory entries to show as examples —
-// no fabricated business names or photos.
+// Pulls real published Founder Stories articles and matches each one to its
+// directory listing (by name appearing in the article) so every card links to
+// an actual story — no fabricated business names or dead-end cards.
 async function getSpotlightExamples(): Promise<SpotlightExample[]> {
   try {
     const supabase = createServiceClient()
-    const { data } = await supabase
-      .from('directory')
-      .select('name, sector, logo_url')
-      .eq('status', 'published')
-      .eq('type', 'startup')
-      .not('logo_url', 'is', null)
-      .order('created_at', { ascending: false })
-      .limit(4)
-    return data ?? []
+    const [{ data: articles }, { data: dirs }] = await Promise.all([
+      supabase
+        .from('articles')
+        .select('title, slug, excerpt')
+        .eq('category', 'founder-stories')
+        .eq('status', 'published')
+        .order('published_at', { ascending: false })
+        .limit(30),
+      supabase
+        .from('directory')
+        .select('name, logo_url')
+        .eq('status', 'published')
+        .not('logo_url', 'is', null),
+    ])
+    if (!articles || !dirs) return []
+
+    const examples: SpotlightExample[] = []
+    for (const a of articles) {
+      const haystack = `${a.title} ${a.excerpt} ${a.slug}`.toLowerCase()
+      const match = dirs.find((d) => haystack.includes(d.name.toLowerCase()))
+      if (match) {
+        examples.push({ name: match.name, logo_url: match.logo_url, slug: a.slug })
+        if (examples.length === 4) break
+      }
+    }
+    return examples
   } catch {
     return []
   }
@@ -142,7 +160,7 @@ export default async function GetFeaturedPage() {
     <div className="min-h-screen bg-white">
 
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="relative min-h-[640px] lg:min-h-[88vh] flex items-end overflow-hidden">
+      <section className="relative min-h-[560px] lg:min-h-[640px] flex items-end overflow-hidden">
         <Image
           src="/get-featured-hero.png"
           alt="Founders and agripreneurs building across Northern Luzon"
@@ -154,7 +172,7 @@ export default async function GetFeaturedPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/75 to-white/10" />
         <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
 
-        <div className="relative z-10 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 pt-28 pb-0">
+        <div className="relative z-10 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 pb-0">
           <div className="max-w-2xl">
             <h1 className="text-5xl sm:text-6xl font-black leading-[1.05] mb-5">
               <span className="text-zinc-900">Share Your Story.</span><br />
