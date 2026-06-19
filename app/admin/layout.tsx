@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { LayoutDashboard, FileText, Calendar, Building2, ImageIcon, Inbox, Mail, PenLine, Settings2, TrendingUp, MessageCircle } from 'lucide-react'
+import { LayoutDashboard, FileText, Calendar, Building2, ImageIcon, Inbox, Mail, PenLine, Settings2, TrendingUp, MessageCircle, Star } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { revalidatePath } from 'next/cache'
@@ -61,6 +61,7 @@ const navItems = [
   { href: '/admin/directory',        label: 'Directory',        icon: Building2,       exact: false },
   { href: '/admin/featured-listings',label: 'Featured Listings',icon: ImageIcon,       exact: false },
   { href: '/admin/contributions',    label: 'Contributions',    icon: PenLine,         exact: false },
+  { href: '/admin/spotlight',        label: 'Get Featured',     icon: Star,            exact: false },
   { href: '/admin/comments',         label: 'Comments',         icon: MessageCircle,   exact: false },
   { href: '/admin/ecosystem-pulse',  label: 'Ecosystem Pulse',  icon: TrendingUp,      exact: false },
   { href: '/admin/submissions',      label: 'Submissions',      icon: Inbox,           exact: false },

@@ -2,9 +2,11 @@ import type React from 'react'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { Plus, AlertCircle, FileText, CheckCircle, Clock, RotateCcw, PenLine } from 'lucide-react'
+import { Plus, AlertCircle, FileText, CheckCircle, Clock, RotateCcw, PenLine, Star, ArrowRight } from 'lucide-react'
 import { SubmissionCard } from '@/components/contributor/SubmissionCard'
 import type { ContributorSubmission } from '@/types/contributor'
+import type { SpotlightApplication } from '@/types/spotlight'
+import { STATUS_LABELS as SPOTLIGHT_STATUS_LABELS, STATUS_COLORS as SPOTLIGHT_STATUS_COLORS } from '@/types/spotlight'
 
 function profileIncomplete(profile: { display_name: string; bio: string | null; role: string | null }) {
   return !profile.bio || !profile.role || !profile.display_name
@@ -15,7 +17,7 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/contribute/login')
 
-  const [profileResult, submissionsResult] = await Promise.all([
+  const [profileResult, submissionsResult, spotlightResult] = await Promise.all([
     supabase
       .from('contributor_profiles')
       .select('display_name, bio, role')
@@ -26,10 +28,18 @@ export default async function DashboardPage() {
       .select('*')
       .eq('contributor_id', user.id)
       .order('created_at', { ascending: false }),
+    supabase
+      .from('spotlight_applications')
+      .select('*')
+      .eq('contributor_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle(),
   ])
 
   const profile = profileResult.data
   const submissions = (submissionsResult.data ?? []) as ContributorSubmission[]
+  const spotlight = spotlightResult.data as SpotlightApplication | null
 
   if (!profile) redirect('/contribute/login')
 
@@ -98,6 +108,52 @@ export default async function DashboardPage() {
           </Link>
         </div>
       )}
+
+      {/* Spotlight (Get Featured) application card */}
+      <div className="rounded-2xl border border-zinc-200 bg-white p-6 mb-6">
+        {spotlight ? (
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
+                <Star className="h-4 w-4 text-[#00a855]" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-black text-zinc-900">{spotlight.business_name}</p>
+                  <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full ${SPOTLIGHT_STATUS_COLORS[spotlight.status]}`}>
+                    {SPOTLIGHT_STATUS_LABELS[spotlight.status]}
+                  </span>
+                </div>
+                <p className="text-xs text-zinc-500 mt-0.5">Get Featured application</p>
+              </div>
+            </div>
+            <Link
+              href="/spotlight"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-black text-white text-sm font-semibold hover:bg-zinc-800 transition-colors shrink-0"
+            >
+              {spotlight.status === 'draft' ? 'Continue Application' : 'View Application'} <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
+                <Star className="h-4 w-4 text-[#00a855]" />
+              </div>
+              <div>
+                <p className="text-sm font-black text-zinc-900">Apply to Get Featured</p>
+                <p className="text-xs text-zinc-500 mt-0.5">Share your business story and get listed in the spotlight.</p>
+              </div>
+            </div>
+            <Link
+              href="/spotlight"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-black text-white text-sm font-semibold hover:bg-zinc-800 transition-colors shrink-0"
+            >
+              Start Application <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        )}
+      </div>
 
       {/* Submissions list */}
       {submissions.length === 0 ? (

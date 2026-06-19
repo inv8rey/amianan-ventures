@@ -233,3 +233,121 @@ export async function sendEditorAlert({
     `),
   })
 }
+
+// ── Get Featured / Spotlight emails ───────────────────────────────────────────
+
+export async function sendSpotlightSubmitted(
+  to: string,
+  { businessName }: { businessName: string }
+) {
+  return getResend().emails.send({
+    from: `Amianan Ventures <${FROM}>`,
+    to,
+    subject: `We received your Get Featured application: "${businessName}"`,
+    html: baseHtml(`
+      ${h1('Application received!')}
+      ${p(`Thanks for applying to be featured, <strong>${businessName}</strong>. Our team will review your application and get back to you within 1–3 business days.`)}
+      ${p('You can keep editing your details from your dashboard at any time before payment.')}
+      ${btn(`${SITE_URL}/dashboard`, 'View My Dashboard')}
+    `),
+  })
+}
+
+export async function sendSpotlightApproved(
+  to: string,
+  { businessName }: { businessName: string }
+) {
+  return getResend().emails.send({
+    from: `Amianan Ventures <${FROM}>`,
+    to,
+    subject: `Your Get Featured application was approved: "${businessName}"`,
+    html: baseHtml(`
+      ${h1('Your application is approved! 🎉')}
+      ${pill('Approved', '#10b981')}
+      <div style="margin-top:16px">
+        ${p(`Congratulations! <strong>${businessName}</strong> has been approved for the Amianan Startup Spotlight. The next step is payment — head to your dashboard to see your payment instructions and upload your proof of payment.`)}
+        ${p('Payment is requested only after your application has been reviewed and approved — exactly where you are now.')}
+        ${btn(`${SITE_URL}/spotlight`, 'Complete Payment')}
+      </div>
+    `),
+  })
+}
+
+export async function sendSpotlightRejected(
+  to: string,
+  { businessName, notes }: { businessName: string; notes: string }
+) {
+  return getResend().emails.send({
+    from: `Amianan Ventures <${FROM}>`,
+    to,
+    subject: `Update on your Get Featured application: "${businessName}"`,
+    html: baseHtml(`
+      ${h1('An update on your application')}
+      ${p(`Thank you for applying to be featured, <strong>${businessName}</strong>.`)}
+      ${p('After careful review, we\'re not able to move forward with your application at this time.')}
+      ${notes ? callout(`<p style="margin:0 0 6px;font-size:12px;font-weight:600;color:#92400e;text-transform:uppercase;letter-spacing:0.5px">Notes</p><p style="margin:0;font-size:14px;color:#78350f;line-height:1.5">${notes}</p>`) : ''}
+      ${p('We encourage you to apply again in the future.')}
+    `),
+  })
+}
+
+export async function sendSpotlightPaymentConfirmed(
+  to: string,
+  { businessName }: { businessName: string }
+) {
+  return getResend().emails.send({
+    from: `Amianan Ventures <${FROM}>`,
+    to,
+    subject: `Payment confirmed: "${businessName}"`,
+    html: baseHtml(`
+      ${h1('Payment confirmed!')}
+      ${pill('Paid', '#10b981')}
+      <div style="margin-top:16px">
+        ${p(`We've confirmed your payment for <strong>${businessName}</strong>. Our team will now start producing your feature story and content assets.`)}
+        ${btn(`${SITE_URL}/spotlight`, 'View My Application')}
+      </div>
+    `),
+  })
+}
+
+export async function sendSpotlightPublished(
+  to: string,
+  { businessName, url }: { businessName: string; url: string }
+) {
+  return getResend().emails.send({
+    from: `Amianan Ventures <${FROM}>`,
+    to,
+    subject: `Your feature is live: "${businessName}"`,
+    html: baseHtml(`
+      ${h1('Your feature is now live! 🚀')}
+      ${pill('Published', '#00a855')}
+      <div style="margin-top:16px">
+        ${p(`<strong>${businessName}</strong> is now featured on Amianan Innovation Ventures. Share it with your network!`)}
+        ${btn(url, 'View Your Feature')}
+        <p style="margin-top:16px;font-size:13px;color:#6b7280">
+          Direct link: <a href="${url}" style="color:#00a855">${url}</a>
+        </p>
+      </div>
+    `),
+  })
+}
+
+export async function sendEditorSpotlightAlert({
+  businessName,
+  applicationId,
+}: {
+  businessName: string
+  applicationId: string
+}) {
+  if (!EDITOR_EMAIL) return
+  return getResend().emails.send({
+    from: `Amianan Ventures <${FROM}>`,
+    to: EDITOR_EMAIL,
+    subject: `New Get Featured application: "${businessName}"`,
+    html: baseHtml(`
+      ${h1('New Get Featured application')}
+      ${p(`<strong>${businessName}</strong> has submitted a Get Featured application for review.`)}
+      ${btn(`${SITE_URL}/admin/spotlight/${applicationId}`, 'Review Application')}
+    `),
+  })
+}
