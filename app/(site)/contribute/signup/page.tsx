@@ -45,8 +45,6 @@ export default function ContributorSignupPage() {
     const supabase = createClient()
 
     // 1. Create Supabase Auth user
-    // All profile fields are passed as user_metadata so the DB trigger
-    // (handle_new_contributor_profile) can create the profile row atomically.
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email: form.email,
       password: form.password,
@@ -71,8 +69,25 @@ export default function ContributorSignupPage() {
       return
     }
 
-    // Profile is created by the DB trigger on auth.users INSERT —
-    // no separate insert needed here.
+    // 2. Create the profile row ourselves (service-role API route) —
+    // do not depend on a DB trigger to do this.
+    const res = await fetch('/api/contributor/create-profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: authData.user.id,
+        displayName: form.displayName.trim(),
+        fullName: form.fullName.trim() || null,
+        role: form.role || null,
+      }),
+    })
+
+    if (!res.ok) {
+      const { error } = await res.json().catch(() => ({ error: 'Could not finish setting up your account.' }))
+      toast.error(error ?? 'Could not finish setting up your account.')
+      setLoading(false)
+      return
+    }
 
     toast.success('Account created! Welcome to the contributor portal.')
     router.push('/dashboard')
