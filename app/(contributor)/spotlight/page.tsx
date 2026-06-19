@@ -8,11 +8,28 @@ export default async function SpotlightPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/contribute/login')
 
-  const { data: profile } = await supabase
+  let { data: profile } = await supabase
     .from('contributor_profiles')
     .select('display_name, organization')
     .eq('id', user.id)
-    .single()
+    .maybeSingle()
+
+  // Profile row missing (e.g. the DB trigger that's supposed to create it
+  // on signup never fired) — create it now from auth metadata instead of
+  // bouncing the user back to login in a loop.
+  if (!profile) {
+    const meta = user.user_metadata as { display_name?: string; organization?: string }
+    const { data: created } = await supabase
+      .from('contributor_profiles')
+      .insert({
+        id: user.id,
+        display_name: meta.display_name || '',
+        organization: meta.organization || null,
+      })
+      .select('display_name, organization')
+      .single()
+    profile = created
+  }
 
   if (!profile) redirect('/contribute/login')
 

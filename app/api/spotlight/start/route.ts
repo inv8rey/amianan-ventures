@@ -5,10 +5,11 @@ import { createClient } from '@supabase/supabase-js'
 // contributor profile + initial draft application row.
 // Uses service role key to bypass RLS.
 //
-// Retries on FK violation (23503) — the contributor_profiles row is
-// created by a DB trigger on auth.users INSERT, which can land a few ms
-// after signUp() resolves on the client (same race condition handled by
-// /api/contributor/create-profile).
+// The contributor_profiles row is *supposed* to be created by a DB trigger
+// on auth.users INSERT, but that trigger isn't guaranteed to exist (it's
+// not in a tracked migration file) — so this route upserts the profile
+// itself rather than relying on it. Retries on FK violation (23503) cover
+// the case where auth.users hasn't fully committed yet.
 function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, ms))
 }
@@ -31,18 +32,40 @@ export async function POST(request: Request) {
   const supabase = createClient(url, serviceKey, { auth: { persistSession: false } })
   const delays = [300, 600, 1200, 2000, 3000]
 
-  // Safety net: make sure organization/display_name are set on the
-  // contributor profile even if the DB trigger didn't populate them.
+  // Ensure the contributor profile exists (insert if missing, fill in
+  // organization/display_name if it already exists but is blank).
   for (let i = 0; i <= delays.length; i++) {
-    const { error } = await supabase
+    const { data: existing, error: fetchError } = await supabase
       .from('contributor_profiles')
-      .update({ organization: businessName, display_name: contactName })
+      .select('id, organization, display_name')
       .eq('id', userId)
-      .is('organization', null)
+      .maybeSingle()
 
-    if (!error) break
+    if (!fetchError) {
+      if (!existing) {
+        const { error: insertError } = await supabase
+          .from('contributor_profiles')
+          .insert({ id: userId, display_name: contactName, organization: businessName })
+        if (!insertError || insertError.code === '23505') break
+        if (insertError.code === '23503' && i < delays.length) {
+          await sleep(delays[i])
+          continue
+        }
+        return NextResponse.json({ error: insertError.message }, { status: 500 })
+      } else if (!existing.organization || !existing.display_name) {
+        await supabase
+          .from('contributor_profiles')
+          .update({
+            organization: existing.organization || businessName,
+            display_name: existing.display_name || contactName,
+          })
+          .eq('id', userId)
+      }
+      break
+    }
+
     if (i === delays.length) {
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      return NextResponse.json({ error: fetchError.message }, { status: 500 })
     }
     await sleep(delays[i])
   }
