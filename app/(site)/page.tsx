@@ -12,54 +12,36 @@ import { EcosystemSection } from '@/components/site/EcosystemSection'
 import { FeaturedListings } from '@/components/site/FeaturedListings'
 import { NewsletterSignup } from '@/components/site/NewsletterSignup'
 import { EcosystemPulseWidget } from '@/components/site/EcosystemPulseWidget'
+import { CommunityContributions } from '@/components/site/CommunityContributions'
+import type { CommunityContribution } from '@/components/site/CommunityContributions'
 import type { Article, DirectoryEntry, DirectoryType, Location } from '@/types'
 import { ROLE_LABELS, type ContributorRole, type ContentType } from '@/types/contributor'
 
-// ─── Ecosystem contributions types ────────────────────────────
-interface EcosystemContribution {
-  id: string
-  headline: string
-  summary: string
-  content_type: ContentType
-  published_url: string | null
-  published_at: string | null
-  contributor: {
-    display_name: string
-    role: string | null
-    photo_url: string | null
-  } | null
-}
-
-const CONTRIBUTION_TYPE_STYLE: Record<ContentType, { label: string; color: string; dot: string }> = {
-  founder_story:       { label: 'Founder Story',       color: 'text-amber-700 bg-amber-50 border-amber-100',     dot: 'bg-amber-400' },
-  opinion_essay:       { label: 'Perspective',          color: 'text-violet-700 bg-violet-50 border-violet-100',  dot: 'bg-violet-400' },
-  program_recap:       { label: 'Program Recap',        color: 'text-blue-700 bg-blue-50 border-blue-100',        dot: 'bg-blue-400' },
-  ecosystem_spotlight: { label: 'Ecosystem Spotlight',  color: 'text-[#00a855] bg-[#00a855]/8 border-[#00a855]/20', dot: 'bg-[#00a855]' },
-  field_notes:         { label: 'Field Notes',          color: 'text-teal-700 bg-teal-50 border-teal-100',        dot: 'bg-teal-400' },
-}
-
-async function getEcosystemContributions(): Promise<EcosystemContribution[]> {
+async function getEcosystemContributions(): Promise<CommunityContribution[]> {
   try {
     const { createServiceClient } = await import('@/lib/supabase/service')
     const supabase = createServiceClient()
     const { data } = await supabase
       .from('contributor_submissions')
-      .select('id, headline, summary, content_type, published_url, published_at, contributor_profiles(display_name, role, photo_url)')
+      .select('id, headline, summary, content_type, cover_image_url, published_at, contributor_profiles(display_name, role, organization, photo_url)')
       .eq('status', 'published')
       .order('published_at', { ascending: false })
-      .limit(5)
+      .limit(20)
     if (!data) return []
-    return data.map((s) => ({
-      id: s.id,
-      headline: s.headline,
-      summary: s.summary,
-      content_type: s.content_type as ContentType,
-      published_url: s.published_url,
-      published_at: s.published_at,
-      contributor: Array.isArray(s.contributor_profiles)
+    return data.map((s) => {
+      const profile = Array.isArray(s.contributor_profiles)
         ? (s.contributor_profiles[0] ?? null)
-        : (s.contributor_profiles as EcosystemContribution['contributor'] | null),
-    }))
+        : (s.contributor_profiles as { display_name: string; role: string | null; organization: string | null; photo_url: string | null } | null)
+      return {
+        id: s.id,
+        headline: s.headline,
+        summary: s.summary,
+        content_type: s.content_type as ContentType,
+        cover_image_url: s.cover_image_url,
+        published_at: s.published_at,
+        contributor: profile,
+      }
+    })
   } catch {
     return []
   }
@@ -421,184 +403,6 @@ function FounderStoriesStrip({ articles }: { articles: Article[] }) {
   )
 }
 
-// ─── From the Ecosystem ───────────────────────────────────────
-function ContributionTypeBadge({ type }: { type: ContentType }) {
-  const s = CONTRIBUTION_TYPE_STYLE[type]
-  return (
-    <span className={`inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border ${s.color}`}>
-      <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${s.dot}`} />
-      {s.label}
-    </span>
-  )
-}
-
-function ContributorByline({ contributor, date }: { contributor: EcosystemContribution['contributor']; date: string | null }) {
-  if (!contributor) return null
-  return (
-    <div className="flex items-center gap-2.5 mt-auto pt-4">
-      {contributor.photo_url ? (
-        <div className="relative w-7 h-7 rounded-full overflow-hidden shrink-0 border border-zinc-200">
-          <Image src={contributor.photo_url} alt={contributor.display_name} fill className="object-cover" sizes="28px" />
-        </div>
-      ) : (
-        <div className="w-7 h-7 rounded-full bg-zinc-900 flex items-center justify-center shrink-0">
-          <span className="text-[10px] font-black text-white">{contributor.display_name.charAt(0).toUpperCase()}</span>
-        </div>
-      )}
-      <div className="min-w-0">
-        <p className="text-xs font-semibold text-zinc-800 truncate">{contributor.display_name}</p>
-        {contributor.role && (
-          <p className="text-[10px] text-zinc-400 truncate leading-none mt-0.5">
-            {ROLE_LABELS[contributor.role as ContributorRole] ?? contributor.role}
-          </p>
-        )}
-      </div>
-      {date && (
-        <span className="text-[10px] text-zinc-300 ml-auto shrink-0">
-          {format(new Date(date), 'MMM d, yyyy')}
-        </span>
-      )}
-    </div>
-  )
-}
-
-function FromTheEcosystem({ contributions }: { contributions: EcosystemContribution[] }) {
-  if (contributions.length === 0) return null
-  const [featured, ...secondary] = contributions
-
-  return (
-    <section className="py-12 border-t border-zinc-100">
-
-      {/* ── Section header ── */}
-      <div className="flex items-start justify-between gap-6 mb-8">
-        <div>
-          <p className="text-[10px] font-black uppercase tracking-widest text-[#00a855] mb-2.5">
-            Community Contributions
-          </p>
-          <h2 className="text-2xl sm:text-3xl font-black text-zinc-900 leading-tight tracking-tight">
-            From the Ecosystem
-          </h2>
-          <p className="text-sm text-zinc-500 mt-2 max-w-xl leading-relaxed">
-            Perspectives, lessons, and field insights from founders, students, researchers,
-            and builders shaping innovation across Northern Luzon.
-          </p>
-        </div>
-        <div className="hidden sm:flex flex-col items-end gap-2 shrink-0">
-          <Link
-            href="/contribute/signup"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-zinc-900 text-white text-xs font-bold hover:bg-black transition-colors whitespace-nowrap"
-          >
-            Submit a Contribution <ArrowRight className="h-3 w-3" />
-          </Link>
-          <Link
-            href="/contribute"
-            className="text-xs font-semibold text-zinc-400 hover:text-zinc-700 transition-colors"
-          >
-            View All Contributions →
-          </Link>
-        </div>
-      </div>
-
-      {/* ── Editorial grid ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5">
-
-        {/* Featured card */}
-        {featured.published_url ? (
-          <a href={featured.published_url} target="_blank" rel="noopener noreferrer" className="group flex flex-col gap-4 p-6 sm:p-8 rounded-2xl border border-zinc-200 bg-white hover:border-zinc-300 hover:shadow-lg hover:shadow-zinc-100 transition-all">
-            <FeaturedInner contribution={featured} />
-          </a>
-        ) : (
-          <div className="flex flex-col gap-4 p-6 sm:p-8 rounded-2xl border border-zinc-200 bg-white">
-            <FeaturedInner contribution={featured} />
-          </div>
-        )}
-
-        {/* Secondary cards */}
-        {secondary.length > 0 && (
-          <div className="flex flex-col gap-3">
-            {secondary.slice(0, 4).map((c) => {
-              const inner = (
-                <SecondaryInner contribution={c} />
-              )
-              return c.published_url ? (
-                <a
-                  key={c.id}
-                  href={c.published_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex flex-col gap-3 p-4 rounded-xl border border-zinc-100 bg-white hover:border-zinc-200 hover:shadow-sm transition-all"
-                >
-                  {inner}
-                </a>
-              ) : (
-                <div key={c.id} className="flex flex-col gap-3 p-4 rounded-xl border border-zinc-100 bg-white">
-                  {inner}
-                </div>
-              )
-            })}
-
-            {/* Mobile CTAs */}
-            <div className="flex sm:hidden items-center gap-4 mt-1 pt-3 border-t border-zinc-100">
-              <Link href="/contribute/signup" className="text-xs font-bold text-zinc-900 hover:underline">
-                Submit a Contribution →
-              </Link>
-              <Link href="/contribute" className="text-xs text-zinc-400 hover:text-zinc-600">
-                View all
-              </Link>
-            </div>
-          </div>
-        )}
-      </div>
-    </section>
-  )
-}
-
-function FeaturedInner({ contribution: c }: { contribution: EcosystemContribution }) {
-  return (
-    <>
-      <ContributionTypeBadge type={c.content_type} />
-      <div className="flex-1">
-        <h3 className="text-xl sm:text-2xl font-black text-zinc-900 leading-snug group-hover:text-[#00a855] transition-colors mb-3 tracking-tight">
-          {c.headline}
-        </h3>
-        <p className="text-sm text-zinc-500 leading-relaxed line-clamp-3">
-          {c.summary}
-        </p>
-      </div>
-      <ContributorByline contributor={c.contributor} date={c.published_at} />
-    </>
-  )
-}
-
-function SecondaryInner({ contribution: c }: { contribution: EcosystemContribution }) {
-  return (
-    <>
-      <ContributionTypeBadge type={c.content_type} />
-      <h3 className="text-sm font-bold text-zinc-900 leading-snug group-hover:text-[#00a855] transition-colors line-clamp-2">
-        {c.headline}
-      </h3>
-      <div className="flex items-center gap-2 mt-auto">
-        {c.contributor && (
-          <>
-            {c.contributor.photo_url ? (
-              <div className="relative w-5 h-5 rounded-full overflow-hidden shrink-0 border border-zinc-200">
-                <Image src={c.contributor.photo_url} alt={c.contributor.display_name} fill className="object-cover" sizes="20px" />
-              </div>
-            ) : (
-              <div className="w-5 h-5 rounded-full bg-zinc-800 flex items-center justify-center shrink-0">
-                <span className="text-[8px] font-black text-white">{c.contributor.display_name.charAt(0).toUpperCase()}</span>
-              </div>
-            )}
-            <span className="text-[10px] font-semibold text-zinc-500 truncate">{c.contributor.display_name}</span>
-          </>
-        )}
-        {c.published_at && (
-          <span className="text-[10px] text-zinc-300 ml-auto shrink-0">{format(new Date(c.published_at), 'MMM d')}</span>
-        )}
-      </div>
-    </>
-  )
-}
 
 // ─── Contributors strip ────────────────────────────────────────
 interface PublicContributor {
@@ -829,8 +633,8 @@ export default async function HomePage() {
         {/* Founder Stories */}
         <FounderStoriesStrip articles={founderStories} />
 
-        {/* From the Ecosystem — community contributions */}
-        <FromTheEcosystem contributions={ecosystemContributions} />
+        {/* Community Contributions */}
+        <CommunityContributions contributions={ecosystemContributions} />
 
         {/* Contributors */}
         <ContributorsStrip contributors={contributors} />
