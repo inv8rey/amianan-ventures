@@ -3,9 +3,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {
   ArrowRight, BookOpen, Eye, Users, FileText, Image as ImageIcon,
-  Quote, Layers, BadgeCheck, Award, Globe, Lock, MapPin, CheckCircle2,
-  ClipboardList, CalendarCheck, FileSearch, Send, Mail,
-  FileEdit, Monitor, Images, IdCard, FileBadge2, Gift, ShieldCheck,
+  Quote, Layers, BadgeCheck, Award, Globe, Lock, MapPin,
+  Mail, FileEdit, Monitor, Images, IdCard, FileBadge2, Gift, ShieldCheck,
+  MailCheck, Smartphone, Rocket, QrCode, ChevronRight, Clock, Landmark, CreditCard,
 } from 'lucide-react'
 import { SpotlightApplicationForm } from '@/components/site/SpotlightApplicationForm'
 
@@ -52,11 +52,38 @@ const included = [
 ]
 
 const steps = [
-  { step: '01', icon: Send,          title: 'Submit your application', desc: 'Fill out the form below with your business details and story.' },
-  { step: '02', icon: CalendarCheck, title: 'Intake conversation', desc: 'Amianan schedules a 30-minute conversation to learn your story.' },
-  { step: '03', icon: FileSearch,    title: 'Draft & review', desc: 'Your feature is drafted and shared with you for review before publication.' },
-  { step: '04', icon: ClipboardList, title: 'Published', desc: 'Your story goes live within 7 to 14 days from submission.' },
-  { step: '05', icon: CheckCircle2,  title: 'Assets delivered', desc: 'All content assets delivered within 3 days of publication.' },
+  {
+    icon: FileEdit,
+    title: 'Submit Your Application',
+    desc: 'Fill out the short application form and tell us your story.',
+    time: 'Takes 3–5 minutes',
+  },
+  {
+    icon: MailCheck,
+    title: 'Get Reviewed',
+    desc: 'Our team reviews your application. If accepted, we’ll send you an approval message.',
+    time: 'Within 24 hours',
+  },
+  {
+    icon: Smartphone,
+    title: 'Complete Payment',
+    desc: 'Once approved, complete payment using any of our secure payment options.',
+    time: 'Instant',
+  },
+  {
+    icon: Rocket,
+    title: 'We Create & Feature Your Story',
+    desc: 'Our team produces your feature and publishes it on Amianan Ventures.',
+    time: '7–14 business days',
+  },
+]
+
+const paymentMethods = [
+  { name: 'GCash',     color: '#007DFE' },
+  { name: 'Maya',      color: '#00C26E' },
+  { name: 'BDO',       color: '#003DA5' },
+  { name: 'BPI',       color: '#C8102E' },
+  { name: 'UnionBank', color: '#F47920' },
 ]
 
 export default function GetFeaturedPage() {
@@ -288,31 +315,142 @@ export default function GetFeaturedPage() {
 
       {/* ── How it works ──────────────────────────────────────── */}
       <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-        <p className="text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">Simple process</p>
-        <h2 className="text-2xl sm:text-3xl font-black text-zinc-900 mb-12">How It Works</h2>
+        <div className="text-center mb-14">
+          <p className="text-xs font-black uppercase tracking-widest text-[#00a855] mb-3">How It Works</p>
+          <h2 className="text-3xl sm:text-4xl font-black text-zinc-900 mb-4 leading-tight">
+            Simple. Transparent. Founder-First.
+          </h2>
+          <p className="text-sm sm:text-base text-zinc-500 max-w-lg mx-auto leading-relaxed">
+            We&apos;ve made the process simple so you can focus on what you do best—building and growing your business.
+          </p>
+        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
+        {/* Step row */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
           {steps.map((s, i) => (
-            <div key={s.step} className="relative">
+            <div key={s.title} className="relative flex flex-col">
+              {/* Chevron connector */}
               {i < steps.length - 1 && (
-                <div
-                  className="hidden lg:block absolute h-px bg-zinc-200"
-                  style={{ top: '18px', left: 'calc(100% + 4px)', right: '-100%', width: 'calc(100% - 8px)' }}
-                />
+                <ChevronRight className="hidden lg:block absolute h-5 w-5 text-zinc-300" style={{ top: '34px', right: '-26px' }} />
               )}
-              <div className="flex items-center gap-3 mb-5">
-                <div className="w-9 h-9 rounded-full border border-[#00a855]/30 bg-[#00a855]/8 flex items-center justify-center shrink-0">
-                  <span className="text-xs font-black text-[#00a855]">{s.step}</span>
+
+              {/* Numbered icon */}
+              <div className="relative w-20 h-20 mx-auto mb-5">
+                <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[#0a3a22] flex items-center justify-center z-10 ring-4 ring-white">
+                  <span className="text-[11px] font-black text-white">{i + 1}</span>
                 </div>
-                <div className="flex-1 h-px bg-zinc-100 lg:hidden" />
+                <div className="w-20 h-20 rounded-full bg-[#00a855]/10 flex items-center justify-center">
+                  <s.icon className="h-8 w-8 text-[#0a3a22]" />
+                </div>
               </div>
-              <div className="w-9 h-9 rounded-xl bg-zinc-900 flex items-center justify-center mb-4">
-                <s.icon className="h-4 w-4 text-white" />
+
+              <p className="text-base font-black text-zinc-900 mb-2 text-center">{s.title}</p>
+              <p className="text-xs text-zinc-500 leading-relaxed text-center max-w-[220px] mx-auto mb-5">{s.desc}</p>
+
+              {/* Step visual */}
+              <div className="mt-auto mb-4">
+                {i === 0 && (
+                  <div className="rounded-xl border border-zinc-200 bg-white p-3.5 shadow-sm">
+                    <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-wider mb-2.5">Application Form</p>
+                    <div className="space-y-2">
+                      <div className="h-1.5 bg-zinc-100 rounded w-1/2" />
+                      <div className="h-6 bg-zinc-50 border border-zinc-100 rounded" />
+                      <div className="h-1.5 bg-zinc-100 rounded w-1/3 mt-2" />
+                      <div className="h-6 bg-zinc-50 border border-zinc-100 rounded" />
+                    </div>
+                    <div className="mt-2.5 h-7 rounded bg-[#00cc6a] flex items-center justify-center">
+                      <span className="text-[9px] font-bold text-black">Submit Application</span>
+                    </div>
+                  </div>
+                )}
+                {i === 1 && (
+                  <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
+                      <MailCheck className="h-5 w-5 text-[#00a855]" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold text-zinc-900">You&apos;re approved!</p>
+                      <p className="text-[10px] text-zinc-400 mt-0.5">Complete payment to get started.</p>
+                    </div>
+                  </div>
+                )}
+                {i === 2 && (
+                  <div className="rounded-xl bg-[#06301c] border border-white/10 p-3.5">
+                    <p className="text-[10px] font-black text-[#00cc6a] uppercase tracking-wider text-center mb-2.5">Payment Options</p>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      <div className="bg-white/5 rounded-lg p-2 flex items-center justify-center">
+                        <span className="text-[11px] font-black" style={{ color: '#4FA8FF' }}>GCash</span>
+                      </div>
+                      <div className="bg-white/5 rounded-lg p-2 flex flex-col items-center justify-center gap-0.5">
+                        <QrCode className="h-4 w-4 text-white/60" />
+                        <span className="text-[8px] text-white/40">Scan to Pay</span>
+                      </div>
+                      <div className="bg-white/5 rounded-lg p-2 flex items-center justify-center">
+                        <span className="text-[11px] font-black text-[#00cc6a]">maya</span>
+                      </div>
+                      <div className="bg-white/5 rounded-lg p-2 flex flex-col items-center justify-center gap-0.5">
+                        <Landmark className="h-3.5 w-3.5 text-white/60" />
+                        <span className="text-[8px] text-white/40">BDO · BPI · UB</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {i === 3 && (
+                  <div className="rounded-xl border border-zinc-200 bg-white overflow-hidden shadow-sm">
+                    <div className="h-5 bg-zinc-100 flex items-center gap-1 px-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-zinc-300" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-zinc-300" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-zinc-300" />
+                    </div>
+                    <div className="p-3">
+                      <span className="inline-block text-[8px] font-bold uppercase px-1.5 py-0.5 rounded bg-[#00a855]/10 text-[#00a855] mb-1.5">
+                        Featured Story
+                      </span>
+                      <p className="text-[11px] font-bold text-zinc-900 leading-snug">Building Solutions. Creating Impact.</p>
+                      <div className="mt-2 h-10 rounded bg-gradient-to-br from-zinc-100 to-zinc-200" />
+                    </div>
+                  </div>
+                )}
               </div>
-              <p className="text-sm font-bold text-zinc-900 mb-1.5">{s.title}</p>
-              <p className="text-xs text-zinc-500 leading-relaxed">{s.desc}</p>
+
+              {/* Timing pill */}
+              <span className="inline-flex items-center justify-center gap-1.5 mx-auto px-3 py-1.5 rounded-full bg-[#00a855]/8 text-[#0a3a22] text-xs font-semibold">
+                <Clock className="h-3 w-3" /> {s.time}
+              </span>
             </div>
           ))}
+        </div>
+
+        {/* Trust + payment options bar */}
+        <div className="mt-16 rounded-2xl border border-zinc-200 bg-zinc-50 grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-zinc-200">
+          {/* Secure & Trusted */}
+          <div className="flex items-start gap-4 p-7">
+            <div className="w-12 h-12 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
+              <ShieldCheck className="h-6 w-6 text-[#00a855]" />
+            </div>
+            <div>
+              <p className="text-base font-black text-zinc-900 mb-1">Secure & Trusted</p>
+              <p className="text-sm text-zinc-500 leading-relaxed">
+                Payment is only requested after your application has been reviewed and approved by the Amianan Ventures team.
+              </p>
+            </div>
+          </div>
+
+          {/* Payment options */}
+          <div className="p-7">
+            <p className="text-base font-black text-zinc-900 mb-4">Secure Payment Options</p>
+            <div className="flex items-center gap-3 flex-wrap mb-3">
+              {paymentMethods.map((m) => (
+                <span key={m.name} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 bg-white">
+                  {(m.name === 'BDO' || m.name === 'BPI' || m.name === 'UnionBank') && (
+                    <CreditCard className="h-3.5 w-3.5 text-zinc-400" />
+                  )}
+                  <span className="text-sm font-black" style={{ color: m.color }}>{m.name}</span>
+                </span>
+              ))}
+            </div>
+            <p className="text-xs text-zinc-400">More options coming soon.</p>
+          </div>
         </div>
       </section>
 
