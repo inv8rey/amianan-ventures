@@ -160,17 +160,19 @@ export default async function GetFeaturedPage() {
     <div className="min-h-screen bg-white">
 
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="relative min-h-[560px] lg:min-h-[640px] flex items-end overflow-hidden">
-        <Image
-          src="/get-featured-hero.png"
-          alt="Founders and agripreneurs building across Northern Luzon"
-          fill
-          priority
-          className="object-cover object-center"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/75 to-white/10" />
-        <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
+      <section className="relative min-h-[560px] lg:min-h-[640px] flex items-end">
+        <div className="absolute inset-0 overflow-hidden">
+          <Image
+            src="/get-featured-hero.png"
+            alt="Founders and agripreneurs building across Northern Luzon"
+            fill
+            priority
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/75 to-white/10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
+        </div>
 
         <div className="relative z-10 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 pb-0">
           <div className="max-w-2xl">
