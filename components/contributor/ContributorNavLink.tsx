@@ -1,16 +1,16 @@
 'use client'
 
+import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import type { LucideIcon } from 'lucide-react'
 
 export function ContributorNavLink({
   href,
-  icon: Icon,
+  icon,
   label,
 }: {
   href: string
-  icon: LucideIcon
+  icon: ReactNode
   label: string
 }) {
   const pathname = usePathname()
@@ -26,7 +26,7 @@ export function ContributorNavLink({
           : 'text-zinc-500 border-transparent hover:text-zinc-900'
       }`}
     >
-      <Icon className="h-4 w-4" />
+      {icon}
       {label}
     </Link>
   )

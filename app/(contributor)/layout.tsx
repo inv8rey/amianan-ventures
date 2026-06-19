@@ -42,9 +42,9 @@ export default async function ContributorLayout({ children }: { children: React.
 
           {/* Nav links */}
           <nav className="hidden md:flex items-center gap-6">
-            <ContributorNavLink href="/dashboard" icon={LayoutDashboard} label="Dashboard" />
-            <ContributorNavLink href="/dashboard#stories" icon={FileText} label="My Stories" />
-            <ContributorNavLink href="/profile" icon={User} label="Profile" />
+            <ContributorNavLink href="/dashboard" icon={<LayoutDashboard className="h-4 w-4" />} label="Dashboard" />
+            <ContributorNavLink href="/dashboard#stories" icon={<FileText className="h-4 w-4" />} label="My Stories" />
+            <ContributorNavLink href="/profile" icon={<User className="h-4 w-4" />} label="Profile" />
           </nav>
 
           {/* New submission + user menu */}
