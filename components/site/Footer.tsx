@@ -49,32 +49,18 @@ export function Footer() {
           <div>
             <h4 className="text-[10px] font-black mb-4 text-white uppercase tracking-widest">Submit</h4>
             <ul className="space-y-2.5">
-              <li>
-                <Link href="/get-featured" className="text-sm text-zinc-400 hover:text-[#00cc6a] transition-colors">
-                  Get Featured
-                </Link>
-              </li>
               {[
-                { href: 'https://airtable.com/appYUrRsmwImGgG3C/pagsOvlAtunXtZ5Og/form', label: 'List a startup' },
-                { href: 'https://airtable.com/appYUrRsmwImGgG3C/pagjZcduZUZQd759K/form', label: 'Share your story' },
-                { href: 'https://airtable.com/appYUrRsmwImGgG3C/pagGIjuSJK91I4fV0/form', label: 'For founder story' },
+                { href: '/get-featured', label: 'Get Featured' },
+                { href: '/submit-startup', label: 'List a startup' },
+                { href: '/founder-story', label: 'Share your story' },
+                { href: '/contact', label: 'Partner with us' },
               ].map((link) => (
-                <li key={link.label}>
-                  <a
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-zinc-400 hover:text-[#00cc6a] transition-colors"
-                  >
+                <li key={link.href}>
+                  <Link href={link.href} className="text-sm text-zinc-400 hover:text-[#00cc6a] transition-colors">
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
-              <li>
-                <Link href="/contact" className="text-sm text-zinc-400 hover:text-[#00cc6a] transition-colors">
-                  Partner with us
-                </Link>
-              </li>
             </ul>
           </div>
 
