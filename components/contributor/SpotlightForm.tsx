@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { toast } from 'sonner'
 import {
   ArrowLeft, Loader2, Upload, CheckCircle2, ExternalLink, Lock, ImageIcon, X,
+  FileEdit, Monitor, Images, Quote, IdCard, Award, FileBadge2, CreditCard, PenSquare, Send,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import {
@@ -23,6 +24,30 @@ const PAYMENT_VISIBLE_STATUSES: SpotlightApplication['status'][] = [
   'approved', 'awaiting_payment', 'payment_submitted', 'paid', 'in_production', 'published',
 ]
 const PAYMENT_EDITABLE_STATUSES: SpotlightApplication['status'][] = ['approved', 'awaiting_payment']
+
+// What's included in the package — same list shown on the /get-featured marketing page.
+const PACKAGE_INCLUDED = [
+  { icon: FileEdit,   title: 'Startup Story Feature', desc: 'Professionally written story published on Amianan Ventures.' },
+  { icon: Monitor,    title: 'Homepage Featured Placement', desc: 'Featured on the Amianan Ventures homepage for 2 weeks.' },
+  { icon: Images,     title: 'Social Media Carousel', desc: 'Branded carousel post (5–6 slides) showcasing your story.' },
+  { icon: Quote,      title: 'Founder Quote Card', desc: 'Professional quote graphic featuring your insights.' },
+  { icon: IdCard,     title: 'Startup Directory Listing', desc: 'Permanent profile in the Northern Luzon Startup Directory.' },
+  { icon: Award,      title: 'Featured Startup Badge', desc: 'Recognition asset for your website and social media.' },
+  { icon: FileBadge2, title: 'Digital Feature Certificate', desc: 'Official recognition as an Amianan Ventures featured startup.' },
+]
+
+// What happens after saving/submitting — mirrors the "How It Works" steps on /get-featured.
+const NEXT_STEPS = [
+  { icon: FileEdit,   title: 'Application Review', desc: 'Our team reviews your application within 1–3 business days.', statuses: ['draft', 'submitted', 'under_review'] },
+  { icon: CreditCard, title: 'Approval & Payment', desc: 'If approved, payment instructions appear below. Pay to reserve the founding rate.', statuses: ['approved', 'rejected', 'awaiting_payment', 'payment_submitted'] },
+  { icon: PenSquare,  title: 'Story Production', desc: 'We interview you and create your story and content assets.', statuses: ['paid', 'in_production'] },
+  { icon: Send,       title: 'Publication', desc: 'Your story goes live and we promote it across our channels.', statuses: ['published'] },
+] as const
+
+function currentStepIndex(status: SpotlightApplication['status']) {
+  const idx = NEXT_STEPS.findIndex((s) => (s.statuses as readonly string[]).includes(status))
+  return idx === -1 ? 0 : idx
+}
 
 export function SpotlightForm({ application }: { application: SpotlightApplication }) {
   const [app, setApp] = useState(application)
@@ -221,6 +246,62 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
             </a>
           </div>
         )}
+
+        {/* What's included in the package */}
+        <div className="rounded-2xl border border-zinc-200 bg-white p-6 mb-5">
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-sm font-black text-zinc-900">{SPOTLIGHT_PACKAGE.label} Package</p>
+            <p className="text-sm font-black text-zinc-900">₱{(app.amount_php ?? SPOTLIGHT_PACKAGE.amount_php).toLocaleString()}</p>
+          </div>
+          <p className="text-xs text-zinc-500 mb-4">Here&apos;s what you get once your story is featured.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {PACKAGE_INCLUDED.map((item) => (
+              <div key={item.title} className="flex items-start gap-3 rounded-lg bg-zinc-50 p-3">
+                <div className="w-7 h-7 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
+                  <item.icon className="h-3.5 w-3.5 text-[#00a855]" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-zinc-900">{item.title}</p>
+                  <p className="text-[11px] text-zinc-500 leading-snug">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* What happens next */}
+        <div className="rounded-2xl border border-zinc-200 bg-white p-6 mb-5">
+          <p className="text-sm font-black text-zinc-900 mb-4">What Happens Next</p>
+          <div className="space-y-0">
+            {NEXT_STEPS.map((step, i) => {
+              const current = currentStepIndex(app.status)
+              const isDone = i < current || app.status === 'published'
+              const isActive = i === current && app.status !== 'published'
+              return (
+                <div key={step.title} className="flex gap-3.5">
+                  <div className="flex flex-col items-center shrink-0">
+                    <div className={`w-7 h-7 rounded-full flex items-center justify-center ${
+                      isDone ? 'bg-[#0a3a22]' : isActive ? 'bg-[#00cc6a]' : 'bg-zinc-100'
+                    }`}>
+                      {isDone ? (
+                        <CheckCircle2 className="h-3.5 w-3.5 text-white" />
+                      ) : (
+                        <step.icon className={`h-3.5 w-3.5 ${isActive ? 'text-black' : 'text-zinc-400'}`} />
+                      )}
+                    </div>
+                    {i < NEXT_STEPS.length - 1 && <div className="w-px flex-1 bg-zinc-200 my-1" />}
+                  </div>
+                  <div className="pb-5">
+                    <p className={`text-sm font-bold mb-0.5 ${isActive ? 'text-zinc-900' : isDone ? 'text-zinc-700' : 'text-zinc-400'}`}>
+                      {step.title} {isActive && <span className="text-[10px] font-bold uppercase text-[#00a855] ml-1">You are here</span>}
+                    </p>
+                    <p className={`text-xs leading-relaxed ${isActive ? 'text-zinc-500' : 'text-zinc-400'}`}>{step.desc}</p>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
 
         {/* About You / Business Info — mirrors /founder-story's "About You" section */}
         <div className="rounded-2xl border border-zinc-200 bg-white p-6 mb-5">
