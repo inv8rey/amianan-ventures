@@ -55,8 +55,8 @@ export default function GetFeaturedPage() {
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section className="relative min-h-[640px] lg:min-h-[88vh] flex items-end overflow-hidden">
         <Image
-          src="/contribute-hero.jpg"
-          alt="Founders building across Northern Luzon"
+          src="/get-featured-hero.png"
+          alt="Founders and agripreneurs building across Northern Luzon"
           fill
           priority
           className="object-cover object-center"
