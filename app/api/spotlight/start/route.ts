@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { SPOTLIGHT_PACKAGE } from '@/types/spotlight'
 
 // Called right after Get Featured signup to set up the applicant's
 // contributor profile + initial draft application row.
@@ -80,6 +81,7 @@ export async function POST(request: Request) {
         contact_name: contactName,
         email,
         status: 'draft',
+        amount_php: SPOTLIGHT_PACKAGE.amount_php,
       })
       .select('id')
       .single()

@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS public.spotlight_applications (
   impact                TEXT,
   why_feature           TEXT,
   package               TEXT NOT NULL DEFAULT 'founding-rate',
-  amount_php            NUMERIC NOT NULL DEFAULT 1999,
+  amount_php            NUMERIC NOT NULL DEFAULT 599,
   status                TEXT NOT NULL DEFAULT 'draft' CHECK (status IN (
     'draft','submitted','under_review','approved','rejected',
     'awaiting_payment','payment_submitted','paid','in_production','published'

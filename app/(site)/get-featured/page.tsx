@@ -348,7 +348,7 @@ export default async function GetFeaturedPage() {
               <span className="inline-flex self-start items-center px-3.5 py-1.5 rounded-full bg-[#00cc6a] text-black text-[11px] font-black uppercase tracking-widest mb-6">
                 Founding Rate
               </span>
-              <p className="text-5xl sm:text-6xl font-black text-white mb-1">₱1,999</p>
+              <p className="text-5xl sm:text-6xl font-black text-white mb-1">₱599</p>
               <p className="text-base font-bold text-[#00cc6a] mb-5">Founding Rate</p>
               <div className="w-12 h-px bg-white/15 mb-5" />
               <p className="text-sm text-white/60 leading-relaxed mb-3">

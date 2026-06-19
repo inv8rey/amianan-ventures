@@ -112,5 +112,5 @@ export const INDUSTRIES = [
 export const SPOTLIGHT_PACKAGE = {
   id: 'founding-rate',
   label: 'Founding Rate',
-  amount_php: 1999,
+  amount_php: 599,
 }
