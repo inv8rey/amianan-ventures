@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { format } from 'date-fns'
 import { ArrowLeft, Clock, User, MapPin } from 'lucide-react'
 import { SubmitStoryBanner } from '@/components/site/SubmitStoryBanner'
+import { ArticleAd } from '@/components/site/ArticleAd'
 import { CommentSection } from '@/components/site/CommentSection'
 import { ViewTracker } from '@/components/admin/ViewTracker'
 import { getArticleBySlug, getPublishedArticles } from '@/lib/queries'
@@ -133,6 +134,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               </div>
             )}
 
+            <ArticleAd />
+
             <ViewTracker articleId={article.id} />
             <div className="prose-article" dangerouslySetInnerHTML={{ __html: article.content }} />
 
@@ -184,7 +187,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                   <p className="text-[10px] font-black text-black uppercase tracking-wider">Have a story?</p>
                 </div>
                 <div className="p-3 bg-white">
-                  <p className="text-xs text-zinc-500 mb-3 leading-relaxed">Share what's happening in your corner of Northern Luzon.</p>
+                  <p className="text-xs text-zinc-500 mb-3 leading-relaxed">Share what&apos;s happening in your corner of Northern Luzon.</p>
                   <Link href="/contact" className="flex items-center justify-center gap-1 w-full py-1.5 bg-black text-white text-[10px] font-bold rounded hover:bg-zinc-800 transition-colors uppercase tracking-wide">
                     Submit a story →
                   </Link>

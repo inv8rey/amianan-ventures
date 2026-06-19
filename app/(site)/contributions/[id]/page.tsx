@@ -11,6 +11,7 @@ import {
   type ContributorRole,
 } from '@/types/contributor'
 import { CommentSection } from '@/components/site/CommentSection'
+import { ArticleAd } from '@/components/site/ArticleAd'
 
 export const dynamic = 'force-dynamic'
 
@@ -278,6 +279,7 @@ export default async function ContributionPage({
 
             {/* ── Article body ── */}
             <div className="border-t border-zinc-100 pt-8">
+              <ArticleAd />
               {contribution.draft_type === 'gdocs' && contribution.gdocs_url ? (
                 <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-8 text-center">
                   <p className="text-sm text-zinc-500 mb-4">This article is hosted on Google Docs.</p>
