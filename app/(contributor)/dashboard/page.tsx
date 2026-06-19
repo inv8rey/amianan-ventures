@@ -1,15 +1,30 @@
 import type React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
+import { format } from 'date-fns'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { Plus, AlertCircle, FileText, CheckCircle, Clock, RotateCcw, PenLine, Star, ArrowRight } from 'lucide-react'
+import {
+  Plus, AlertCircle, FileText, CheckCircle, Clock, RotateCcw, PenLine, Star, ArrowRight,
+  Headset, Mail, MessageCircle, ImageIcon, User, Sparkles,
+} from 'lucide-react'
 import { SubmissionCard } from '@/components/contributor/SubmissionCard'
-import type { ContributorSubmission } from '@/types/contributor'
+import {
+  CONTENT_TYPE_LABELS, STATUS_LABELS, STATUS_COLORS,
+  type ContributorSubmission, type SubmissionStatus,
+} from '@/types/contributor'
 import type { SpotlightApplication } from '@/types/spotlight'
-import { STATUS_LABELS as SPOTLIGHT_STATUS_LABELS, STATUS_COLORS as SPOTLIGHT_STATUS_COLORS } from '@/types/spotlight'
+import { STATUS_LABELS as SPOTLIGHT_STATUS_LABELS } from '@/types/spotlight'
 
 function profileIncomplete(profile: { display_name: string; bio: string | null; role: string | null }) {
   return !profile.bio || !profile.role || !profile.display_name
+}
+
+function getGreeting() {
+  const hour = new Date().getHours()
+  if (hour < 12) return 'Good morning'
+  if (hour < 18) return 'Good afternoon'
+  return 'Good evening'
 }
 
 export default async function DashboardPage() {
@@ -43,6 +58,8 @@ export default async function DashboardPage() {
 
   if (!profile) redirect('/contribute/login')
 
+  const firstName = (profile.display_name || 'Contributor').split(' ')[0]
+
   // Compute analytics (exclude drafts from "total" since they're not submitted)
   const draftCount = submissions.filter((s) => s.status === 'draft').length
   const submittedSubmissions = submissions.filter((s) => s.status !== 'draft')
@@ -51,31 +68,17 @@ export default async function DashboardPage() {
   const inReviewCount = submissions.filter((s) => s.status === 'submitted' || s.status === 'under_review').length
   const revisionCount = submissions.filter((s) => s.status === 'revision_requested').length
 
+  const recentStories = submissions.slice(0, 4)
+
   return (
     <div>
-      {/* Header */}
-      <div className="flex items-start justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-black text-zinc-900">
-            Welcome back, {profile.display_name || 'Contributor'}
-          </h1>
-          <p className="text-sm text-zinc-500 mt-1">Your contributor dashboard</p>
-        </div>
-        <Link
-          href="/submit"
-          className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-black text-white text-sm font-semibold hover:bg-zinc-800 transition-colors"
-        >
-          <Plus className="h-4 w-4" /> New Submission
-        </Link>
-      </div>
-
-      {/* Analytics stat cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-        <StatCard icon={<FileText className="h-4 w-4" />} label="Total" value={totalCount} color="zinc" />
-        <StatCard icon={<CheckCircle className="h-4 w-4" />} label="Published" value={publishedCount} color="green" />
-        <StatCard icon={<Clock className="h-4 w-4" />} label="In Review" value={inReviewCount} color="amber" />
-        <StatCard icon={<RotateCcw className="h-4 w-4" />} label="Needs Revision" value={revisionCount} color="orange" />
-      </div>
+      {/* Greeting */}
+      <h1 className="text-2xl font-black text-zinc-900">
+        {getGreeting()}, {firstName}! 👋
+      </h1>
+      <p className="text-sm text-zinc-500 mt-1 mb-6">
+        Welcome to your Amianan Ventures dashboard. Manage your stories and feature applications.
+      </p>
 
       {/* Drafts banner */}
       {draftCount > 0 && (
@@ -84,7 +87,7 @@ export default async function DashboardPage() {
           <p className="text-sm text-zinc-600 flex-1">
             You have <span className="font-bold text-zinc-900">{draftCount} draft{draftCount !== 1 ? 's' : ''}</span> — finish writing and submit for review.
           </p>
-          <Link href="#drafts" className="text-xs font-bold text-zinc-700 hover:underline shrink-0">
+          <Link href="#stories" className="text-xs font-bold text-zinc-700 hover:underline shrink-0">
             View Drafts →
           </Link>
         </div>
@@ -109,73 +112,253 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      {/* Spotlight (Get Featured) application card */}
-      <div className="rounded-2xl border border-zinc-200 bg-white p-6 mb-6">
-        {spotlight ? (
-          <div className="flex items-center justify-between gap-4 flex-wrap">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
-                <Star className="h-4 w-4 text-[#00a855]" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <p className="text-sm font-black text-zinc-900">{spotlight.business_name}</p>
-                  <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full ${SPOTLIGHT_STATUS_COLORS[spotlight.status]}`}>
-                    {SPOTLIGHT_STATUS_LABELS[spotlight.status]}
-                  </span>
-                </div>
-                <p className="text-xs text-zinc-500 mt-0.5">Get Featured application</p>
-              </div>
+      {/* Hero promo — Feature Your Business */}
+      <div className="relative rounded-2xl overflow-hidden bg-[#042212] mb-6">
+        <div className="absolute inset-0">
+          <Image
+            src="/get-featured-hero.png"
+            alt="Founders and agripreneurs building across Northern Luzon"
+            fill
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#042212] via-[#042212]/85 to-[#042212]/10" />
+        </div>
+        <div className="relative z-10 p-8 sm:p-10 max-w-lg">
+          <p className="text-xs font-black uppercase tracking-widest text-[#00cc6a] mb-3">Feature Your Business</p>
+          <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight mb-3">
+            Share your story.<br />Grow your impact.
+          </h2>
+          <p className="text-sm text-zinc-300 leading-relaxed mb-6 max-w-sm">
+            Get featured on Amianan Ventures and connect with founders, customers, investors, and ecosystem builders.
+          </p>
+          <Link
+            href="/spotlight"
+            className="inline-flex items-center gap-2 bg-white text-[#042212] px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-zinc-100 transition-colors"
+          >
+            Apply for a Feature <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </div>
+
+      {/* Feature Application + Recent Stories */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-5 mb-6">
+        {/* Feature Application status */}
+        <div className="rounded-2xl border border-zinc-200 bg-white p-6 flex flex-col">
+          <div className="flex items-center gap-2 mb-5">
+            <div className="w-9 h-9 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
+              <Star className="h-4 w-4 text-[#00a855]" />
             </div>
+            <span className="text-sm font-bold text-zinc-900">Feature Application</span>
+          </div>
+
+          <div className="flex items-start justify-between gap-4 mb-4">
+            <div>
+              <p className="text-xl font-black text-zinc-900">
+                {spotlight ? SPOTLIGHT_STATUS_LABELS[spotlight.status] : 'Not Started'}
+              </p>
+              <p className="text-xs text-zinc-500 mt-1 max-w-[10rem]">
+                {spotlight
+                  ? spotlight.business_name
+                  : 'Apply to get featured on Amianan Ventures.'}
+              </p>
+            </div>
+            <FeatureIllustration />
+          </div>
+
+          <Link
+            href="/spotlight"
+            className="mt-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-[#042212] text-white text-sm font-semibold hover:bg-[#06331c] transition-colors"
+          >
+            {!spotlight ? 'Start Application' : spotlight.status === 'draft' ? 'Continue Application' : 'View Application'}
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+
+        {/* Recent Stories */}
+        <div className="rounded-2xl border border-zinc-200 bg-white p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <FileText className="h-4 w-4 text-zinc-400" />
+              <span className="text-sm font-bold text-zinc-900">Recent Stories</span>
+            </div>
+            <Link href="#stories" className="text-xs font-bold text-[#00a855] hover:underline flex items-center gap-1">
+              View all stories <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+
+          {recentStories.length === 0 ? (
+            <div className="text-center py-10">
+              <p className="text-sm font-bold text-zinc-600">No stories yet</p>
+              <p className="text-xs text-zinc-400 mt-1 mb-4">Share your story with the ecosystem</p>
+              <Link
+                href="/submit"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-black text-white text-xs font-semibold hover:bg-zinc-800 transition-colors"
+              >
+                Submit your first article
+              </Link>
+            </div>
+          ) : (
+            <div className="divide-y divide-zinc-100">
+              {recentStories.map((sub) => (
+                <RecentStoryRow key={sub.id} submission={sub} />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Need help */}
+      <div className="rounded-2xl border border-zinc-200 bg-white p-6 flex flex-col sm:flex-row items-start sm:items-center gap-6 justify-between mb-10">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-zinc-100 flex items-center justify-center shrink-0">
+            <Headset className="h-4 w-4 text-zinc-500" />
+          </div>
+          <div>
+            <p className="text-sm font-bold text-zinc-900">Need help?</p>
+            <p className="text-xs text-zinc-500 mt-0.5">We&apos;re here to assist you with your submissions.</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-6 flex-wrap">
+          <a
+            href="https://www.facebook.com/amiananventures"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-[#00a855] transition-colors"
+          >
+            <div className="w-8 h-8 rounded-full bg-[#1877F2]/10 flex items-center justify-center shrink-0">
+              <MessageCircle className="h-4 w-4 text-[#1877F2]" />
+            </div>
+            <div>
+              <p>Message us on Facebook</p>
+              <p className="text-xs text-zinc-400 font-normal">facebook.com/amiananventures</p>
+            </div>
+          </a>
+          <a
+            href="mailto:amiananventures@gmail.com"
+            className="flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-[#00a855] transition-colors"
+          >
+            <div className="w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center shrink-0">
+              <Mail className="h-4 w-4 text-zinc-500" />
+            </div>
+            <div>
+              <p>Email us</p>
+              <p className="text-xs text-zinc-400 font-normal">amiananventures@gmail.com</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      {/* All My Stories */}
+      <div id="stories">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-black text-zinc-900">All My Stories</h2>
+          <Link
+            href="/submit"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-black text-white text-sm font-semibold hover:bg-zinc-800 transition-colors"
+          >
+            <Plus className="h-4 w-4" /> New Submission
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+          <StatCard icon={<FileText className="h-4 w-4" />} label="Total" value={totalCount} color="zinc" />
+          <StatCard icon={<CheckCircle className="h-4 w-4" />} label="Published" value={publishedCount} color="green" />
+          <StatCard icon={<Clock className="h-4 w-4" />} label="In Review" value={inReviewCount} color="amber" />
+          <StatCard icon={<RotateCcw className="h-4 w-4" />} label="Needs Revision" value={revisionCount} color="orange" />
+        </div>
+
+        {submissions.length === 0 ? (
+          <div className="text-center py-20 border-2 border-dashed border-zinc-200 rounded-2xl">
+            <div className="w-12 h-12 rounded-full bg-zinc-100 flex items-center justify-center mx-auto mb-4">
+              <Plus className="h-5 w-5 text-zinc-400" />
+            </div>
+            <p className="text-sm font-bold text-zinc-600">No submissions yet</p>
+            <p className="text-xs text-zinc-400 mt-1 mb-5">Share your story with the ecosystem</p>
             <Link
-              href="/spotlight"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-black text-white text-sm font-semibold hover:bg-zinc-800 transition-colors shrink-0"
+              href="/submit"
+              className="inline-flex items-center gap-1.5 px-5 py-2 rounded-lg bg-black text-white text-sm font-semibold hover:bg-zinc-800 transition-colors"
             >
-              {spotlight.status === 'draft' ? 'Continue Application' : 'View Application'} <ArrowRight className="h-3.5 w-3.5" />
+              Submit your first article
             </Link>
           </div>
         ) : (
-          <div className="flex items-center justify-between gap-4 flex-wrap">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
-                <Star className="h-4 w-4 text-[#00a855]" />
-              </div>
-              <div>
-                <p className="text-sm font-black text-zinc-900">Apply to Get Featured</p>
-                <p className="text-xs text-zinc-500 mt-0.5">Share your business story and get listed in the spotlight.</p>
-              </div>
-            </div>
-            <Link
-              href="/spotlight"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-black text-white text-sm font-semibold hover:bg-zinc-800 transition-colors shrink-0"
-            >
-              Start Application <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
+          <div className="space-y-3">
+            {submissions.map((sub) => (
+              <SubmissionCard key={sub.id} submission={sub} />
+            ))}
           </div>
         )}
       </div>
+    </div>
+  )
+}
 
-      {/* Submissions list */}
-      {submissions.length === 0 ? (
-        <div className="text-center py-20 border-2 border-dashed border-zinc-200 rounded-2xl">
-          <div className="w-12 h-12 rounded-full bg-zinc-100 flex items-center justify-center mx-auto mb-4">
-            <Plus className="h-5 w-5 text-zinc-400" />
+// ─── Decorative illustration for the Feature Application card ─────
+function FeatureIllustration() {
+  return (
+    <div className="relative w-16 h-20 shrink-0">
+      <Sparkles className="absolute -top-1 -left-1 h-3 w-3 text-[#00cc6a]" />
+      <Sparkles className="absolute top-2 -right-1 h-2.5 w-2.5 text-[#00cc6a]/60" />
+      <div className="w-16 h-20 rounded-xl border border-zinc-200 bg-zinc-50 flex flex-col items-center justify-center gap-2 p-2">
+        <div className="w-7 h-7 rounded-full bg-zinc-200 flex items-center justify-center">
+          <User className="h-3.5 w-3.5 text-zinc-400" />
+        </div>
+        <div className="w-9 h-1 rounded-full bg-zinc-200" />
+        <div className="w-7 h-1 rounded-full bg-zinc-200" />
+      </div>
+      <div className="absolute -bottom-1.5 -right-1.5 w-6 h-6 rounded-full bg-[#00a855] flex items-center justify-center border-2 border-white">
+        <Star className="h-3 w-3 text-white fill-white" />
+      </div>
+    </div>
+  )
+}
+
+// ─── Compact row for the Recent Stories preview ────────────────────
+function RecentStoryRow({ submission: sub }: { submission: ContributorSubmission }) {
+  const status = sub.status as SubmissionStatus
+  const isDraft = status === 'draft'
+  const isRevision = status === 'revision_requested'
+
+  return (
+    <div className="flex items-center gap-3 py-3">
+      <div className="relative w-12 h-9 rounded-lg overflow-hidden shrink-0 bg-zinc-100">
+        {sub.cover_image_url ? (
+          <Image src={sub.cover_image_url} alt="" fill className="object-cover" sizes="48px" unoptimized />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <ImageIcon className="h-4 w-4 text-zinc-300" />
           </div>
-          <p className="text-sm font-bold text-zinc-600">No submissions yet</p>
-          <p className="text-xs text-zinc-400 mt-1 mb-5">Share your story with the ecosystem</p>
-          <Link
-            href="/submit"
-            className="inline-flex items-center gap-1.5 px-5 py-2 rounded-lg bg-black text-white text-sm font-semibold hover:bg-zinc-800 transition-colors"
-          >
-            Submit your first article
-          </Link>
+        )}
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-1.5 mb-0.5">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
+            {CONTENT_TYPE_LABELS[sub.content_type]}
+          </span>
+          <span className="text-zinc-200">·</span>
+          <span className="text-[10px] text-zinc-400">{format(new Date(sub.created_at), 'MMM d, yyyy')}</span>
         </div>
+        <p className={`text-sm font-bold line-clamp-1 ${isDraft ? 'text-zinc-500' : 'text-zinc-900'}`}>{sub.headline}</p>
+      </div>
+      <span className={`text-[10px] px-2.5 py-1 rounded-full font-semibold shrink-0 ${STATUS_COLORS[status]}`}>
+        {STATUS_LABELS[status]}
+      </span>
+      {status === 'published' && sub.published_url ? (
+        <a href={sub.published_url} rel="noopener noreferrer" className="text-xs font-bold text-[#00a855] hover:underline shrink-0">
+          Read Live →
+        </a>
+      ) : isDraft ? (
+        <Link href={`/submit?edit=${sub.id}`} className="text-xs font-bold text-zinc-700 hover:text-black shrink-0">
+          Continue →
+        </Link>
       ) : (
-        <div id="drafts" className="space-y-3">
-          {submissions.map((sub) => (
-            <SubmissionCard key={sub.id} submission={sub} />
-          ))}
-        </div>
+        <Link
+          href={`/submissions/${sub.id}`}
+          className={`text-xs font-bold shrink-0 ${isRevision ? 'text-orange-600 hover:underline' : 'text-zinc-500 hover:text-zinc-900'}`}
+        >
+          {isRevision ? 'View Feedback →' : 'View →'}
+        </Link>
       )}
     </div>
   )
