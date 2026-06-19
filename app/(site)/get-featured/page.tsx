@@ -5,6 +5,7 @@ import {
   ArrowRight, BookOpen, Eye, Users, FileText, Image as ImageIcon,
   Quote, Layers, BadgeCheck, Award, Globe, Lock, MapPin, CheckCircle2,
   ClipboardList, CalendarCheck, FileSearch, Send, Mail,
+  FileEdit, Monitor, Images, IdCard, FileBadge2, Gift, ShieldCheck,
 } from 'lucide-react'
 import { SpotlightApplicationForm } from '@/components/site/SpotlightApplicationForm'
 
@@ -38,6 +39,16 @@ const reasons = [
   { icon: Globe, title: 'A story you can use everywhere', desc: 'The published article is a permanent, linkable record of your business. Attach it to DOST and DTI grant applications, investor presentations, and customer conversations.' },
   { icon: Lock,  title: 'Content you own', desc: 'The carousel, quote card, and badge are yours — not locked to Amianan\'s platform. Post them on your own channels and reuse them across your marketing anytime.' },
   { icon: Award, title: 'A permanent place in Northern Luzon\'s innovation story', desc: 'The startup directory is the region\'s growing public record of founders and businesses. Being listed early means being part of the foundation.' },
+]
+
+const included = [
+  { icon: FileEdit,    title: 'Startup Story Feature', desc: 'Professionally written story published on Amianan Ventures.' },
+  { icon: Monitor,     title: 'Homepage Featured Placement', desc: 'Featured on the Amianan Ventures homepage for 2 weeks.' },
+  { icon: Images,      title: 'Social Media Carousel', desc: 'Branded carousel post (5–6 slides) showcasing your story.' },
+  { icon: Quote,       title: 'Founder Quote Card', desc: 'Professional quote graphic featuring your insights.' },
+  { icon: IdCard,      title: 'Startup Directory Listing', desc: 'Permanent profile in the Northern Luzon Startup Directory.' },
+  { icon: Award,       title: 'Featured Startup Badge', desc: 'Recognition asset for your website and social media.' },
+  { icon: FileBadge2,  title: 'Digital Feature Certificate', desc: 'Official recognition as an Amianan Ventures featured startup.' },
 ]
 
 const steps = [
@@ -173,25 +184,104 @@ export default function GetFeaturedPage() {
       {/* ── Founding rate ─────────────────────────────────────── */}
       <section className="bg-[#042212] relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -right-32 top-1/2 -translate-y-1/2 w-96 h-96 rounded-full border border-white/5" />
-          <div className="absolute -left-16 bottom-0 w-64 h-64 rounded-full border border-white/5" />
+          <div className="absolute -right-32 top-1/3 w-96 h-96 rounded-full border border-white/5" />
+          <div className="absolute -left-20 bottom-0 w-72 h-72 rounded-full border border-white/5" />
         </div>
-        <div className="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20 text-center">
-          <p className="text-xs font-black uppercase tracking-widest text-[#00cc6a] mb-3">Founding rate</p>
-          <p className="text-6xl sm:text-7xl font-black text-white mb-3">₱1,999</p>
-          <p className="text-sm text-white/60 max-w-md mx-auto leading-relaxed mb-1">
-            Available to the first 10 founders and businesses in this founding batch.
-          </p>
-          <p className="text-sm text-white/40 max-w-md mx-auto leading-relaxed mb-8">
-            After the founding batch closes, the rate increases.
-          </p>
-          <div className="rounded-xl border border-white/10 bg-white/5 p-5 max-w-md mx-auto text-left">
-            <p className="text-xs text-white/50 leading-relaxed">
-              This is not a media placement or advertising slot. It is a content asset package
-              built around your story. You are not paying for our audience — you are paying for
-              a professionally produced story and seven assets that work for your business
-              long after the feature period ends.
+        <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+
+          {/* Header */}
+          <div className="text-center mb-12">
+            <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#00a855]/20 border border-[#00a855]/40 text-[#00cc6a] text-xs font-black uppercase tracking-widest mb-6">
+              Startup Spotlight Package
+            </span>
+            <h2 className="text-3xl sm:text-4xl lg:text-[2.5rem] font-black text-white leading-tight max-w-3xl mx-auto mb-4">
+              Everything you need to build credibility, increase visibility, and showcase your story.
+            </h2>
+            <p className="text-sm sm:text-base text-white/50 max-w-xl mx-auto">
+              A complete content asset package built around your story.
             </p>
+          </div>
+
+          {/* Two-column pricing card */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.3fr] rounded-2xl overflow-hidden border border-white/10">
+
+            {/* Left: price */}
+            <div className="bg-[#06301c] p-8 sm:p-10 flex flex-col">
+              <span className="inline-flex self-start items-center px-3.5 py-1.5 rounded-full bg-[#00cc6a] text-black text-[11px] font-black uppercase tracking-widest mb-6">
+                Founding Rate
+              </span>
+              <p className="text-5xl sm:text-6xl font-black text-white mb-1">₱1,999</p>
+              <p className="text-base font-bold text-[#00cc6a] mb-5">Founding Rate</p>
+              <div className="w-12 h-px bg-white/15 mb-5" />
+              <p className="text-sm text-white/60 leading-relaxed mb-3">
+                Available to the first 10 founders and businesses in this founding batch.
+              </p>
+              <p className="text-sm text-white/40 leading-relaxed mb-8">
+                After the founding batch closes, the rate increases.
+              </p>
+              <a
+                href="#apply"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-[#00cc6a] text-black font-bold text-sm hover:bg-[#00b85e] transition-colors mb-3"
+              >
+                Apply Now <ArrowRight className="h-4 w-4" />
+              </a>
+              <p className="flex items-center gap-1.5 text-xs text-white/40">
+                <Lock className="h-3 w-3" /> Limited slots only
+              </p>
+            </div>
+
+            {/* Right: what's included */}
+            <div className="bg-zinc-50 p-8 sm:p-10">
+              <div className="flex items-center gap-2.5 mb-6">
+                <div className="w-8 h-8 rounded-lg bg-[#00a855]/15 flex items-center justify-center shrink-0">
+                  <Gift className="h-4 w-4 text-[#00a855]" />
+                </div>
+                <h3 className="text-sm font-black uppercase tracking-widest text-zinc-900">What&apos;s Included</h3>
+              </div>
+              <div className="divide-y divide-zinc-200">
+                {included.map((item) => (
+                  <div key={item.title} className="flex items-start gap-3.5 py-4 first:pt-0 last:pb-0">
+                    <div className="w-9 h-9 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
+                      <item.icon className="h-4 w-4 text-[#00a855]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-zinc-900">{item.title}</p>
+                      <p className="text-xs text-zinc-500 mt-0.5 leading-relaxed">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Stat bar */}
+          <div className="mt-6 rounded-2xl border border-white/10 bg-[#06301c]/60 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/10">
+            {heroStats.map((s) => (
+              <div key={s.label} className="flex items-center gap-4 p-6">
+                <div className="w-11 h-11 rounded-full border border-[#00a855]/30 bg-[#00a855]/10 flex items-center justify-center shrink-0">
+                  <s.icon className="h-5 w-5 text-[#00cc6a]" />
+                </div>
+                <div>
+                  {s.value ? (
+                    <>
+                      <p className="text-xl font-black text-white leading-none mb-0.5">{s.value}</p>
+                      <p className="text-sm font-bold text-white">{s.label}</p>
+                    </>
+                  ) : (
+                    <p className="text-base font-bold text-white leading-tight">
+                      Founders Across <span className="text-[#00cc6a]">Northern Luzon</span>
+                    </p>
+                  )}
+                  <p className="text-xs text-white/40 mt-0.5">{s.sub}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Footer note */}
+          <div className="flex items-center justify-center gap-2 mt-8 text-sm text-white/50 text-center">
+            <ShieldCheck className="h-4 w-4 text-[#00a855] shrink-0" />
+            This is not advertising. This is your story, professionally told and yours to own.
           </div>
         </div>
       </section>
