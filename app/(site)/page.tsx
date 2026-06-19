@@ -13,6 +13,7 @@ import { FeaturedListings } from '@/components/site/FeaturedListings'
 import { NewsletterSignup } from '@/components/site/NewsletterSignup'
 import { EcosystemPulseWidget } from '@/components/site/EcosystemPulseWidget'
 import { CommunityContributions } from '@/components/site/CommunityContributions'
+import { SubmitStoryBanner } from '@/components/site/SubmitStoryBanner'
 import type { CommunityContribution } from '@/components/site/CommunityContributions'
 import type { Article, DirectoryEntry, DirectoryType, Location } from '@/types'
 import { ROLE_LABELS, type ContributorRole, type ContentType } from '@/types/contributor'
@@ -632,6 +633,9 @@ export default async function HomePage() {
 
         {/* Founder Stories */}
         <FounderStoriesStrip articles={founderStories} />
+
+        {/* Submit Your Story ad */}
+        <SubmitStoryBanner className="mt-2 mb-12" />
 
         {/* Community Contributions */}
         <CommunityContributions contributions={ecosystemContributions} />

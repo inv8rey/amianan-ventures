@@ -1,8 +1,9 @@
+import Link from 'next/link'
 import { ArrowRight, FileText } from 'lucide-react'
 
-export function SubmitStoryBanner() {
+export function SubmitStoryBanner({ className = 'mt-12' }: { className?: string }) {
   return (
-    <div className="mt-12 rounded-xl border-2 border-black overflow-hidden">
+    <div className={`${className} rounded-xl border-2 border-black overflow-hidden`}>
       <div className="bg-[#00cc6a] px-6 py-3 flex items-center gap-2">
         <FileText className="h-4 w-4 text-black" />
         <span className="text-sm font-black text-black uppercase tracking-wider">Share Your Story</span>
@@ -13,17 +14,15 @@ export function SubmitStoryBanner() {
             Are you a founder, innovator, or community builder in Northern Luzon?
           </h3>
           <p className="text-sm text-zinc-500 leading-relaxed max-w-xl">
-            We're always looking for compelling stories from the region's ecosystem. Whether you're launching a startup, running a program, or doing something interesting — we'd love to feature you.
+            We&apos;re always looking for compelling stories from the region&apos;s ecosystem. Whether you&apos;re launching a startup, running a program, or doing something interesting — we&apos;d love to feature you.
           </p>
         </div>
-        <a
-          href="https://airtable.com/appYUrRsmwImGgG3C/pagjZcduZUZQd759K/form"
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          href="/founder-story"
           className="shrink-0 inline-flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded font-bold text-sm hover:bg-zinc-800 transition-colors uppercase tracking-wide"
         >
           Submit a story <ArrowRight className="h-4 w-4" />
-        </a>
+        </Link>
       </div>
     </div>
   )
