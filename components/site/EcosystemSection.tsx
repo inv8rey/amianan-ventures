@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {
   ArrowRight, Search, SlidersHorizontal, Star, ExternalLink, MapPin,
-  Rocket, GraduationCap, Building2, Landmark, Users, LayoutGrid,
+  Rocket, GraduationCap, Building, Landmark, UsersRound, LayoutGrid,
   ChevronRight, BadgeCheck, X,
 } from 'lucide-react'
 import type { DirectoryEntry, DirectoryType } from '@/types'
@@ -22,9 +22,9 @@ const TABS: { type: DirectoryType; label: string }[] = [
 const STAT_CARDS: { type: DirectoryType; label: string; sub: string; Icon: React.ComponentType<{ className?: string }> }[] = [
   { type: 'startup',    label: 'Startups',             sub: 'Active builders',           Icon: Rocket },
   { type: 'university', label: 'Universities & HEIs',  sub: 'Knowledge institutions',     Icon: GraduationCap },
-  { type: 'incubator',  label: 'Programs & TBIs',      sub: 'Incubators & accelerators',  Icon: Building2 },
+  { type: 'incubator',  label: 'Programs & TBIs',      sub: 'Incubators & accelerators',  Icon: Building },
   { type: 'government', label: 'Government Agencies', sub: 'Public sector partners',     Icon: Landmark },
-  { type: 'community',  label: 'Communities',          sub: 'Groups & networks',          Icon: Users },
+  { type: 'community',  label: 'Communities',          sub: 'Groups & networks',          Icon: UsersRound },
 ]
 
 const TYPE_LABEL: Record<DirectoryType, string> = {
