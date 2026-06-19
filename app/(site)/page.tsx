@@ -625,7 +625,7 @@ export default async function HomePage() {
         <FeaturedListings listings={featuredListings} />
 
         {/* Ecosystem Directory — shown before news */}
-        <EcosystemSection entriesByType={entriesByType} counts={counts} showViewAll />
+        <EcosystemSection entries={directoryAll} />
 
         {/* Recent articles */}
         <RecentArticles articles={recentArticles} />
