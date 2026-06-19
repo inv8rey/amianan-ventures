@@ -700,16 +700,16 @@ export default async function GetFeaturedPage() {
                   <p className="text-sm font-black text-zinc-900 mb-4">Stories from founders like you</p>
                   <div className="grid grid-cols-2 gap-3">
                     {spotlightExamples.map((ex) => (
-                      <div key={ex.name} className="flex flex-col gap-2">
-                        <div className="relative aspect-square rounded-lg bg-white border border-zinc-100 overflow-hidden flex items-center justify-center">
+                      <Link key={ex.name} href={`/founder-stories/${ex.slug}`} className="group flex flex-col gap-2">
+                        <div className="relative aspect-square rounded-lg bg-white border border-zinc-100 overflow-hidden flex items-center justify-center group-hover:border-[#00a855]/40 transition-colors">
                           {ex.logo_url ? (
                             <Image src={ex.logo_url} alt={ex.name} fill className="object-contain p-3" sizes="120px" unoptimized />
                           ) : (
                             <span className="text-lg font-black text-zinc-300">{ex.name.charAt(0)}</span>
                           )}
                         </div>
-                        <p className="text-xs font-bold text-zinc-900 leading-snug line-clamp-2">{ex.name}</p>
-                      </div>
+                        <p className="text-xs font-bold text-zinc-900 leading-snug line-clamp-2 group-hover:text-[#00a855] transition-colors">{ex.name}</p>
+                      </Link>
                     ))}
                   </div>
                 </div>
