@@ -20,7 +20,7 @@ const FOUNDER_QUESTIONS = [
 ] as const
 
 const INNOVATION_QUESTIONS = [
-  { key: 'q1', label: "What is your role in Northern Luzon's innovation or business ecosystem?" },
+  { key: 'q1', label: 'What is your role in the innovation or business ecosystem?' },
   { key: 'q2', label: 'How did you get involved in this work?' },
   { key: 'q3', label: 'What does your day-to-day work focus on?' },
   { key: 'q4', label: "What's a project, program, or initiative you're proud of?" },
@@ -28,9 +28,11 @@ const INNOVATION_QUESTIONS = [
   { key: 'q6', label: 'What keeps you motivated to keep doing this work?' },
   { key: 'q7', label: 'What are you working toward in the next 6 to 12 months?' },
   { key: 'q8', label: 'What advice would you give to someone starting out in this space?' },
+  { key: 'q9', label: "What's an insight you've gained from working in the innovation or business ecosystem?" },
 ] as const
 
-type QuestionKey = typeof FOUNDER_QUESTIONS[number]['key']
+const ALL_QUESTION_KEYS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9'] as const
+type QuestionKey = typeof ALL_QUESTION_KEYS[number]
 
 const TRACK_COPY = {
   founder: {
@@ -225,7 +227,7 @@ export default function FounderStoryPage() {
     website: '',
   })
   const [answers, setAnswers] = useState<Record<QuestionKey, string>>(
-    Object.fromEntries(FOUNDER_QUESTIONS.map((q) => [q.key, ''])) as Record<QuestionKey, string>
+    Object.fromEntries(ALL_QUESTION_KEYS.map((k) => [k, ''])) as Record<QuestionKey, string>
   )
   const [promo, setPromo] = useState('')
   const [founderPhoto, setFounderPhoto] = useState<FileField>(emptyFile())
