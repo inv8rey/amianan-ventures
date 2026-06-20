@@ -112,7 +112,7 @@ export function EcosystemSection({ entries }: Props) {
 
         <div className="flex flex-col sm:flex-row items-stretch gap-3 w-full lg:w-auto lg:shrink-0">
           {/* Search */}
-          <div className="relative sm:w-56">
+          <div className="relative sm:w-64 lg:w-72">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
             <input
               type="text"
@@ -123,7 +123,7 @@ export function EcosystemSection({ entries }: Props) {
             />
             {query && (
               <button onClick={() => setQuery('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700">
-                <X className="h-3.5 w-3.5" />
+                <X className="h-4 w-4" />
               </button>
             )}
           </div>
@@ -137,7 +137,7 @@ export function EcosystemSection({ entries }: Props) {
                 : 'border-zinc-200 text-zinc-600 hover:border-zinc-400'
             }`}
           >
-            <SlidersHorizontal className="h-3.5 w-3.5" />
+            <SlidersHorizontal className="h-4 w-4" />
             Filters
           </button>
 
@@ -152,7 +152,7 @@ export function EcosystemSection({ entries }: Props) {
                 List your organization and be part of Northern Luzon&apos;s ecosystem.
               </p>
             </div>
-            <ArrowRight className="h-3.5 w-3.5 text-[#00a855] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+            <ArrowRight className="h-4 w-4 text-[#00a855] shrink-0 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>
       </div>
