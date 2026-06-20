@@ -112,14 +112,14 @@ export function EcosystemSection({ entries }: Props) {
 
         <div className="flex flex-col sm:flex-row items-stretch gap-3 w-full lg:w-auto lg:shrink-0">
           {/* Search */}
-          <div className="relative sm:w-64 lg:w-72">
+          <div className="relative sm:w-64 lg:w-72 h-12">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search startups, organizations…"
-              className="w-full pl-9 pr-8 py-2.5 text-sm border border-zinc-200 rounded-lg bg-white focus:outline-none focus:border-zinc-900 transition-colors"
+              className="w-full h-full pl-9 pr-8 text-sm border border-zinc-200 rounded-lg bg-white focus:outline-none focus:border-zinc-900 transition-colors"
             />
             {query && (
               <button onClick={() => setQuery('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700">
@@ -131,7 +131,7 @@ export function EcosystemSection({ entries }: Props) {
           {/* Filters toggle */}
           <button
             onClick={() => setShowFilters((v) => !v)}
-            className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border text-sm font-semibold transition-colors shrink-0 ${
+            className={`flex items-center justify-center gap-2 px-4 h-12 rounded-lg border text-sm font-semibold transition-colors shrink-0 ${
               showFilters || region
                 ? 'border-zinc-900 bg-zinc-900 text-white'
                 : 'border-zinc-200 text-zinc-600 hover:border-zinc-400'
@@ -144,12 +144,12 @@ export function EcosystemSection({ entries }: Props) {
           {/* Help grow the directory */}
           <Link
             href="/submit-startup"
-            className="group flex items-center gap-3 px-4 py-2.5 rounded-lg border border-[#00a855]/25 bg-[#00a855]/5 hover:bg-[#00a855]/10 transition-colors shrink-0"
+            className="group flex items-center gap-3 px-4 h-12 rounded-lg border border-[#00a855]/25 bg-[#00a855]/5 hover:bg-[#00a855]/10 transition-colors shrink-0"
           >
             <div className="min-w-0">
               <p className="text-xs font-bold text-zinc-900 whitespace-nowrap">Help grow the directory</p>
-              <p className="text-[10px] text-zinc-500 leading-snug hidden sm:block max-w-[180px]">
-                List your organization and be part of Northern Luzon&apos;s ecosystem.
+              <p className="text-[10px] text-zinc-500 leading-snug hidden lg:block truncate max-w-[180px]">
+                List your organization and be part of the ecosystem.
               </p>
             </div>
             <ArrowRight className="h-4 w-4 text-[#00a855] shrink-0 group-hover:translate-x-0.5 transition-transform" />
