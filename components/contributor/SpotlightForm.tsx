@@ -303,7 +303,7 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
           </div>
         </div>
 
-        {/* About You / Business Info — mirrors /founder-story's "About You" section */}
+        {/* About You / Business Info — mirrors /share-your-story's "About You" section */}
         <div className="rounded-2xl border border-zinc-200 bg-white p-6 mb-5">
           <p className="text-sm font-black text-zinc-900 mb-5">About You</p>
           <div className="space-y-4">
@@ -327,7 +327,7 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
           </div>
         </div>
 
-        {/* Your Story — same questions as /founder-story; first 3 required */}
+        {/* Your Story — same questions as /share-your-story; first 3 required */}
         <div className="rounded-2xl border border-zinc-200 bg-white p-6 mb-5">
           <p className="text-sm font-black text-zinc-900 mb-1">Your Story</p>
           <p className="text-xs text-zinc-400 mb-5">Answer as many as you can. Questions 1–3 are required.</p>
@@ -346,7 +346,7 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
           </div>
         </div>
 
-        {/* Photos & Assets — mirrors /founder-story's "Photos & Assets" section */}
+        {/* Photos & Assets — mirrors /share-your-story's "Photos & Assets" section */}
         <div className="rounded-2xl border border-zinc-200 bg-white p-6 mb-5">
           <p className="text-sm font-black text-zinc-900 mb-5">Photos &amp; Assets</p>
           <div className="space-y-5">
@@ -378,7 +378,7 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
           </div>
         </div>
 
-        {/* Promo — mirrors /founder-story's "Anything to Promote?" section */}
+        {/* Promo — mirrors /share-your-story's "Anything to Promote?" section */}
         <div className="rounded-2xl border border-zinc-200 bg-white p-6 mb-5">
           <p className="text-sm font-black text-zinc-900 mb-5">Anything to Promote?</p>
           <TextareaField

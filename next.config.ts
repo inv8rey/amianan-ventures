@@ -1,6 +1,15 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/founder-story',
+        destination: '/share-your-story',
+        permanent: true,
+      },
+    ]
+  },
   images: {
     // Disable Vercel image optimization — images are served from Supabase CDN
     // which already optimizes delivery. This prevents hitting the 5K/month

@@ -48,7 +48,7 @@ export interface SpotlightApplication {
   updated_at: string
 }
 
-// Same questions used on the public /founder-story submission form —
+// Same questions used on the public /share-your-story submission form —
 // the Get Featured package produces this same feature story, so the
 // application collects identical story inputs.
 export const STORY_QUESTIONS: { key: StoryQuestionKey; label: string }[] = [

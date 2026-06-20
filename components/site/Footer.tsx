@@ -52,7 +52,7 @@ export function Footer() {
               {[
                 { href: '/get-featured', label: 'Get Featured' },
                 { href: '/submit-startup', label: 'List a startup' },
-                { href: '/founder-story', label: 'Share your story' },
+                { href: '/share-your-story', label: 'Share your story' },
                 { href: '/contact', label: 'Partner with us' },
               ].map((link) => (
                 <li key={link.href}>

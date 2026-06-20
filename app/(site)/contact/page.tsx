@@ -57,7 +57,7 @@ const LINKS = [
   {
     label: 'Share Your Founder Story',
     description: "Are you a founder building in the north? We want to feature your innovation story.",
-    href: '/founder-story',
+    href: '/share-your-story',
     cta: 'Share your story',
   },
 ]

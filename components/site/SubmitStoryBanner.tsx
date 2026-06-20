@@ -18,7 +18,7 @@ export function SubmitStoryBanner({ className = 'mt-12' }: { className?: string 
           </p>
         </div>
         <Link
-          href="/founder-story"
+          href="/share-your-story"
           className="shrink-0 inline-flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded font-bold text-sm hover:bg-zinc-800 transition-colors uppercase tracking-wide"
         >
           Submit a story <ArrowRight className="h-4 w-4" />
