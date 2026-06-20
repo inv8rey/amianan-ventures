@@ -86,7 +86,7 @@ export interface NewsletterSubscriber {
   created_at: string
 }
 
-export type FormSubmissionType = 'startup' | 'partner' | 'founder-story' | 'spotlight'
+export type FormSubmissionType = 'startup' | 'partner' | 'founder-story' | 'spotlight' | 'innovation-story'
 
 export interface FormSubmission {
   id: string

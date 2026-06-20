@@ -1,11 +1,14 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { ArrowRight, Loader2, CheckCircle2, Upload, X, ImageIcon } from 'lucide-react'
+import Link from 'next/link'
+import { ArrowRight, ArrowLeft, Loader2, CheckCircle2, Upload, X, ImageIcon, Rocket, Lightbulb } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
-// ── Story questions ────────────────────────────────────────────
-const QUESTIONS = [
+// ── Story tracks ────────────────────────────────────────────────
+type Track = 'founder' | 'innovation'
+
+const FOUNDER_QUESTIONS = [
   { key: 'q1', label: 'How did the idea for your startup begin?' },
   { key: 'q2', label: 'What problem are you trying to solve?' },
   { key: 'q3', label: 'What does your startup actually do?' },
@@ -16,7 +19,49 @@ const QUESTIONS = [
   { key: 'q8', label: 'What advice would you give someone starting their first startup in the region?' },
 ] as const
 
-type QuestionKey = typeof QUESTIONS[number]['key']
+const INNOVATION_QUESTIONS = [
+  { key: 'q1', label: "What is your role in Northern Luzon's innovation or business ecosystem?" },
+  { key: 'q2', label: 'How did you get involved in this work?' },
+  { key: 'q3', label: 'What does your day-to-day work focus on?' },
+  { key: 'q4', label: "What's a project, program, or initiative you're proud of?" },
+  { key: 'q5', label: 'What has been the biggest challenge in this work?' },
+  { key: 'q6', label: 'What keeps you motivated to keep doing this work?' },
+  { key: 'q7', label: 'What are you working toward in the next 6 to 12 months?' },
+  { key: 'q8', label: 'What advice would you give to someone starting out in this space?' },
+] as const
+
+type QuestionKey = typeof FOUNDER_QUESTIONS[number]['key']
+
+const TRACK_COPY = {
+  founder: {
+    eyebrow: 'Founder Stories',
+    title: 'Share Your Founder Story',
+    subtitle: 'Are you a founder or innovator building a startup in Northern Luzon? Tell us your story — we’ll amplify it to the entire Amianan community.',
+    orgLabel: 'Startup Name',
+    orgPlaceholder: 'Your startup or company',
+    photoLabel: 'Founder Photo',
+    photoHint: 'A clear headshot or portrait. Used on your story page.',
+    logoLabel: 'Startup Logo',
+    logoHint: 'Your company logo. PNG with transparent background preferred.',
+    workPhotoLabel: 'Product Photo / Screenshot (optional)',
+    workPhotoHint: 'A photo of your product, app screenshot, or team at work.',
+    questions: FOUNDER_QUESTIONS,
+  },
+  innovation: {
+    eyebrow: 'Innovation Stories',
+    title: 'Share Your Innovation Story',
+    subtitle: 'Are you working in innovation, business support, or the startup ecosystem — even if you’re not a founder? Tell us your story — we’ll amplify it to the entire Amianan community.',
+    orgLabel: 'Organization',
+    orgPlaceholder: 'Your organization, program, or company',
+    photoLabel: 'Your Photo',
+    photoHint: 'A clear headshot or portrait. Used on your story page.',
+    logoLabel: 'Organization Logo (optional)',
+    logoHint: 'Your organization’s logo. PNG with transparent background preferred.',
+    workPhotoLabel: 'Work / Project Photo (optional)',
+    workPhotoHint: 'A photo of your work, a program in action, or your team.',
+    questions: INNOVATION_QUESTIONS,
+  },
+} as const
 
 // ── File upload helper ─────────────────────────────────────────
 interface FileField {
@@ -122,18 +167,65 @@ function FileUpload({
 const inputCls = 'w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-amber-400/40 focus:border-amber-400 transition-colors'
 const textareaCls = `${inputCls} resize-none`
 
+// ── Track selection screen ─────────────────────────────────────
+function TrackSelector({ onSelect }: { onSelect: (track: Track) => void }) {
+  return (
+    <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-14">
+      <div className="mb-10">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-[#d97706] mb-2">Share Your Story</p>
+        <h1 className="text-4xl font-black text-zinc-900 mb-3 leading-tight">Which story fits you best?</h1>
+        <p className="text-zinc-500 leading-relaxed max-w-lg">
+          Northern Luzon&apos;s innovation ecosystem is built by founders and by the people supporting them. Pick whichever path matches your story.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <button
+          type="button"
+          onClick={() => onSelect('founder')}
+          className="group text-left rounded-xl border-2 border-zinc-200 hover:border-[#d97706] p-6 transition-colors"
+        >
+          <div className="w-11 h-11 rounded-full bg-amber-50 flex items-center justify-center mb-4 group-hover:bg-amber-100 transition-colors">
+            <Rocket className="h-5 w-5 text-[#d97706]" />
+          </div>
+          <p className="text-base font-black text-zinc-900 mb-1.5">Founder / Startup Story</p>
+          <p className="text-sm text-zinc-500 leading-relaxed">
+            You&apos;re building a startup or company. Share how it started, what it does, and where it&apos;s going.
+          </p>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => onSelect('innovation')}
+          className="group text-left rounded-xl border-2 border-zinc-200 hover:border-[#d97706] p-6 transition-colors"
+        >
+          <div className="w-11 h-11 rounded-full bg-amber-50 flex items-center justify-center mb-4 group-hover:bg-amber-100 transition-colors">
+            <Lightbulb className="h-5 w-5 text-[#d97706]" />
+          </div>
+          <p className="text-base font-black text-zinc-900 mb-1.5">Innovation Story</p>
+          <p className="text-sm text-zinc-500 leading-relaxed">
+            You&apos;re not a founder, but you work in innovation, business support, or the startup ecosystem. Share your perspective.
+          </p>
+        </button>
+      </div>
+    </div>
+  )
+}
+
 // ── Page ──────────────────────────────────────────────────────
 export default function FounderStoryPage() {
+  const [track, setTrack] = useState<Track | null>(null)
+
   const [info, setInfo] = useState({
     name: '',
     email: '',
-    startup_name: '',
+    org: '',
     role: '',
     social_link: '',
     website: '',
   })
   const [answers, setAnswers] = useState<Record<QuestionKey, string>>(
-    Object.fromEntries(QUESTIONS.map((q) => [q.key, ''])) as Record<QuestionKey, string>
+    Object.fromEntries(FOUNDER_QUESTIONS.map((q) => [q.key, ''])) as Record<QuestionKey, string>
   )
   const [promo, setPromo] = useState('')
   const [founderPhoto, setFounderPhoto] = useState<FileField>(emptyFile())
@@ -145,6 +237,12 @@ export default function FounderStoryPage() {
 
   const setInfo_ = (k: keyof typeof info, v: string) => setInfo((f) => ({ ...f, [k]: v }))
   const setAnswer = (k: QuestionKey, v: string) => setAnswers((a) => ({ ...a, [k]: v }))
+
+  if (!track) {
+    return <TrackSelector onSelect={setTrack} />
+  }
+
+  const copy = TRACK_COPY[track]
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -158,9 +256,9 @@ export default function FounderStoryPage() {
         return
       }
     }
-    // Founder photo required
+    // Photo required
     if (!founderPhoto.url) {
-      setErrorMsg('Please upload a founder photo.')
+      setErrorMsg(`Please upload a photo.`)
       setState('error')
       return
     }
@@ -170,14 +268,15 @@ export default function FounderStoryPage() {
 
     const supabase = createClient()
     const { error } = await supabase.from('form_submissions').insert({
-      type: 'founder-story',
+      type: track === 'founder' ? 'founder-story' : 'innovation-story',
       name: info.name,
       email: info.email,
-      organization: info.startup_name,
-      message: QUESTIONS.map((q, i) =>
+      organization: info.org,
+      message: copy.questions.map((q, i) =>
         `${i + 1}. ${q.label}\n${answers[q.key] || '(not answered)'}`
       ).join('\n\n'),
       extra_data: {
+        track,
         role: info.role,
         social_link: info.social_link,
         website: info.website,
@@ -205,12 +304,12 @@ export default function FounderStoryPage() {
         <p className="text-zinc-500 leading-relaxed max-w-md mx-auto mb-6">
           Thank you, <strong>{info.name}</strong>! We&apos;ll review your submission and reach out at <strong>{info.email}</strong> within a week.
         </p>
-        <a
+        <Link
           href="/"
           className="inline-flex items-center gap-2 bg-[#d97706] text-white px-6 py-2.5 rounded font-bold text-sm hover:bg-[#b45309] transition-colors uppercase tracking-wide"
         >
           Back to Home
-        </a>
+        </Link>
       </div>
     )
   }
@@ -219,11 +318,16 @@ export default function FounderStoryPage() {
     <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-14">
       {/* Header */}
       <div className="mb-10">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-[#d97706] mb-2">Founder Stories</p>
-        <h1 className="text-4xl font-black text-zinc-900 mb-3 leading-tight">Share Your Innovation Story</h1>
-        <p className="text-zinc-500 leading-relaxed max-w-lg">
-          Are you a founder or innovator building something meaningful in Northern Luzon? Tell us your story — we&apos;ll amplify it to the entire Amianan community.
-        </p>
+        <button
+          type="button"
+          onClick={() => setTrack(null)}
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-400 hover:text-zinc-900 transition-colors mb-4 uppercase tracking-wider"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" /> Change story type
+        </button>
+        <p className="text-[10px] font-bold uppercase tracking-widest text-[#d97706] mb-2">{copy.eyebrow}</p>
+        <h1 className="text-4xl font-black text-zinc-900 mb-3 leading-tight">{copy.title}</h1>
+        <p className="text-zinc-500 leading-relaxed max-w-lg">{copy.subtitle}</p>
       </div>
 
       {/* What to expect */}
@@ -258,8 +362,8 @@ export default function FounderStoryPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-zinc-700 mb-1.5">Startup Name *</label>
-                <input required type="text" value={info.startup_name} onChange={(e) => setInfo_('startup_name', e.target.value)} placeholder="Your startup or company" className={inputCls} />
+                <label className="block text-sm font-semibold text-zinc-700 mb-1.5">{copy.orgLabel} *</label>
+                <input required type="text" value={info.org} onChange={(e) => setInfo_('org', e.target.value)} placeholder={copy.orgPlaceholder} className={inputCls} />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-zinc-700 mb-1.5">Your Role *</label>
@@ -274,7 +378,7 @@ export default function FounderStoryPage() {
               </div>
               <div>
                 <label className="block text-sm font-semibold text-zinc-700 mb-1.5">Website</label>
-                <input type="url" value={info.website} onChange={(e) => setInfo_('website', e.target.value)} placeholder="https://yourstartup.com" className={inputCls} />
+                <input type="url" value={info.website} onChange={(e) => setInfo_('website', e.target.value)} placeholder="https://example.com" className={inputCls} />
               </div>
             </div>
           </div>
@@ -287,7 +391,7 @@ export default function FounderStoryPage() {
           </h2>
           <p className="text-xs text-zinc-400 mb-5">Answer as many as you can. Questions 1–3 are required.</p>
           <div className="space-y-6">
-            {QUESTIONS.map((q, i) => (
+            {copy.questions.map((q, i) => (
               <div key={q.key}>
                 <label className="block text-sm font-semibold text-zinc-700 mb-1.5">
                   {i + 1}. {q.label}
@@ -312,21 +416,21 @@ export default function FounderStoryPage() {
           </h2>
           <div className="space-y-5">
             <FileUpload
-              label="Founder Photo"
-              hint="A clear headshot or portrait. Used on your story page."
+              label={copy.photoLabel}
+              hint={copy.photoHint}
               required
               field={founderPhoto}
               onChange={setFounderPhoto}
             />
             <FileUpload
-              label="Startup Logo"
-              hint="Your company logo. PNG with transparent background preferred."
+              label={copy.logoLabel}
+              hint={copy.logoHint}
               field={startupLogo}
               onChange={setStartupLogo}
             />
             <FileUpload
-              label="Product Photo / Screenshot (optional)"
-              hint="A photo of your product, app screenshot, or team at work."
+              label={copy.workPhotoLabel}
+              hint={copy.workPhotoHint}
               field={productPhoto}
               onChange={setProductPhoto}
             />
