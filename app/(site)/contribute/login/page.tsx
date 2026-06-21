@@ -97,18 +97,18 @@ export default function ContributorLoginPage() {
 
         {/* ── Right: form card ── */}
         <div className="flex items-center justify-center px-4 sm:px-8 py-12 lg:py-20">
-          <div className="w-full max-w-sm bg-white rounded-2xl p-7 sm:p-9 shadow-2xl">
-            <div className="flex items-start gap-3.5 pb-5 mb-5 border-b border-zinc-100">
-              <div className="w-11 h-11 rounded-xl bg-[#00a855]/10 flex items-center justify-center shrink-0">
+          <div className="w-full max-w-md bg-white rounded-2xl p-8 sm:p-11 shadow-2xl">
+            <div className="flex items-start gap-4 pb-6 mb-6 border-b border-zinc-100">
+              <div className="w-12 h-12 rounded-xl bg-[#00a855]/10 flex items-center justify-center shrink-0">
                 <PenLine className="h-5 w-5 text-[#00a855]" />
               </div>
               <div>
-                <h2 className="text-xl font-black text-zinc-900 leading-tight">Welcome back</h2>
+                <h2 className="text-2xl font-black text-zinc-900 leading-tight">Welcome back</h2>
                 <p className="text-sm text-zinc-500 mt-0.5">Sign in to your contributor account</p>
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1.5">
                   Email Address
@@ -121,7 +121,7 @@ export default function ContributorLoginPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     placeholder="you@example.com"
-                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 pl-9 pr-3 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:border-zinc-400 focus:bg-white transition-colors"
+                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 pl-9 pr-3 py-3 text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:border-zinc-400 focus:bg-white transition-colors"
                   />
                 </div>
               </div>
@@ -138,7 +138,7 @@ export default function ContributorLoginPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     placeholder="••••••••"
-                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 pl-9 pr-9 py-2.5 text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:border-zinc-400 focus:bg-white transition-colors"
+                    className="w-full rounded-lg border border-zinc-200 bg-zinc-50 pl-9 pr-9 py-3 text-sm text-zinc-900 placeholder-zinc-400 outline-none focus:border-zinc-400 focus:bg-white transition-colors"
                   />
                   <button
                     type="button"
@@ -175,14 +175,14 @@ export default function ContributorLoginPage() {
               </button>
             </form>
 
-            <p className="text-center text-sm text-zinc-500 mt-5">
+            <p className="text-center text-sm text-zinc-500 mt-6">
               Don&apos;t have an account?{' '}
               <Link href="/contribute/signup" className="text-[#00a855] font-semibold hover:underline">
                 Sign up
               </Link>
             </p>
 
-            <p className="text-center text-xs text-zinc-400 mt-4 pt-4 border-t border-zinc-100">
+            <p className="text-center text-xs text-zinc-400 mt-5 pt-5 border-t border-zinc-100">
               <Link href="/contribute" className="hover:underline">← Back to contributor info</Link>
             </p>
           </div>
