@@ -54,7 +54,7 @@ function PhotoCard({ listing }: { listing: FeaturedListing }) {
       href={clickHref(listing)}
       target={listing.cta_url ? '_blank' : undefined}
       rel="noopener noreferrer"
-      className="group relative flex flex-col justify-end overflow-hidden rounded-xl min-h-[200px] hover:shadow-lg transition-shadow"
+      className="group relative flex flex-col justify-end overflow-hidden rounded-xl aspect-[8/3] hover:shadow-lg transition-shadow"
     >
       <Image
         src={listing.image_url!}
