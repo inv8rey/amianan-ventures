@@ -57,6 +57,10 @@ export default async function DashboardPage() {
   const profile = profileResult.data
   const submissions = (submissionsResult.data ?? []) as ContributorSubmission[]
   const spotlight = spotlightResult.data as SpotlightApplication | null
+  // /spotlight auto-creates an empty draft row the moment a contributor visits
+  // it, so a draft alone doesn't mean they've actually applied — only show
+  // the status card once they've submitted for real.
+  const hasSubmittedSpotlight = !!spotlight && spotlight.status !== 'draft'
 
   if (!profile) redirect('/contribute/login')
 
@@ -144,38 +148,38 @@ export default async function DashboardPage() {
       </div>
 
       {/* Feature Application + Recent Stories */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-5 mb-6">
-        {/* Feature Application status */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-6 flex flex-col">
-          <div className="flex items-center gap-2 mb-5">
-            <div className="w-9 h-9 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
-              <Star className="h-4 w-4 text-[#00a855]" />
+      <div className={`grid grid-cols-1 ${hasSubmittedSpotlight ? 'lg:grid-cols-[1fr_1.6fr]' : ''} gap-5 mb-6`}>
+        {/* Feature Application status — only once a real application exists (not just an empty auto-created draft) */}
+        {hasSubmittedSpotlight && spotlight && (
+          <div className="rounded-2xl border border-zinc-200 bg-white p-6 flex flex-col">
+            <div className="flex items-center gap-2 mb-5">
+              <div className="w-9 h-9 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
+                <Star className="h-4 w-4 text-[#00a855]" />
+              </div>
+              <span className="text-sm font-bold text-zinc-900">Feature Application</span>
             </div>
-            <span className="text-sm font-bold text-zinc-900">Feature Application</span>
-          </div>
 
-          <div className="flex items-start justify-between gap-4 mb-4">
-            <div>
-              <p className="text-xl font-black text-zinc-900">
-                {spotlight ? SPOTLIGHT_STATUS_LABELS[spotlight.status] : 'Not Started'}
-              </p>
-              <p className="text-xs text-zinc-500 mt-1 max-w-[10rem]">
-                {spotlight
-                  ? spotlight.business_name
-                  : 'Apply to get featured on Amianan Ventures.'}
-              </p>
+            <div className="flex items-start justify-between gap-4 mb-4">
+              <div>
+                <p className="text-xl font-black text-zinc-900">
+                  {SPOTLIGHT_STATUS_LABELS[spotlight.status]}
+                </p>
+                <p className="text-xs text-zinc-500 mt-1 max-w-[10rem]">
+                  {spotlight.business_name}
+                </p>
+              </div>
+              <FeatureIllustration />
             </div>
-            <FeatureIllustration />
-          </div>
 
-          <Link
-            href="/spotlight"
-            className="mt-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-[#042212] text-white text-sm font-semibold hover:bg-[#06331c] transition-colors"
-          >
-            {!spotlight ? 'Start Application' : spotlight.status === 'draft' ? 'Continue Application' : 'View Application'}
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
-        </div>
+            <Link
+              href="/spotlight"
+              className="mt-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-[#042212] text-white text-sm font-semibold hover:bg-[#06331c] transition-colors"
+            >
+              View Application
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        )}
 
         {/* Recent Stories */}
         <div className="rounded-2xl border border-zinc-200 bg-white p-6">
