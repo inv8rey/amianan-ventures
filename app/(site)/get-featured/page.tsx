@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import {
-  ArrowRight, Eye, Users, Check, Minus,
+  ArrowRight, Eye, Users, Check,
   FileEdit, Monitor, Megaphone, Quote, IdCard, Share2,
   ShieldCheck, Sparkles, Layers,
   Star, ThumbsUp, MessageCircle, Send,
@@ -83,16 +83,6 @@ const partnerIncludes = [
   'Social Media Feature',
 ]
 
-// Row label, then [startup, partner] — true/false/'partial' for the comparison table
-const comparisonRows: { label: string; cells: [boolean, boolean] }[] = [
-  { label: 'Featured Article', cells: [true, true] },
-  { label: 'Homepage Placement', cells: [true, true] },
-  { label: 'Article Banner Placement', cells: [true, true] },
-  { label: 'Social Media Feature', cells: [false, true] },
-  { label: 'Directory Feature', cells: [true, true] },
-  { label: 'Newsletter Inclusion', cells: [true, false] },
-]
-
 const receiveCards = [
   { icon: FileEdit, title: 'Featured Article', desc: 'A professionally written and published feature on Amianan Ventures.' },
   { icon: Monitor, title: 'Homepage Feature', desc: 'Prominent placement on the homepage for two weeks, seen by every visitor.' },
@@ -135,18 +125,6 @@ const faqs = [
     a: 'Yes — once your placement period ends, you can reapply for another round at the then-current rate.',
   },
 ]
-
-function CheckCell({ value }: { value: boolean }) {
-  return value ? (
-    <div className="w-7 h-7 rounded-full bg-[#00a855]/10 flex items-center justify-center mx-auto">
-      <Check className="h-4 w-4 text-[#00a855]" />
-    </div>
-  ) : (
-    <div className="w-7 h-7 rounded-full bg-zinc-100 flex items-center justify-center mx-auto">
-      <Minus className="h-3.5 w-3.5 text-zinc-300" />
-    </div>
-  )
-}
 
 export default async function GetFeaturedPage() {
   const spotlightExamples = await getSpotlightExamples()
@@ -367,41 +345,6 @@ export default async function GetFeaturedPage() {
                 <div className="h-2 bg-zinc-100 rounded w-2/3" />
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ════════════════════ COMPARISON ════════════════════ */}
-      <section className="bg-zinc-50 border-y border-zinc-200">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-black text-zinc-900 leading-tight">Compare Packages</h2>
-          </div>
-
-          <div className="rounded-2xl border border-zinc-200 bg-white overflow-hidden overflow-x-auto">
-            <table className="w-full min-w-[480px]">
-              <thead>
-                <tr className="border-b border-zinc-200">
-                  <th className="text-left text-xs font-black uppercase tracking-widest text-zinc-400 px-6 py-5">Feature</th>
-                  <th className="text-center text-xs font-black uppercase tracking-widest text-zinc-900 px-4 py-5">Startup<br />Spotlight</th>
-                  <th className="text-center text-xs font-black uppercase tracking-widest text-zinc-900 px-4 py-5">Ecosystem<br />Visibility</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-zinc-100">
-                {comparisonRows.map((row) => (
-                  <tr key={row.label}>
-                    <td className="text-sm font-semibold text-zinc-700 px-6 py-4">{row.label}</td>
-                    <td className="px-4 py-4"><CheckCell value={row.cells[0]} /></td>
-                    <td className="px-4 py-4"><CheckCell value={row.cells[1]} /></td>
-                  </tr>
-                ))}
-                <tr>
-                  <td className="text-sm font-semibold text-zinc-700 px-6 py-4">Best For</td>
-                  <td className="text-xs text-zinc-500 text-center px-4 py-4">Founders &amp; startups</td>
-                  <td className="text-xs text-zinc-500 text-center px-4 py-4">Organizations &amp; programs</td>
-                </tr>
-              </tbody>
-            </table>
           </div>
         </div>
       </section>
