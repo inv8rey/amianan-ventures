@@ -6,11 +6,17 @@ interface FeaturedListingsProps {
   listings: FeaturedListing[]
 }
 
+// Routes through a tracking redirect so clicks count toward the listing,
+// instead of linking straight to cta_url.
+function clickHref(listing: FeaturedListing) {
+  return listing.cta_url ? `/api/featured-listings/click?id=${listing.id}` : '#'
+}
+
 // Placeholder shown when a listing has no image yet
 function PlaceholderCard({ listing }: { listing: FeaturedListing }) {
   return (
     <a
-      href={listing.cta_url ?? '#'}
+      href={clickHref(listing)}
       target={listing.cta_url ? '_blank' : undefined}
       rel="noopener noreferrer"
       className="group relative flex flex-col justify-end overflow-hidden rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900 border border-zinc-200 min-h-[200px] p-6 hover:border-[#00cc6a]/60 transition-colors"
@@ -45,7 +51,7 @@ function PlaceholderCard({ listing }: { listing: FeaturedListing }) {
 function PhotoCard({ listing }: { listing: FeaturedListing }) {
   return (
     <a
-      href={listing.cta_url ?? '#'}
+      href={clickHref(listing)}
       target={listing.cta_url ? '_blank' : undefined}
       rel="noopener noreferrer"
       className="group relative flex flex-col justify-end overflow-hidden rounded-xl min-h-[200px] hover:shadow-lg transition-shadow"

@@ -110,6 +110,7 @@ export interface FeaturedListing {
   sponsor_label: string
   display_order: number
   status: 'draft' | 'published'
+  clicks: number
   created_at: string
   updated_at: string
 }

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { PlusCircle, ImageIcon } from 'lucide-react'
+import { PlusCircle, ImageIcon, MousePointerClick } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import type { FeaturedListing } from '@/types'
 
@@ -63,6 +63,9 @@ export default async function FeaturedListingsAdminPage() {
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0">
+                  <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <MousePointerClick className="h-3 w-3" /> {listing.clicks ?? 0}
+                  </span>
                   <span className="text-xs text-muted-foreground">Order: {listing.display_order}</span>
                   <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
                     listing.status === 'published'

@@ -34,7 +34,7 @@ export async function ArticleAd() {
 
   return (
     <a
-      href={listing.cta_url ?? '#'}
+      href={listing.cta_url ? `/api/featured-listings/click?id=${listing.id}` : '#'}
       target={listing.cta_url ? '_blank' : undefined}
       rel="noopener noreferrer"
       className="my-8 group relative flex flex-col justify-end overflow-hidden rounded-xl min-h-[160px] border border-zinc-200 hover:shadow-lg transition-shadow"

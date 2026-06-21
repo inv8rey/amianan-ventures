@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { Save, Eye, Trash2, Loader2, ExternalLink } from 'lucide-react'
+import { Save, Eye, Trash2, Loader2, ExternalLink, MousePointerClick } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -165,6 +165,12 @@ export function FeaturedListingForm({ listing }: FeaturedListingFormProps) {
             <a href="/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-primary hover:underline">
               <ExternalLink className="h-3 w-3" /> View on homepage
             </a>
+          )}
+          {!isNew && (
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground pt-1 border-t border-border/40">
+              <MousePointerClick className="h-3.5 w-3.5" />
+              <span className="font-semibold text-foreground">{listing?.clicks ?? 0}</span> clicks tracked
+            </div>
           )}
         </div>
 
