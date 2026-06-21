@@ -172,7 +172,7 @@ export default function ContributorSignupPage() {
 
         {/* ── Right: form card ── */}
         <div className="flex items-center justify-center px-4 sm:px-8 py-12 lg:py-20">
-          <div className="w-full max-w-md bg-white rounded-2xl p-7 sm:p-9 shadow-2xl">
+          <div className="w-full max-w-xl bg-white rounded-2xl p-7 sm:p-10 shadow-2xl">
             <div className="flex items-start gap-3.5 pb-5 mb-5 border-b border-zinc-100">
               <div className="w-11 h-11 rounded-xl bg-[#00a855]/10 flex items-center justify-center shrink-0">
                 <PenLine className="h-5 w-5 text-[#00a855]" />
