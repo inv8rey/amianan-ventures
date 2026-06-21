@@ -54,7 +54,7 @@ function PhotoCard({ listing }: { listing: FeaturedListing }) {
       href={clickHref(listing)}
       target={listing.cta_url ? '_blank' : undefined}
       rel="noopener noreferrer"
-      className="group relative flex flex-col justify-end overflow-hidden rounded-xl aspect-[8/3] hover:shadow-lg transition-shadow"
+      className="group relative block overflow-hidden rounded-xl aspect-[8/3] hover:shadow-lg transition-shadow"
     >
       <Image
         src={listing.image_url!}
@@ -63,8 +63,6 @@ function PhotoCard({ listing }: { listing: FeaturedListing }) {
         className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
         sizes="(max-width: 768px) 100vw, 50vw"
       />
-      {/* Dark gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
       {/* Sponsor label */}
       <span className="absolute top-4 left-4 text-[9px] font-black uppercase tracking-widest text-white/70 border border-white/20 rounded px-1.5 py-0.5 bg-black/40 backdrop-blur-sm">
@@ -74,13 +72,6 @@ function PhotoCard({ listing }: { listing: FeaturedListing }) {
       {listing.cta_url && (
         <ExternalLink className="absolute top-4 right-4 h-3.5 w-3.5 text-white/60 group-hover:text-white transition-colors" />
       )}
-
-      <div className="relative p-5">
-        <p className="text-base font-black text-white mb-1">{listing.title}</p>
-        {listing.tagline && (
-          <p className="text-xs text-white/70 leading-relaxed line-clamp-2">{listing.tagline}</p>
-        )}
-      </div>
     </a>
   )
 }
