@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server'
 import { ProfileForm } from '@/components/contributor/ProfileForm'
 import type { ContributorProfile } from '@/types/contributor'
 
+export const dynamic = 'force-dynamic'
+
 export default async function ProfilePage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()

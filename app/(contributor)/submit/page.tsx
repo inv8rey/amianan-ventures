@@ -4,6 +4,8 @@ import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { SubmissionForm } from '@/components/contributor/SubmissionForm'
 import type { ContributorSubmission } from '@/types/contributor'
 
+export const dynamic = 'force-dynamic'
+
 export default async function SubmitPage({
   searchParams,
 }: {

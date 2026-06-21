@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { ArrowRight, ArrowLeft, Check, Loader2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
@@ -16,7 +15,6 @@ const BENEFITS = [
 ]
 
 export function ApplyWizard() {
-  const router = useRouter()
   const [form, setForm] = useState({
     businessName: '',
     contactName: '',
@@ -92,7 +90,11 @@ export function ApplyWizard() {
     }
 
     toast.success('Account created! Let’s build your feature.')
-    router.push('/dashboard')
+    // Hard navigation — the client-side Router Cache keys by route, not by
+    // session, so a previously cached /dashboard or /spotlight RSC payload
+    // from a different signed-in account in this tab could otherwise leak
+    // into this brand-new session.
+    window.location.href = '/dashboard'
   }
 
   return (

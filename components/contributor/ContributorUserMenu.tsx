@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { ChevronDown, User, LogOut } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -16,7 +15,6 @@ export function ContributorUserMenu({
 }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
-  const router = useRouter()
   const firstName = displayName.split(' ')[0]
 
   useEffect(() => {
@@ -30,7 +28,12 @@ export function ContributorUserMenu({
   async function signOut() {
     const supabase = createClient()
     await supabase.auth.signOut()
-    router.push('/contribute/login')
+    // Hard navigation, not router.push — router.refresh() only clears the
+    // client cache for the *current* route. Other already-visited routes
+    // (e.g. /spotlight, /dashboard) would otherwise keep serving the
+    // previous user's cached RSC payload to whoever signs in next in this
+    // tab. A full page load wipes the entire client-side router cache.
+    window.location.href = '/contribute/login'
   }
 
   return (

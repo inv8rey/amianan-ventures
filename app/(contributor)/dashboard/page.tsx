@@ -16,6 +16,8 @@ import {
 import type { SpotlightApplication } from '@/types/spotlight'
 import { STATUS_LABELS as SPOTLIGHT_STATUS_LABELS } from '@/types/spotlight'
 
+export const dynamic = 'force-dynamic'
+
 function profileIncomplete(profile: { display_name: string; bio: string | null; role: string | null }) {
   return !profile.bio || !profile.role || !profile.display_name
 }

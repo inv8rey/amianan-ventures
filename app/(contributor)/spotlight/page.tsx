@@ -1,7 +1,9 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { SpotlightForm } from '@/components/contributor/SpotlightForm'
-import type { SpotlightApplication } from '@/types/spotlight'
+import { SPOTLIGHT_PACKAGE, type SpotlightApplication } from '@/types/spotlight'
+
+export const dynamic = 'force-dynamic'
 
 export default async function SpotlightPage() {
   const supabase = await createClient()
@@ -51,6 +53,7 @@ export default async function SpotlightPage() {
         contact_name: profile.display_name || '',
         email: user.email || '',
         status: 'draft',
+        amount_php: SPOTLIGHT_PACKAGE.amount_php,
       })
       .select('*')
       .single()

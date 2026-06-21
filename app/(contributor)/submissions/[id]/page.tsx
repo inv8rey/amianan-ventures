@@ -12,6 +12,8 @@ import {
 } from '@/types/contributor'
 import { SubmissionDetailActions } from '@/components/contributor/SubmissionDetailActions'
 
+export const dynamic = 'force-dynamic'
+
 const STATUS_ICON: Record<SubmissionStatus, React.ElementType> = {
   draft: Pencil,
   submitted: Clock,

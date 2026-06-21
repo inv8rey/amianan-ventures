@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import {
   Loader2, PenLine, Users, BarChart3, Star, User, Briefcase,
   Mail, Lock, Eye, EyeOff, ShieldCheck, UserPlus, Leaf,
@@ -46,7 +45,6 @@ function DecorativeSkyline() {
 }
 
 export default function ContributorSignupPage() {
-  const router = useRouter()
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -136,7 +134,11 @@ export default function ContributorSignupPage() {
     }
 
     toast.success('Account created! Welcome to the contributor portal.')
-    router.push('/dashboard')
+    // Hard navigation — the client-side Router Cache keys by route, not by
+    // session, so a previously cached /dashboard or /spotlight RSC payload
+    // from a different signed-in account in this tab could otherwise leak
+    // into this brand-new session.
+    window.location.href = '/dashboard'
   }
 
   return (

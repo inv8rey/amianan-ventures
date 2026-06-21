@@ -5,6 +5,10 @@ import { createClient } from '@/lib/supabase/server'
 import { ContributorUserMenu } from '@/components/contributor/ContributorUserMenu'
 import { ContributorNavLink } from '@/components/contributor/ContributorNavLink'
 
+// Every page under this layout is per-user authenticated content — never
+// let it be statically cached/served to the wrong visitor.
+export const dynamic = 'force-dynamic'
+
 export default async function ContributorLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()

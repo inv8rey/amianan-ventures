@@ -2,13 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { Loader2, PenLine } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 
 export default function ContributorLoginPage() {
-  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -33,13 +31,17 @@ export default function ContributorLoginPage() {
       .eq('id', data.user.id)
       .single()
 
+    // Hard navigation, not router.push — the client-side Router Cache keys
+    // by route, not by session, so a previously cached /dashboard or
+    // /spotlight RSC payload from a *different* signed-in account in this
+    // same tab could otherwise be served to whoever logs in next.
     if (!profile) {
       // Admin account — redirect to admin
-      router.push('/admin')
+      window.location.href = '/admin'
       return
     }
 
-    router.push('/dashboard')
+    window.location.href = '/dashboard'
   }
 
   return (
