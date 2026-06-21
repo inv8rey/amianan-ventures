@@ -2,14 +2,14 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import {
-  ArrowRight, BookOpen, Eye, Users,
-  Quote, Award, Lock,
-  Mail, FileEdit, Monitor, Images, IdCard, FileBadge2, Gift, ShieldCheck,
-  MailCheck, Smartphone, Rocket, QrCode, ChevronRight, Clock, Landmark, CreditCard,
-  PenSquare, Send, Headset, MessageCircle, Globe2,
-  Handshake, FileStack, Megaphone, Store, TrendingUp, User, Download, Shield,
+  ArrowRight, Eye, Users, Check, Minus,
+  FileEdit, Monitor, Megaphone, Quote, IdCard, Share2,
+  ShieldCheck, Sparkles, Layers,
+  Star, ThumbsUp, MessageCircle, Send,
 } from 'lucide-react'
 import { createServiceClient } from '@/lib/supabase/service'
+import { SPOTLIGHT_PACKAGE, PARTNER_PACKAGE } from '@/types/spotlight'
+import { FaqAccordion } from '@/components/site/FaqAccordion'
 
 interface SpotlightExample {
   name: string
@@ -55,67 +55,98 @@ async function getSpotlightExamples(): Promise<SpotlightExample[]> {
 }
 
 export const metadata: Metadata = {
-  title: 'Get Featured — Amianan Startup Spotlight',
-  description: 'A professionally written feature story, six branded content assets, and a permanent listing in Northern Luzon\'s growing innovation directory.',
+  title: 'Partner With Amianan Ventures',
+  description: 'Promote your organization, share your story, and connect with founders, startups, innovators, and ecosystem stakeholders across Northern Luzon.',
 }
 
 const heroStats = [
-  { icon: BookOpen, value: '140+',    label: 'Stories Published', sub: 'Real founders. Real stories.' },
-  { icon: Eye,       value: '100,000+', label: 'Content Views',    sub: 'Stories read across Northern Luzon.' },
-  { icon: Users,     value: null,      label: 'Founders Across Northern Luzon', sub: 'Building a stronger innovation ecosystem.' },
+  { value: '150+', label: 'Stories Published' },
+  { value: '100,000+', label: 'Content Views' },
+  { value: null, label: 'Growing Ecosystem Community' },
 ]
 
-const included = [
-  { icon: FileEdit,    title: 'Startup Story Feature', desc: 'Professionally written story published on Amianan Ventures.' },
-  { icon: Monitor,     title: 'Homepage Featured Placement', desc: 'Featured on the Amianan Ventures homepage for 2 weeks.' },
-  { icon: Images,      title: 'Social Media Carousel', desc: 'Branded carousel post (5–6 slides) showcasing your story.' },
-  { icon: Quote,       title: 'Founder Quote Card', desc: 'Professional quote graphic featuring your insights.' },
-  { icon: IdCard,      title: 'Startup Directory Listing', desc: 'Permanent profile in the Northern Luzon Startup Directory.' },
-  { icon: Award,       title: 'Featured Startup Badge', desc: 'Recognition asset for your website and social media.' },
-  { icon: FileBadge2,  title: 'Digital Feature Certificate', desc: 'Official recognition as an Amianan Ventures featured startup.' },
+const startupIncludes = [
+  'Featured Article',
+  'Homepage Feature (2 Weeks)',
+  'Article Banner Placement',
+  'Founder Quote Card',
+  'Featured Startup Listing',
+  'Newsletter Inclusion',
 ]
 
-const steps = [
+const partnerIncludes = [
+  'Homepage Banner Placement',
+  'Article Banner Placement',
+  'Announcement Bar Placement',
+  'Directory Spotlight',
+  'Featured Article',
+  'Social Media Feature',
+]
+
+// Row label, then [startup, partner] — true/false/'partial' for the comparison table
+const comparisonRows: { label: string; cells: [boolean, boolean] }[] = [
+  { label: 'Featured Article', cells: [true, true] },
+  { label: 'Homepage Placement', cells: [true, true] },
+  { label: 'Article Banner Placement', cells: [true, true] },
+  { label: 'Social Media Feature', cells: [false, true] },
+  { label: 'Directory Feature', cells: [true, true] },
+  { label: 'Newsletter Inclusion', cells: [true, false] },
+]
+
+const receiveCards = [
+  { icon: FileEdit, title: 'Featured Article', desc: 'A professionally written and published feature on Amianan Ventures.' },
+  { icon: Monitor, title: 'Homepage Feature', desc: 'Prominent placement on the homepage for two weeks, seen by every visitor.' },
+  { icon: Layers, title: 'Article Banner Placement', desc: 'Your brand placed inside relevant articles read across the ecosystem.' },
+  { icon: Quote, title: 'Founder Quote Card', desc: 'A branded quote graphic featuring your story, ready to share anywhere.' },
+  { icon: IdCard, title: 'Directory Spotlight', desc: 'A standout profile in the Northern Luzon ecosystem directory.' },
+  { icon: Share2, title: 'Social Media Feature', desc: 'Your story or organization shared across Amianan Ventures\' channels.' },
+]
+
+const whyCards = [
+  { icon: ShieldCheck, title: 'Build Credibility', desc: 'Professionally showcase your work and impact.' },
+  { icon: Eye, title: 'Increase Visibility', desc: 'Reach founders, innovators, and ecosystem stakeholders.' },
+  { icon: Users, title: 'Strengthen Community Presence', desc: 'Become part of Northern Luzon\'s growing innovation ecosystem.' },
+  { icon: Sparkles, title: 'Create Lasting Assets', desc: 'Receive content and placements you can continue using beyond the campaign.' },
+]
+
+const faqs = [
   {
-    icon: FileEdit,
-    title: 'Submit Your Application',
-    desc: 'Fill out the short application form and tell us your story.',
-    time: 'Takes 3–5 minutes',
+    q: 'Who can apply?',
+    a: 'Founders, startups, MSMEs, businesses, universities, government agencies, programs, and any organization building or supporting Northern Luzon\'s innovation ecosystem.',
   },
   {
-    icon: MailCheck,
-    title: 'Get Reviewed',
-    desc: 'Our team reviews your application. If accepted, we’ll send you an approval message.',
-    time: 'Within 24 hours',
+    q: 'Can universities and government agencies participate?',
+    a: 'Yes — the Ecosystem Visibility Package is built for organizations and programs, including academic institutions and government units, not just startups.',
   },
   {
-    icon: Smartphone,
-    title: 'Complete Payment',
-    desc: 'Once approved, complete payment using any of our secure payment options.',
-    time: 'Instant',
+    q: 'How long does the process take?',
+    a: 'Applications are typically reviewed within 1–3 business days. Once approved and payment is confirmed, production and publishing usually takes 7–14 business days.',
   },
   {
-    icon: Rocket,
-    title: 'We Create & Feature Your Story',
-    desc: 'Our team produces your feature and publishes it on Amianan Ventures.',
-    time: '7–14 business days',
+    q: 'Can I promote an event or program?',
+    a: 'Yes — the Ecosystem Visibility Package is well suited for events, programs, and initiatives, not just ongoing organizations.',
+  },
+  {
+    q: 'Do I need to provide content or photos?',
+    a: 'No — our team interviews you and produces the written feature and content assets. You\'re welcome to share existing photos or brand assets if you have them.',
+  },
+  {
+    q: 'Can I renew my placement?',
+    a: 'Yes — once your placement period ends, you can reapply for another round at the then-current rate.',
   },
 ]
 
-const paymentMethods = [
-  { name: 'GCash',     color: '#007DFE' },
-  { name: 'Maya',      color: '#00C26E' },
-  { name: 'BDO',       color: '#003DA5' },
-  { name: 'BPI',       color: '#C8102E' },
-  { name: 'UnionBank', color: '#F47920' },
-]
-
-const nextSteps = [
-  { icon: FileEdit,    title: 'Application Review', desc: 'Our team reviews your application within 1–3 business days.' },
-  { icon: CreditCard,  title: 'Approval & Payment', desc: 'If approved, we’ll send payment instructions. Founding rate is reserved for approved applicants.' },
-  { icon: PenSquare,   title: 'Story Production', desc: 'We’ll conduct an interview and create your story and content assets.' },
-  { icon: Send,        title: 'Publication', desc: 'Your story goes live on Amianan Ventures and we promote it across our channels.' },
-]
+function CheckCell({ value }: { value: boolean }) {
+  return value ? (
+    <div className="w-7 h-7 rounded-full bg-[#00a855]/10 flex items-center justify-center mx-auto">
+      <Check className="h-4 w-4 text-[#00a855]" />
+    </div>
+  ) : (
+    <div className="w-7 h-7 rounded-full bg-zinc-100 flex items-center justify-center mx-auto">
+      <Minus className="h-3.5 w-3.5 text-zinc-300" />
+    </div>
+  )
+}
 
 export default async function GetFeaturedPage() {
   const spotlightExamples = await getSpotlightExamples()
@@ -123,565 +154,439 @@ export default async function GetFeaturedPage() {
   return (
     <div className="min-h-screen bg-white">
 
-      {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="relative min-h-[560px] lg:min-h-[640px] flex items-end">
-        <div className="absolute inset-0 overflow-hidden">
-          <Image
-            src="/get-featured-hero.png"
-            alt="Founders and agripreneurs building across Northern Luzon"
-            fill
-            priority
-            className="object-cover object-center"
-            sizes="100vw"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/75 to-white/10" />
-          <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
-        </div>
-
-        <div className="relative z-10 mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 pb-0">
-          <div className="max-w-2xl">
-            <h1 className="text-5xl sm:text-6xl font-black leading-[1.05] mb-5">
-              <span className="text-zinc-900">Share Your Story.</span><br />
-              <span className="text-[#00a855]">Build Your Reputation.</span>
-            </h1>
-            <div className="w-14 h-1 bg-[#00cc6a] rounded-full mb-6" />
-            <p className="text-lg text-zinc-600 leading-relaxed mb-8 max-w-lg">
-              Join the founders, startups, MSMEs, innovators, and businesses shaping
-              the future of <span className="text-[#00a855] font-semibold">Northern Luzon.</span>
-            </p>
-            <div className="flex items-center gap-3 flex-wrap">
-              <Link
-                href="/get-featured/apply"
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-lg bg-[#0a3a22] text-white font-bold text-sm hover:bg-[#042212] transition-colors"
-              >
-                Apply for a Feature <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/news"
-                className="inline-flex items-center px-6 py-3.5 rounded-lg border-2 border-zinc-900 text-zinc-900 font-bold text-sm hover:bg-zinc-900 hover:text-white transition-colors"
-              >
-                View Featured Stories
-              </Link>
-            </div>
-          </div>
-
-          {/* Stat bar — overlaps bottom of hero */}
-          <div className="relative mt-14 translate-y-8 bg-white rounded-2xl shadow-xl border border-zinc-100 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-zinc-100">
-            {heroStats.map((s) => (
-              <div key={s.label} className="flex items-center gap-4 p-6">
-                <div className="w-12 h-12 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
-                  <s.icon className="h-5 w-5 text-[#00a855]" />
-                </div>
-                <div>
-                  {s.value && <p className="text-2xl font-black text-zinc-900 leading-none mb-0.5">{s.value}</p>}
-                  <p className={`font-bold text-zinc-900 ${s.value ? 'text-sm' : 'text-base leading-tight'}`}>{s.label}</p>
-                  <p className="text-xs text-zinc-400 mt-0.5">{s.sub}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Spacer for overlapping stat bar */}
-      <div className="h-12 sm:h-8" />
-
-      {/* ── Brochure CTA ───────────────────────────────────────── */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-6">
-        <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-5 sm:p-6 flex items-center gap-5 flex-wrap sm:flex-nowrap">
-          {/* Thumbnail */}
-          <div className="relative w-16 h-20 sm:w-20 sm:h-24 rounded-lg overflow-hidden shrink-0 shadow-sm border border-zinc-200 bg-[#0a3a22]">
-            <Image
-              src="/get-featured-hero.png"
-              alt="Get Featured brochure"
-              fill
-              className="object-cover opacity-50"
-              sizes="80px"
-            />
-            <div className="absolute inset-0 flex flex-col items-center justify-center px-1.5 text-center">
-              <span className="text-[9px] font-black text-white uppercase tracking-wider leading-tight">Get<br />Featured</span>
-            </div>
-          </div>
-
-          {/* Text */}
-          <div className="flex-1 min-w-[200px]">
-            <p className="text-base font-black text-zinc-900 mb-1">Want the full details?</p>
-            <p className="text-sm text-zinc-500">See package inclusions, examples, pricing, and featured stories.</p>
-          </div>
-
-          {/* CTA */}
-          <a
-            href="/get-featured-brochure.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-lg border-2 border-[#00a855] text-[#00a855] font-bold text-sm hover:bg-[#00a855] hover:text-white transition-colors shrink-0"
-          >
-            <Download className="h-4 w-4" /> View Brochure / Flyer
-          </a>
-        </div>
-      </div>
-
-      {/* ── Why founders choose Amianan Ventures ──────────────── */}
-      <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-        <div className="text-center mb-10">
-          <p className="text-xs font-black uppercase tracking-widest text-[#00a855] mb-3">Why Get Featured?</p>
-          <h2 className="text-2xl sm:text-3xl font-black text-zinc-900 leading-tight">
-            More Visibility. More Opportunities.
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-
-          {/* Build Credibility */}
-          <div className="rounded-2xl border border-zinc-200 bg-white p-5">
-            <Shield className="h-6 w-6 text-[#00a855] mb-3" />
-            <p className="text-sm font-black text-zinc-900 mb-1.5">Build Credibility</p>
-            <p className="text-xs text-zinc-500 leading-relaxed mb-4">
-              A professionally published feature helps customers, partners, investors, and supporters take your business seriously.
-            </p>
-            <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-2">
-              <div className="aspect-[16/10] rounded bg-gradient-to-br from-[#0a3a22] to-[#06301c] flex items-end p-2">
-                <span className="text-[8px] font-bold text-white/90 leading-snug">Cordillera Coffee:<br />Impact in the Cordilleras</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Increase Visibility */}
-          <div className="rounded-2xl border border-zinc-200 bg-white p-5">
-            <Eye className="h-6 w-6 text-[#00a855] mb-3" />
-            <p className="text-sm font-black text-zinc-900 mb-1.5">Increase Visibility</p>
-            <p className="text-xs text-zinc-500 leading-relaxed mb-4">
-              Reach customers, founders, institutions, and ecosystem leaders across Northern Luzon.
-            </p>
-            <div className="rounded-lg border border-zinc-200 overflow-hidden">
-              <div className="flex items-center gap-1.5 px-2 py-1.5 bg-white border-b border-zinc-100">
-                <div className="w-3 h-3 rounded-sm bg-[#0a3a22]" />
-                <span className="text-[7px] font-black text-zinc-700">AMIANAN</span>
-              </div>
-              <div className="p-2 bg-zinc-50">
-                <p className="text-[8px] font-black text-zinc-900 leading-snug">Stories of Innovation<br />from Northern Luzon</p>
-                <div className="grid grid-cols-3 gap-1 mt-1.5">
-                  {[1, 2, 3].map((i) => (
-                    <div key={i} className="aspect-[4/3] rounded bg-gradient-to-br from-zinc-200 to-zinc-300" />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Unlock Opportunities */}
-          <div className="rounded-2xl border border-zinc-200 bg-white p-5">
-            <Handshake className="h-6 w-6 text-[#00a855] mb-3" />
-            <p className="text-sm font-black text-zinc-900 mb-1.5">Unlock Opportunities</p>
-            <p className="text-xs text-zinc-500 leading-relaxed mb-4">
-              Great stories start conversations. Conversations create opportunities.
-            </p>
-            <div className="relative rounded-lg border border-zinc-200 bg-zinc-50 flex items-center justify-center" style={{ minHeight: '92px' }}>
-              <div className="relative w-11 h-11 rounded-full bg-[#0a3a22] flex items-center justify-center z-10">
-                <User className="h-5 w-5 text-white" />
-              </div>
-              <div className="absolute top-2.5 left-3 w-6 h-6 rounded-full bg-white border border-zinc-200 flex items-center justify-center">
-                <Megaphone className="h-3 w-3 text-[#00a855]" />
-              </div>
-              <div className="absolute top-2.5 right-3 w-6 h-6 rounded-full bg-white border border-zinc-200 flex items-center justify-center">
-                <TrendingUp className="h-3 w-3 text-[#00a855]" />
-              </div>
-              <div className="absolute bottom-2.5 left-3 w-6 h-6 rounded-full bg-white border border-zinc-200 flex items-center justify-center">
-                <Handshake className="h-3 w-3 text-[#00a855]" />
-              </div>
-              <div className="absolute bottom-2.5 right-3 w-6 h-6 rounded-full bg-white border border-zinc-200 flex items-center justify-center">
-                <Store className="h-3 w-3 text-[#00a855]" />
-              </div>
-            </div>
-          </div>
-
-          {/* Create Reusable Content */}
-          <div className="rounded-2xl border border-zinc-200 bg-white p-5">
-            <FileStack className="h-6 w-6 text-[#00a855] mb-3" />
-            <p className="text-sm font-black text-zinc-900 mb-1.5">Create Reusable Content</p>
-            <p className="text-xs text-zinc-500 leading-relaxed mb-4">
-              Receive professional content you can reuse across your website, presentations, proposals, and social media.
-            </p>
-            <div className="grid grid-cols-2 gap-2">
-              <div className="aspect-square rounded-lg bg-gradient-to-br from-zinc-200 to-zinc-300" />
-              <div className="aspect-square rounded-lg bg-gradient-to-br from-zinc-200 to-zinc-300" />
-            </div>
-          </div>
-        </div>
-
-        {/* Trust bar */}
-        <div className="mt-6 flex items-center justify-center gap-2.5 rounded-xl bg-[#00a855]/8 px-5 py-4 text-center flex-wrap">
-          <ShieldCheck className="h-4 w-4 text-[#00a855] shrink-0" />
-          <p className="text-sm text-zinc-700">
-            <span className="font-black text-zinc-900">Professional. Trusted. Purposeful.</span>{' '}
-            We&apos;re committed to telling stories that inspire, inform, and drive positive impact.
-          </p>
-        </div>
-      </section>
-
-      {/* ── Founding rate ─────────────────────────────────────── */}
-      <section className="bg-[#042212] relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -right-32 top-1/3 w-96 h-96 rounded-full border border-white/5" />
-          <div className="absolute -left-20 bottom-0 w-72 h-72 rounded-full border border-white/5" />
-        </div>
-        <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-
-          {/* Header */}
-          <div className="text-center mb-12">
-            <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#00a855]/20 border border-[#00a855]/40 text-[#00cc6a] text-xs font-black uppercase tracking-widest mb-6">
-              Startup Spotlight Package
-            </span>
-            <h2 className="text-3xl sm:text-4xl lg:text-[2.5rem] font-black text-white leading-tight max-w-3xl mx-auto mb-4">
-              Everything you need to build credibility, increase visibility, and showcase your story.
-            </h2>
-            <p className="text-sm sm:text-base text-white/50 max-w-xl mx-auto">
-              A complete content asset package built around your story.
-            </p>
-          </div>
-
-          {/* Two-column pricing card */}
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.3fr] rounded-2xl overflow-hidden border border-white/10">
-
-            {/* Left: price */}
-            <div className="bg-[#06301c] p-8 sm:p-10 flex flex-col">
-              <span className="inline-flex self-start items-center px-3.5 py-1.5 rounded-full bg-[#00cc6a] text-black text-[11px] font-black uppercase tracking-widest mb-6">
-                Founding Rate
+      {/* ════════════════════════ HERO ════════════════════════ */}
+      <section className="relative overflow-hidden border-b border-zinc-100">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-14 sm:pt-20 pb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left: copy */}
+            <div>
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-widest text-[#00a855] mb-5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00a855]" />
+                Partner With Amianan Ventures
               </span>
-              <p className="text-5xl sm:text-6xl font-black text-white mb-1">₱599</p>
-              <p className="text-base font-bold text-[#00cc6a] mb-5">Founding Rate</p>
-              <div className="w-12 h-px bg-white/15 mb-5" />
-              <p className="text-sm text-white/60 leading-relaxed mb-3">
-                Available to the first 10 founders and businesses in this founding batch.
+              <h1 className="text-4xl sm:text-5xl lg:text-[3.4rem] font-black text-zinc-900 leading-[1.08] mb-5">
+                Reach Northern Luzon&apos;s<br />
+                <span className="text-[#00a855]">Innovation Community</span>
+              </h1>
+              <p className="text-base sm:text-lg text-zinc-500 leading-relaxed max-w-lg mb-8">
+                Promote your organization, share your story, and connect with founders, startups, innovators, businesses, universities, and ecosystem stakeholders across Northern Luzon.
               </p>
-              <p className="text-sm text-white/40 leading-relaxed mb-8">
-                After the founding batch closes, the rate increases.
-              </p>
-              <Link
-                href="/get-featured/apply"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-[#00cc6a] text-black font-bold text-sm hover:bg-[#00b85e] transition-colors mb-3"
-              >
-                Apply Now <ArrowRight className="h-4 w-4" />
-              </Link>
-              <p className="flex items-center gap-1.5 text-xs text-white/40">
-                <Lock className="h-3 w-3" /> Limited slots only
-              </p>
-            </div>
-
-            {/* Right: what's included */}
-            <div className="bg-zinc-50 p-8 sm:p-10">
-              <div className="flex items-center gap-2.5 mb-6">
-                <div className="w-8 h-8 rounded-lg bg-[#00a855]/15 flex items-center justify-center shrink-0">
-                  <Gift className="h-4 w-4 text-[#00a855]" />
-                </div>
-                <h3 className="text-sm font-black uppercase tracking-widest text-zinc-900">What&apos;s Included</h3>
+              <div className="flex items-center gap-3 flex-wrap mb-10">
+                <Link
+                  href="/get-featured/apply"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-lg bg-[#042212] text-white font-bold text-sm hover:bg-[#06331c] transition-colors"
+                >
+                  Get Featured <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/partner"
+                  className="inline-flex items-center px-6 py-3.5 rounded-lg border-2 border-zinc-900 text-zinc-900 font-bold text-sm hover:bg-zinc-900 hover:text-white transition-colors"
+                >
+                  Become A Partner
+                </Link>
               </div>
-              <div className="divide-y divide-zinc-200">
-                {included.map((item) => (
-                  <div key={item.title} className="flex items-start gap-3.5 py-4 first:pt-0 last:pb-0">
-                    <div className="w-9 h-9 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
-                      <item.icon className="h-4 w-4 text-[#00a855]" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-zinc-900">{item.title}</p>
-                      <p className="text-xs text-zinc-500 mt-0.5 leading-relaxed">{item.desc}</p>
-                    </div>
+
+              {/* Stats row */}
+              <div className="flex items-center gap-8 flex-wrap">
+                {heroStats.map((s) => (
+                  <div key={s.label}>
+                    {s.value && <p className="text-2xl font-black text-zinc-900 leading-none mb-1">{s.value}</p>}
+                    <p className={`font-bold text-zinc-500 ${s.value ? 'text-xs' : 'text-sm text-zinc-700'}`}>{s.label}</p>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
 
-          {/* Stat bar */}
-          <div className="mt-6 rounded-2xl border border-white/10 bg-[#06301c]/60 grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/10">
-            {heroStats.map((s) => (
-              <div key={s.label} className="flex items-center gap-4 p-6">
-                <div className="w-11 h-11 rounded-full border border-[#00a855]/30 bg-[#00a855]/10 flex items-center justify-center shrink-0">
-                  <s.icon className="h-5 w-5 text-[#00cc6a]" />
+            {/* Right: hero visual */}
+            <div className="relative">
+              <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
+                <Image
+                  src="/get-featured-hero.png"
+                  alt="Founders, business owners, and ecosystem builders across Northern Luzon"
+                  fill
+                  priority
+                  className="object-cover object-center"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#042212]/40 via-transparent to-transparent" />
+              </div>
+              {/* Floating credibility chip */}
+              <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-xl border border-zinc-100 px-5 py-4 flex items-center gap-3 max-w-[220px]">
+                <div className="w-10 h-10 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
+                  <Star className="h-4 w-4 text-[#00a855]" />
                 </div>
                 <div>
-                  {s.value ? (
-                    <>
-                      <p className="text-xl font-black text-white leading-none mb-0.5">{s.value}</p>
-                      <p className="text-sm font-bold text-white">{s.label}</p>
-                    </>
-                  ) : (
-                    <p className="text-base font-bold text-white leading-tight">
-                      Founders Across <span className="text-[#00cc6a]">Northern Luzon</span>
-                    </p>
-                  )}
-                  <p className="text-xs text-white/40 mt-0.5">{s.sub}</p>
+                  <p className="text-xs font-black text-zinc-900 leading-tight">Built for credibility</p>
+                  <p className="text-[11px] text-zinc-400">Not a marketplace.</p>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
 
-          {/* Footer note */}
-          <div className="flex items-center justify-center gap-2 mt-8 text-sm text-white/50 text-center">
-            <ShieldCheck className="h-4 w-4 text-[#00a855] shrink-0" />
-            This is not advertising. This is your story, professionally told and yours to own.
+          {/* Trust card */}
+          <div className="mt-16 rounded-2xl bg-zinc-50 border border-zinc-200 p-6 sm:p-7 flex items-center gap-4">
+            <ShieldCheck className="h-6 w-6 text-[#00a855] shrink-0" />
+            <p className="text-sm sm:text-base text-zinc-600 leading-relaxed">
+              Helping organizations, founders, and ecosystem builders share their stories, build credibility, and increase visibility across Northern Luzon.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* ── How it works ──────────────────────────────────────── */}
-      <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+      {/* ════════════════════ CHOOSE YOUR PATH ════════════════════ */}
+      <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
         <div className="text-center mb-14">
-          <p className="text-xs font-black uppercase tracking-widest text-[#00a855] mb-3">How It Works</p>
-          <h2 className="text-3xl sm:text-4xl font-black text-zinc-900 mb-4 leading-tight">
-            Simple. Transparent. Founder-First.
+          <h2 className="text-3xl sm:text-4xl font-black text-zinc-900 leading-tight mb-4">
+            Choose The Option That Fits You
           </h2>
           <p className="text-sm sm:text-base text-zinc-500 max-w-lg mx-auto leading-relaxed">
-            We&apos;ve made the process simple so you can focus on what you do best—building and growing your business.
+            Whether you&apos;re building a startup or promoting an organization, we have a package designed for you.
           </p>
         </div>
 
-        {/* Step row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
-          {steps.map((s, i) => (
-            <div key={s.title} className="relative flex flex-col">
-              {/* Chevron connector */}
-              {i < steps.length - 1 && (
-                <ChevronRight className="hidden lg:block absolute h-5 w-5 text-zinc-300" style={{ top: '34px', right: '-26px' }} />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+          {/* CARD 1 — Startups */}
+          <div className="rounded-2xl border border-zinc-200 bg-white overflow-hidden flex flex-col">
+            <div className="p-7 sm:p-8 flex-1 flex flex-col">
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#00a855] mb-3">For Founders & Startups</span>
+              <h3 className="text-2xl font-black text-zinc-900 mb-2">Startup Spotlight Package</h3>
+              <p className="text-sm text-zinc-500 leading-relaxed mb-6">
+                Share your story and build your reputation through a professionally published feature.
+              </p>
+
+              <div className="flex items-baseline gap-2.5 mb-6">
+                <p className="text-4xl font-black text-zinc-900">₱{SPOTLIGHT_PACKAGE.amount_php}</p>
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#00a855] bg-[#00a855]/10 px-2.5 py-1 rounded-full">
+                  Founding Rate
+                </span>
+              </div>
+
+              <div className="space-y-2.5 mb-8">
+                {startupIncludes.map((item) => (
+                  <div key={item} className="flex items-center gap-2.5">
+                    <Check className="h-4 w-4 text-[#00a855] shrink-0" />
+                    <span className="text-sm text-zinc-700">{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              <Link
+                href="/get-featured/apply"
+                className="mt-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-[#042212] text-white font-bold text-sm hover:bg-[#06331c] transition-colors"
+              >
+                Apply Now <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+
+            {/* Visual: laptop + phone mockup */}
+            <div className="relative bg-zinc-50 border-t border-zinc-200 p-8 pt-12 pb-10 min-h-[180px]">
+              <div className="relative max-w-[280px] mx-auto">
+                {/* Laptop */}
+                <div className="rounded-t-lg border border-zinc-300 bg-white shadow-sm overflow-hidden">
+                  <div className="h-4 bg-zinc-100 flex items-center gap-1 px-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-300" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-300" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-300" />
+                  </div>
+                  <div className="p-3">
+                    <span className="inline-block text-[7px] font-bold uppercase px-1.5 py-0.5 rounded bg-[#00a855]/10 text-[#00a855] mb-1.5">Featured Article</span>
+                    <div className="h-2 bg-zinc-200 rounded w-4/5 mb-1" />
+                    <div className="h-2 bg-zinc-100 rounded w-3/5 mb-2" />
+                    <div className="h-12 rounded bg-gradient-to-br from-zinc-200 to-zinc-300" />
+                  </div>
+                </div>
+                <div className="h-1.5 bg-zinc-300 rounded-b" />
+
+                {/* Phone overlapping */}
+                <div className="absolute -right-4 -bottom-6 w-20 rounded-xl border-2 border-zinc-900 bg-white shadow-lg p-2">
+                  <Quote className="h-3 w-3 text-[#00a855] mb-1" />
+                  <div className="h-1 bg-zinc-200 rounded w-full mb-0.5" />
+                  <div className="h-1 bg-zinc-200 rounded w-4/5 mb-1.5" />
+                  <div className="h-1 bg-zinc-100 rounded w-1/2" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* CARD 2 — Organizations */}
+          <div className="rounded-2xl border-2 border-[#042212] bg-white overflow-hidden flex flex-col relative">
+            <span className="absolute top-5 right-5 text-[10px] font-black uppercase tracking-widest text-white bg-[#042212] px-2.5 py-1 rounded-full">
+              For Organizations
+            </span>
+            <div className="p-7 sm:p-8 flex-1 flex flex-col">
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#00a855] mb-3">For Organizations & Programs</span>
+              <h3 className="text-2xl font-black text-zinc-900 mb-2">Ecosystem Visibility Package</h3>
+              <p className="text-sm text-zinc-500 leading-relaxed mb-6">
+                Promote your organization and connect with Northern Luzon&apos;s innovation community.
+              </p>
+
+              <div className="flex items-baseline gap-2.5 mb-6">
+                <p className="text-4xl font-black text-zinc-900">₱{PARTNER_PACKAGE.amount_php}</p>
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#00a855] bg-[#00a855]/10 px-2.5 py-1 rounded-full">
+                  Founding Rate
+                </span>
+              </div>
+
+              <div className="space-y-2.5 mb-8">
+                {partnerIncludes.map((item) => (
+                  <div key={item} className="flex items-center gap-2.5">
+                    <Check className="h-4 w-4 text-[#00a855] shrink-0" />
+                    <span className="text-sm text-zinc-700">{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              <Link
+                href="/partner"
+                className="mt-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-[#00a855] text-black font-bold text-sm hover:bg-[#00b85e] transition-colors"
+              >
+                Become A Partner <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+
+            {/* Visual: banner + directory + ad mockups */}
+            <div className="bg-zinc-50 border-t border-zinc-200 p-6 grid grid-cols-3 gap-3">
+              {/* Homepage banner mockup */}
+              <div className="rounded-lg border border-zinc-200 bg-white p-2 flex flex-col gap-1">
+                <Monitor className="h-3 w-3 text-zinc-400" />
+                <div className="h-8 rounded bg-gradient-to-br from-[#0a3a22] to-[#042212] flex items-center justify-center">
+                  <span className="text-[6px] font-black text-white uppercase">Banner</span>
+                </div>
+              </div>
+              {/* Directory profile mockup */}
+              <div className="rounded-lg border border-zinc-200 bg-white p-2 flex flex-col items-center gap-1">
+                <IdCard className="h-3 w-3 text-zinc-400 self-start" />
+                <div className="w-6 h-6 rounded-full bg-zinc-200 mt-0.5" />
+                <div className="h-1 bg-zinc-200 rounded w-3/4" />
+              </div>
+              {/* Article ad mockup */}
+              <div className="rounded-lg border border-zinc-200 bg-white p-2 flex flex-col gap-1">
+                <Megaphone className="h-3 w-3 text-zinc-400" />
+                <div className="h-2 bg-zinc-200 rounded w-full mt-1" />
+                <div className="h-2 bg-zinc-100 rounded w-2/3" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════ COMPARISON ════════════════════ */}
+      <section className="bg-zinc-50 border-y border-zinc-200">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-black text-zinc-900 leading-tight">Compare Packages</h2>
+          </div>
+
+          <div className="rounded-2xl border border-zinc-200 bg-white overflow-hidden overflow-x-auto">
+            <table className="w-full min-w-[480px]">
+              <thead>
+                <tr className="border-b border-zinc-200">
+                  <th className="text-left text-xs font-black uppercase tracking-widest text-zinc-400 px-6 py-5">Feature</th>
+                  <th className="text-center text-xs font-black uppercase tracking-widest text-zinc-900 px-4 py-5">Startup<br />Spotlight</th>
+                  <th className="text-center text-xs font-black uppercase tracking-widest text-zinc-900 px-4 py-5">Ecosystem<br />Visibility</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-zinc-100">
+                {comparisonRows.map((row) => (
+                  <tr key={row.label}>
+                    <td className="text-sm font-semibold text-zinc-700 px-6 py-4">{row.label}</td>
+                    <td className="px-4 py-4"><CheckCell value={row.cells[0]} /></td>
+                    <td className="px-4 py-4"><CheckCell value={row.cells[1]} /></td>
+                  </tr>
+                ))}
+                <tr>
+                  <td className="text-sm font-semibold text-zinc-700 px-6 py-4">Best For</td>
+                  <td className="text-xs text-zinc-500 text-center px-4 py-4">Founders &amp; startups</td>
+                  <td className="text-xs text-zinc-500 text-center px-4 py-4">Organizations &amp; programs</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════ WHAT YOU RECEIVE ════════════════════ */}
+      <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+        <div className="text-center mb-14">
+          <h2 className="text-3xl sm:text-4xl font-black text-zinc-900 leading-tight">See What You&apos;ll Receive</h2>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {receiveCards.map((card) => (
+            <div key={card.title} className="rounded-2xl border border-zinc-200 bg-white p-6">
+              <div className="w-10 h-10 rounded-full bg-[#00a855]/10 flex items-center justify-center mb-4">
+                <card.icon className="h-4.5 w-4.5 text-[#00a855]" />
+              </div>
+              <p className="text-sm font-black text-zinc-900 mb-1.5">{card.title}</p>
+              <p className="text-xs text-zinc-500 leading-relaxed mb-4">{card.desc}</p>
+
+              {/* Mini mockup preview, varies per card */}
+              {card.title === 'Featured Article' && (
+                <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
+                  <div className="h-2 bg-zinc-200 rounded w-4/5 mb-1.5" />
+                  <div className="h-2 bg-zinc-200 rounded w-3/5 mb-2" />
+                  <div className="aspect-video rounded bg-gradient-to-br from-zinc-200 to-zinc-300" />
+                </div>
               )}
-
-              {/* Numbered icon */}
-              <div className="relative w-20 h-20 mx-auto mb-5">
-                <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[#0a3a22] flex items-center justify-center z-10 ring-4 ring-white">
-                  <span className="text-[11px] font-black text-white">{i + 1}</span>
+              {card.title === 'Homepage Feature' && (
+                <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
+                  <div className="flex items-center gap-1 mb-2">
+                    <div className="w-2 h-2 rounded-sm bg-[#042212]" />
+                    <div className="h-1.5 bg-zinc-300 rounded w-10" />
+                  </div>
+                  <div className="grid grid-cols-3 gap-1">
+                    <div className="aspect-square rounded bg-gradient-to-br from-[#00a855]/30 to-[#00a855]/10 ring-2 ring-[#00a855]" />
+                    <div className="aspect-square rounded bg-zinc-200" />
+                    <div className="aspect-square rounded bg-zinc-200" />
+                  </div>
                 </div>
-                <div className="w-20 h-20 rounded-full bg-[#00a855]/10 flex items-center justify-center">
-                  <s.icon className="h-8 w-8 text-[#0a3a22]" />
+              )}
+              {card.title === 'Article Banner Placement' && (
+                <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 space-y-1.5">
+                  <div className="h-1.5 bg-zinc-200 rounded w-full" />
+                  <div className="h-1.5 bg-zinc-200 rounded w-5/6" />
+                  <div className="h-8 rounded bg-gradient-to-br from-[#0a3a22] to-[#042212] flex items-center justify-center">
+                    <span className="text-[6px] font-black text-white uppercase">Your Brand Here</span>
+                  </div>
+                  <div className="h-1.5 bg-zinc-200 rounded w-3/4" />
                 </div>
-              </div>
-
-              <p className="text-base font-black text-zinc-900 mb-2 text-center">{s.title}</p>
-              <p className="text-xs text-zinc-500 leading-relaxed text-center max-w-[220px] mx-auto mb-5">{s.desc}</p>
-
-              {/* Step visual */}
-              <div className="mt-auto mb-4">
-                {i === 0 && (
-                  <div className="rounded-xl border border-zinc-200 bg-white p-3.5 shadow-sm">
-                    <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-wider mb-2.5">Application Form</p>
-                    <div className="space-y-2">
-                      <div className="h-1.5 bg-zinc-100 rounded w-1/2" />
-                      <div className="h-6 bg-zinc-50 border border-zinc-100 rounded" />
-                      <div className="h-1.5 bg-zinc-100 rounded w-1/3 mt-2" />
-                      <div className="h-6 bg-zinc-50 border border-zinc-100 rounded" />
-                    </div>
-                    <div className="mt-2.5 h-7 rounded bg-[#00cc6a] flex items-center justify-center">
-                      <span className="text-[9px] font-bold text-black">Submit Application</span>
-                    </div>
+              )}
+              {card.title === 'Founder Quote Card' && (
+                <div className="rounded-lg bg-[#042212] p-4">
+                  <Quote className="h-4 w-4 text-[#00cc6a] mb-2" />
+                  <div className="h-1.5 bg-white/30 rounded w-full mb-1" />
+                  <div className="h-1.5 bg-white/30 rounded w-3/4 mb-2.5" />
+                  <div className="h-1.5 bg-white/50 rounded w-1/3" />
+                </div>
+              )}
+              {card.title === 'Directory Spotlight' && (
+                <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-zinc-300 to-zinc-400 shrink-0" />
+                  <div className="flex-1">
+                    <div className="h-1.5 bg-zinc-300 rounded w-3/4 mb-1" />
+                    <span className="inline-block text-[6px] font-black uppercase px-1 py-0.5 rounded bg-[#00a855]/15 text-[#00a855]">Featured</span>
                   </div>
-                )}
-                {i === 1 && (
-                  <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
-                      <MailCheck className="h-5 w-5 text-[#00a855]" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-xs font-bold text-zinc-900">You&apos;re approved!</p>
-                      <p className="text-[10px] text-zinc-400 mt-0.5">Complete payment to get started.</p>
-                    </div>
+                </div>
+              )}
+              {card.title === 'Social Media Feature' && (
+                <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <div className="w-4 h-4 rounded-full bg-zinc-300" />
+                    <div className="h-1.5 bg-zinc-300 rounded w-12" />
                   </div>
-                )}
-                {i === 2 && (
-                  <div className="rounded-xl bg-[#06301c] border border-white/10 p-3.5">
-                    <p className="text-[10px] font-black text-[#00cc6a] uppercase tracking-wider text-center mb-2.5">Payment Options</p>
-                    <div className="grid grid-cols-2 gap-1.5">
-                      <div className="bg-white/5 rounded-lg p-2 flex items-center justify-center">
-                        <span className="text-[11px] font-black" style={{ color: '#4FA8FF' }}>GCash</span>
-                      </div>
-                      <div className="bg-white/5 rounded-lg p-2 flex flex-col items-center justify-center gap-0.5">
-                        <QrCode className="h-4 w-4 text-white/60" />
-                        <span className="text-[8px] text-white/40">Scan to Pay</span>
-                      </div>
-                      <div className="bg-white/5 rounded-lg p-2 flex items-center justify-center">
-                        <span className="text-[11px] font-black text-[#00cc6a]">maya</span>
-                      </div>
-                      <div className="bg-white/5 rounded-lg p-2 flex flex-col items-center justify-center gap-0.5">
-                        <Landmark className="h-3.5 w-3.5 text-white/60" />
-                        <span className="text-[8px] text-white/40">BDO · BPI · UB</span>
-                      </div>
-                    </div>
+                  <div className="aspect-square rounded bg-gradient-to-br from-zinc-200 to-zinc-300 mb-1.5" />
+                  <div className="flex items-center gap-2">
+                    <ThumbsUp className="h-2.5 w-2.5 text-zinc-300" />
+                    <MessageCircle className="h-2.5 w-2.5 text-zinc-300" />
+                    <Send className="h-2.5 w-2.5 text-zinc-300" />
                   </div>
-                )}
-                {i === 3 && (
-                  <div className="rounded-xl border border-zinc-200 bg-white overflow-hidden shadow-sm">
-                    <div className="h-5 bg-zinc-100 flex items-center gap-1 px-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-zinc-300" />
-                      <span className="w-1.5 h-1.5 rounded-full bg-zinc-300" />
-                      <span className="w-1.5 h-1.5 rounded-full bg-zinc-300" />
-                    </div>
-                    <div className="p-3">
-                      <span className="inline-block text-[8px] font-bold uppercase px-1.5 py-0.5 rounded bg-[#00a855]/10 text-[#00a855] mb-1.5">
-                        Featured Story
-                      </span>
-                      <p className="text-[11px] font-bold text-zinc-900 leading-snug">Building Solutions. Creating Impact.</p>
-                      <div className="mt-2 h-10 rounded bg-gradient-to-br from-zinc-100 to-zinc-200" />
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Timing pill */}
-              <span className="inline-flex items-center justify-center gap-1.5 mx-auto px-3 py-1.5 rounded-full bg-[#00a855]/8 text-[#0a3a22] text-xs font-semibold">
-                <Clock className="h-3 w-3" /> {s.time}
-              </span>
+                </div>
+              )}
             </div>
           ))}
         </div>
-
-        {/* Trust + payment options bar */}
-        <div className="mt-16 rounded-2xl border border-zinc-200 bg-zinc-50 grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-zinc-200">
-          {/* Secure & Trusted */}
-          <div className="flex items-start gap-4 p-7">
-            <div className="w-12 h-12 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
-              <ShieldCheck className="h-6 w-6 text-[#00a855]" />
-            </div>
-            <div>
-              <p className="text-base font-black text-zinc-900 mb-1">Secure & Trusted</p>
-              <p className="text-sm text-zinc-500 leading-relaxed">
-                Payment is only requested after your application has been reviewed and approved by the Amianan Ventures team.
-              </p>
-            </div>
-          </div>
-
-          {/* Payment options */}
-          <div className="p-7">
-            <p className="text-base font-black text-zinc-900 mb-4">Secure Payment Options</p>
-            <div className="flex items-center gap-3 flex-wrap mb-3">
-              {paymentMethods.map((m) => (
-                <span key={m.name} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 bg-white">
-                  {(m.name === 'BDO' || m.name === 'BPI' || m.name === 'UnionBank') && (
-                    <CreditCard className="h-3.5 w-3.5 text-zinc-400" />
-                  )}
-                  <span className="text-sm font-black" style={{ color: m.color }}>{m.name}</span>
-                </span>
-              ))}
-            </div>
-            <p className="text-xs text-zinc-400">More options coming soon.</p>
-          </div>
-        </div>
       </section>
 
-      {/* ── Apply form ─────────────────────────────────────────── */}
-      <section id="apply" className="bg-zinc-50 border-t border-zinc-100">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-
-          {/* Header */}
-          <div className="text-center mb-12">
-            <p className="text-xs font-black uppercase tracking-widest text-[#00a855] mb-3">Apply to Be Featured</p>
-            <h2 className="text-3xl sm:text-4xl font-black text-zinc-900 leading-tight mb-4">
-              Tell Your Story.<br />We&apos;ll Handle The Rest.
+      {/* ════════════════════ WHY PARTNER ════════════════════ */}
+      <section className="bg-[#042212] relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -right-32 top-1/4 w-96 h-96 rounded-full border border-white/5" />
+          <div className="absolute -left-20 bottom-0 w-72 h-72 rounded-full border border-white/5" />
+        </div>
+        <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl sm:text-4xl font-black text-white leading-tight">
+              Why Organizations Choose Amianan Ventures
             </h2>
-            <p className="text-sm sm:text-base text-zinc-500 max-w-md mx-auto leading-relaxed">
-              Share your journey with Northern Luzon&apos;s innovation and business community.
-            </p>
           </div>
 
-          {/* Two-column layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-6">
-
-            {/* Left: CTA card */}
-            <div className="rounded-2xl border border-zinc-200 bg-white p-6 sm:p-8 flex flex-col">
-              <div className="flex items-center gap-3 mb-7">
-                <div className="w-11 h-11 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
-                  <FileEdit className="h-5 w-5 text-[#00a855]" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {whyCards.map((card) => (
+              <div key={card.title} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+                <div className="w-10 h-10 rounded-full bg-[#00a855]/15 flex items-center justify-center mb-4">
+                  <card.icon className="h-4.5 w-4.5 text-[#00cc6a]" />
                 </div>
-                <div>
-                  <p className="text-base font-black text-zinc-900">Feature Application</p>
-                  <p className="text-xs text-zinc-500">A guided, 5-step application — takes less than 5 minutes.</p>
-                </div>
+                <p className="text-sm font-black text-white mb-1.5">{card.title}</p>
+                <p className="text-xs text-white/50 leading-relaxed">{card.desc}</p>
               </div>
-              <div className="flex-1 flex flex-col items-start justify-center py-6">
-                <p className="text-xl font-black text-zinc-900 leading-tight mb-3">
-                  Let&apos;s tell your story.
-                </p>
-                <p className="text-sm text-zinc-500 leading-relaxed mb-8 max-w-sm">
-                  We&apos;ll walk you through your business details, your story, and what happens next — step by step.
-                </p>
-                <Link
-                  href="/get-featured/apply"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-[#0a3a22] text-white font-bold text-sm hover:bg-[#042212] transition-colors"
-                >
-                  Start Application <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
-              <p className="flex items-center gap-1.5 text-xs text-zinc-400">
-                <Lock className="h-3 w-3" /> Payment is requested only after your application has been reviewed and approved.
-              </p>
-            </div>
-
-            {/* Right: stacked info cards */}
-            <div className="flex flex-col gap-5">
-
-              {/* Stories from founders like you */}
-              {spotlightExamples.length > 0 && (
-                <div className="rounded-2xl border border-[#00a855]/15 bg-[#00a855]/[0.04] p-6">
-                  <p className="text-sm font-black text-zinc-900 mb-4">Stories from founders like you</p>
-                  <div className="grid grid-cols-2 gap-3">
-                    {spotlightExamples.map((ex) => (
-                      <Link key={ex.name} href={`/founder-stories/${ex.slug}`} className="group flex flex-col gap-2">
-                        <div className="relative aspect-square rounded-lg bg-white border border-zinc-100 overflow-hidden flex items-center justify-center group-hover:border-[#00a855]/40 transition-colors">
-                          {ex.logo_url ? (
-                            <Image src={ex.logo_url} alt={ex.name} fill className="object-contain p-3" sizes="120px" unoptimized />
-                          ) : (
-                            <span className="text-lg font-black text-zinc-300">{ex.name.charAt(0)}</span>
-                          )}
-                        </div>
-                        <p className="text-xs font-bold text-zinc-900 leading-snug line-clamp-2 group-hover:text-[#00a855] transition-colors">{ex.name}</p>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* What happens next */}
-              <div className="rounded-2xl border border-zinc-200 bg-white p-6">
-                <p className="text-sm font-black text-zinc-900 mb-5">What happens next?</p>
-                <div className="space-y-0">
-                  {nextSteps.map((s, i) => (
-                    <div key={s.title} className="flex gap-3.5">
-                      <div className="flex flex-col items-center shrink-0">
-                        <div className="w-7 h-7 rounded-full bg-[#0a3a22] flex items-center justify-center">
-                          <span className="text-[11px] font-black text-white">{i + 1}</span>
-                        </div>
-                        {i < nextSteps.length - 1 && <div className="w-px flex-1 bg-zinc-200 my-1" />}
-                      </div>
-                      <div className="pb-5">
-                        <p className="text-sm font-bold text-zinc-900 mb-0.5">{s.title}</p>
-                        <p className="text-xs text-zinc-500 leading-relaxed">{s.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Need help */}
-              <div className="rounded-2xl border border-zinc-200 bg-white p-6 relative overflow-hidden">
-                <p className="text-sm font-black text-zinc-900 mb-1">Need help?</p>
-                <p className="text-xs text-zinc-500 mb-4">We&apos;re here to help you every step of the way.</p>
-                <div className="space-y-2.5">
-                  <a href="mailto:amiananventures@gmail.com" className="flex items-center gap-2 text-sm font-semibold text-zinc-700 hover:text-[#00a855] transition-colors">
-                    <Mail className="h-4 w-4 text-[#00a855] shrink-0" /> amiananventures@gmail.com
-                  </a>
-                  <a href="https://www.facebook.com/amiananventures" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-semibold text-zinc-700 hover:text-[#00a855] transition-colors">
-                    <MessageCircle className="h-4 w-4 text-[#00a855] shrink-0" /> Message us on Facebook
-                  </a>
-                  <a href="https://amiananventures.org" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-semibold text-zinc-700 hover:text-[#00a855] transition-colors">
-                    <Globe2 className="h-4 w-4 text-[#00a855] shrink-0" /> amiananventures.org
-                  </a>
-                </div>
-                <Headset className="absolute -right-3 -bottom-3 h-20 w-20 text-[#00a855]/8" />
-              </div>
-            </div>
+            ))}
           </div>
-
-          <p className="text-xs text-zinc-400 italic text-center mt-12">Built from the Mountains.</p>
         </div>
       </section>
 
+      {/* ════════════════════ STORIES FROM FOUNDERS LIKE YOU ════════════════════ */}
+      {spotlightExamples.length > 0 && (
+        <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+          <div className="flex items-center gap-2 mb-8">
+            <span className="w-1 h-4 bg-[#00cc6a] rounded-full shrink-0" />
+            <span className="text-xs font-black uppercase tracking-widest text-zinc-800">Stories From Founders Like You</span>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {spotlightExamples.map((ex) => (
+              <Link key={ex.name} href={`/founder-stories/${ex.slug}`} className="group flex flex-col gap-3">
+                <div className="relative aspect-square rounded-xl bg-zinc-50 border border-zinc-200 overflow-hidden flex items-center justify-center group-hover:border-[#00a855]/40 transition-colors">
+                  {ex.logo_url ? (
+                    <Image src={ex.logo_url} alt={ex.name} fill className="object-contain p-4" sizes="160px" unoptimized />
+                  ) : (
+                    <span className="text-2xl font-black text-zinc-300">{ex.name.charAt(0)}</span>
+                  )}
+                </div>
+                <p className="text-sm font-bold text-zinc-900 leading-snug line-clamp-2 group-hover:text-[#00a855] transition-colors">{ex.name}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ════════════════════ FAQ ════════════════════ */}
+      <section className="bg-zinc-50 border-t border-zinc-200">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-black text-zinc-900 leading-tight">Frequently Asked Questions</h2>
+          </div>
+          <FaqAccordion items={faqs} />
+        </div>
+      </section>
+
+      {/* ════════════════════ FINAL CTA ════════════════════ */}
+      <section className="bg-[#042212] relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -right-24 top-1/2 -translate-y-1/2 w-96 h-96 rounded-full border border-white/5" />
+          <div className="absolute -left-16 bottom-0 w-64 h-64 rounded-full border border-white/5" />
+        </div>
+        <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-4 max-w-2xl mx-auto">
+            Ready To Share Your Story Or Promote Your Organization?
+          </h2>
+          <p className="text-sm sm:text-base text-white/50 max-w-xl mx-auto leading-relaxed mb-12">
+            Join the founders, businesses, universities, programs, and ecosystem partners helping shape Northern Luzon&apos;s future.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto text-left">
+            <Link
+              href="/get-featured/apply"
+              className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 hover:border-[#00a855]/40 transition-colors"
+            >
+              <p className="text-xs font-black uppercase tracking-widest text-[#00cc6a] mb-2">Startups &amp; Founders</p>
+              <p className="text-base font-black text-white mb-4">Startup Spotlight Package</p>
+              <span className="inline-flex items-center gap-2 text-sm font-bold text-white group-hover:text-[#00cc6a] transition-colors">
+                Apply For Startup Spotlight <ArrowRight className="h-4 w-4" />
+              </span>
+            </Link>
+            <Link
+              href="/partner"
+              className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 hover:border-[#00a855]/40 transition-colors"
+            >
+              <p className="text-xs font-black uppercase tracking-widest text-[#00cc6a] mb-2">Organizations &amp; Programs</p>
+              <p className="text-base font-black text-white mb-4">Ecosystem Visibility Package</p>
+              <span className="inline-flex items-center gap-2 text-sm font-bold text-white group-hover:text-[#00cc6a] transition-colors">
+                Become An Ecosystem Partner <ArrowRight className="h-4 w-4" />
+              </span>
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   )
 }

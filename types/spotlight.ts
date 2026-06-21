@@ -114,3 +114,13 @@ export const SPOTLIGHT_PACKAGE = {
   label: 'Founding Rate',
   amount_php: 599,
 }
+
+// Display-only reference for the organizations/programs package on the
+// /get-featured marketing page. Applications for this package go through
+// the existing /partner inquiry form (form_submissions), not a dedicated
+// table — there's no separate review/payment pipeline for it yet.
+export const PARTNER_PACKAGE = {
+  id: 'ecosystem-visibility',
+  label: 'Founding Rate',
+  amount_php: 799,
+}
