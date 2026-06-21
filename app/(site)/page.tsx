@@ -10,7 +10,6 @@ import {
 } from '@/lib/queries'
 import { EcosystemSection } from '@/components/site/EcosystemSection'
 import { FeaturedListings } from '@/components/site/FeaturedListings'
-import { NewsletterSignup } from '@/components/site/NewsletterSignup'
 import { EcosystemPulseWidget } from '@/components/site/EcosystemPulseWidget'
 import { CommunityContributions } from '@/components/site/CommunityContributions'
 import { SubmitStoryBanner } from '@/components/site/SubmitStoryBanner'
@@ -642,56 +641,6 @@ export default async function HomePage() {
 
         {/* Contributors */}
         <ContributorsStrip contributors={contributors} />
-      </div>
-
-      {/* ── Pre-footer CTA ─── */}
-      <div id="newsletter" className="mt-16 bg-[#042212] relative overflow-hidden">
-        {/* Decorative rings */}
-        <div className="absolute -right-24 top-1/2 -translate-y-1/2 w-96 h-96 rounded-full border border-white/5 pointer-events-none" />
-        <div className="absolute -right-12 top-1/2 -translate-y-1/2 w-64 h-64 rounded-full border border-white/5 pointer-events-none" />
-        <div className="absolute -left-16 bottom-0 w-64 h-64 rounded-full border border-white/5 pointer-events-none" />
-
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-
-          {/* Left: Subscribe */}
-          <div>
-            <p className="text-xs font-black uppercase tracking-widest text-[#00cc6a] mb-4">Free newsletter</p>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-3">
-              Northern Luzon&apos;s<br />
-              innovation scene —<br />
-              <span className="text-[#00cc6a] italic">in your inbox.</span>
-            </h2>
-            <p className="text-sm text-zinc-400 leading-relaxed mb-7 max-w-sm">
-              Founder stories, ecosystem news, and upcoming events. Join the community staying informed about what&apos;s being built in the north.
-            </p>
-            <NewsletterSignup source="homepage-cta" />
-          </div>
-
-          {/* Right: Become a Contributor */}
-          <div className="lg:border-l lg:border-white/10 lg:pl-12">
-            <p className="text-xs font-black uppercase tracking-widest text-[#00cc6a] mb-4">Contributor portal</p>
-            <h2 className="text-3xl sm:text-4xl font-black text-white leading-tight mb-3">
-              Your story belongs<br />
-              <span className="text-white/60">in the ecosystem.</span>
-            </h2>
-            <p className="text-sm text-zinc-400 leading-relaxed mb-7 max-w-sm">
-              Founders, researchers, and ecosystem builders — share your perspective with the community. Submit an article, opinion piece, or field notes.
-            </p>
-            <Link
-              href="/contribute"
-              className="inline-flex items-center gap-2 bg-[#00cc6a] text-black px-7 py-3.5 rounded font-bold text-sm hover:bg-[#00b85e] transition-colors uppercase tracking-wide"
-            >
-              Become a contributor <ArrowRight className="h-4 w-4" />
-            </Link>
-            <p className="mt-4 text-xs text-zinc-600">
-              Already a contributor?{' '}
-              <Link href="/contribute/login" className="text-zinc-400 hover:text-white transition-colors underline underline-offset-2">
-                Sign in
-              </Link>
-            </p>
-          </div>
-
-        </div>
       </div>
     </div>
   )
