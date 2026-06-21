@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {
   ArrowRight, Eye, Users, Check,
-  FileEdit, Monitor, Megaphone, Quote, IdCard, Share2,
+  FileEdit, Monitor, Quote, IdCard, Share2,
   ShieldCheck, Sparkles, Layers,
   Star, ThumbsUp, MessageCircle, Send,
 } from 'lucide-react'
@@ -256,35 +256,6 @@ export default async function GetFeaturedPage() {
                 Apply Now <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
-
-            {/* Visual: laptop + phone mockup */}
-            <div className="relative bg-zinc-50 border-t border-zinc-200 p-8 pt-12 pb-10 min-h-[180px]">
-              <div className="relative max-w-[280px] mx-auto">
-                {/* Laptop */}
-                <div className="rounded-t-lg border border-zinc-300 bg-white shadow-sm overflow-hidden">
-                  <div className="h-4 bg-zinc-100 flex items-center gap-1 px-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-300" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-300" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-300" />
-                  </div>
-                  <div className="p-3">
-                    <span className="inline-block text-[7px] font-bold uppercase px-1.5 py-0.5 rounded bg-[#00a855]/10 text-[#00a855] mb-1.5">Featured Article</span>
-                    <div className="h-2 bg-zinc-200 rounded w-4/5 mb-1" />
-                    <div className="h-2 bg-zinc-100 rounded w-3/5 mb-2" />
-                    <div className="h-12 rounded bg-gradient-to-br from-zinc-200 to-zinc-300" />
-                  </div>
-                </div>
-                <div className="h-1.5 bg-zinc-300 rounded-b" />
-
-                {/* Phone overlapping */}
-                <div className="absolute -right-4 -bottom-6 w-20 rounded-xl border-2 border-zinc-900 bg-white shadow-lg p-2">
-                  <Quote className="h-3 w-3 text-[#00a855] mb-1" />
-                  <div className="h-1 bg-zinc-200 rounded w-full mb-0.5" />
-                  <div className="h-1 bg-zinc-200 rounded w-4/5 mb-1.5" />
-                  <div className="h-1 bg-zinc-100 rounded w-1/2" />
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* CARD 2 — Organizations */}
@@ -321,29 +292,6 @@ export default async function GetFeaturedPage() {
               >
                 Become A Partner <ArrowRight className="h-4 w-4" />
               </Link>
-            </div>
-
-            {/* Visual: banner + directory + ad mockups */}
-            <div className="bg-zinc-50 border-t border-zinc-200 p-6 grid grid-cols-3 gap-3">
-              {/* Homepage banner mockup */}
-              <div className="rounded-lg border border-zinc-200 bg-white p-2 flex flex-col gap-1">
-                <Monitor className="h-3 w-3 text-zinc-400" />
-                <div className="h-8 rounded bg-gradient-to-br from-[#0a3a22] to-[#042212] flex items-center justify-center">
-                  <span className="text-[6px] font-black text-white uppercase">Banner</span>
-                </div>
-              </div>
-              {/* Directory profile mockup */}
-              <div className="rounded-lg border border-zinc-200 bg-white p-2 flex flex-col items-center gap-1">
-                <IdCard className="h-3 w-3 text-zinc-400 self-start" />
-                <div className="w-6 h-6 rounded-full bg-zinc-200 mt-0.5" />
-                <div className="h-1 bg-zinc-200 rounded w-3/4" />
-              </div>
-              {/* Article ad mockup */}
-              <div className="rounded-lg border border-zinc-200 bg-white p-2 flex flex-col gap-1">
-                <Megaphone className="h-3 w-3 text-zinc-400" />
-                <div className="h-2 bg-zinc-200 rounded w-full mt-1" />
-                <div className="h-2 bg-zinc-100 rounded w-2/3" />
-              </div>
             </div>
           </div>
         </div>
