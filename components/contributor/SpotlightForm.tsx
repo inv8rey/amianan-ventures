@@ -257,9 +257,8 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 py-8">
-        {/* Breadcrumb */}
+    <>
+      {/* Breadcrumb */}
         <nav className="flex items-center gap-1.5 text-xs text-zinc-400 mb-4">
           <Link href="/dashboard" className="hover:text-zinc-600 transition-colors">Dashboard</Link>
           <ChevronRight className="h-3 w-3" />
@@ -664,8 +663,7 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
             <FileEdit className="h-3.5 w-3.5" /> View Content Guidelines
           </Link>
         </div>
-      </div>
-    </div>
+    </>
   )
 }
 
