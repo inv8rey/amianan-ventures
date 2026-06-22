@@ -31,7 +31,7 @@ export interface SpotlightApplication {
   startup_logo_url: string | null
   product_photo_url: string | null
   promo: string | null
-  package: string
+  package: PackageId
   amount_php: number
   status: SpotlightStatus
   payment_method: PaymentMethod | null
@@ -109,18 +109,26 @@ export const INDUSTRIES = [
   'Climate / GreenTech', 'Social Enterprise', 'Other',
 ]
 
-export const SPOTLIGHT_PACKAGE = {
-  id: 'founding-rate',
-  label: 'Founding Rate',
-  amount_php: 599,
+export type PackageId = 'founding-rate' | 'ecosystem-visibility'
+
+// Both packages share the same application table/flow (the `package`
+// column is a free-form string, not constrained to one value) — they
+// differ only in name, price, and a couple of field labels in the form.
+export const PACKAGES: Record<PackageId, { id: PackageId; name: string; badge: string; amount_php: number }> = {
+  'founding-rate': {
+    id: 'founding-rate',
+    name: 'Startup Spotlight Package',
+    badge: 'Founding Rate',
+    amount_php: 599,
+  },
+  'ecosystem-visibility': {
+    id: 'ecosystem-visibility',
+    name: 'Ecosystem Visibility Package',
+    badge: 'Founding Rate',
+    amount_php: 799,
+  },
 }
 
-// Display-only reference for the organizations/programs package on the
-// /get-featured marketing page. Applications for this package go through
-// the existing /partner inquiry form (form_submissions), not a dedicated
-// table — there's no separate review/payment pipeline for it yet.
-export const PARTNER_PACKAGE = {
-  id: 'ecosystem-visibility',
-  label: 'Founding Rate',
-  amount_php: 799,
+export function isPackageId(value: string | null | undefined): value is PackageId {
+  return value === 'founding-rate' || value === 'ecosystem-visibility'
 }

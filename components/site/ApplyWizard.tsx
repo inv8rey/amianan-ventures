@@ -6,15 +6,25 @@ import Link from 'next/link'
 import { ArrowRight, ArrowLeft, Check, Loader2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
+import { PACKAGES, type PackageId } from '@/types/spotlight'
 
-const BENEFITS = [
-  'Professional Story Feature',
-  'Increased Visibility',
-  'Startup Directory Listing',
-  'Content Assets You Can Reuse',
-]
+const COPY: Record<PackageId, { heading: React.ReactNode; nameLabel: string; namePlaceholder: string; benefits: string[] }> = {
+  'founding-rate': {
+    heading: <>Let&apos;s Tell<br />Your Story.</>,
+    nameLabel: 'Business / Startup Name',
+    namePlaceholder: 'e.g. Vidad Food Processing',
+    benefits: ['Professional Story Feature', 'Increased Visibility', 'Startup Directory Listing', 'Content Assets You Can Reuse'],
+  },
+  'ecosystem-visibility': {
+    heading: <>Let&apos;s Build<br />Your Partnership.</>,
+    nameLabel: 'Organization Name',
+    namePlaceholder: 'e.g. Cordillera Innovation Hub',
+    benefits: ['Homepage Banner Placement', 'Featured Article', 'Directory Spotlight', 'Social Media Feature'],
+  },
+}
 
-export function ApplyWizard() {
+export function ApplyWizard({ packageId = 'founding-rate' }: { packageId?: PackageId }) {
+  const copy = COPY[packageId]
   const [form, setForm] = useState({
     businessName: '',
     contactName: '',
@@ -48,7 +58,7 @@ export function ApplyWizard() {
         data: {
           display_name: form.contactName.trim(),
           organization: form.businessName.trim(),
-          contributor_role: 'founder',
+          contributor_role: packageId === 'ecosystem-visibility' ? 'ecosystem_builder' : 'founder',
         },
       },
     })
@@ -79,6 +89,7 @@ export function ApplyWizard() {
         businessName: form.businessName.trim(),
         contactName: form.contactName.trim(),
         email: form.email.trim(),
+        packageId,
       }),
     })
 
@@ -107,16 +118,16 @@ export function ApplyWizard() {
               <ArrowLeft className="h-3.5 w-3.5" /> Back
             </Link>
 
-            <p className="text-xs font-black uppercase tracking-widest text-[#00a855] mb-4">Get Featured</p>
+            <p className="text-xs font-black uppercase tracking-widest text-[#00a855] mb-4">{PACKAGES[packageId].name} · ₱{PACKAGES[packageId].amount_php}</p>
             <h1 className="text-4xl sm:text-5xl font-black text-zinc-900 leading-[1.05] mb-5">
-              Let&apos;s Tell<br />Your Story.
+              {copy.heading}
             </h1>
             <p className="text-base text-zinc-500 leading-relaxed mb-8">
               Create your account to start your application. You can save your progress and come back anytime before paying.
             </p>
 
             <div className="space-y-3 mb-10">
-              {BENEFITS.map((b) => (
+              {copy.benefits.map((b) => (
                 <div key={b} className="flex items-center gap-3">
                   <div className="w-5 h-5 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
                     <Check className="h-3 w-3 text-[#00a855]" />
@@ -127,8 +138,8 @@ export function ApplyWizard() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <Field label="Business / Startup Name" required value={form.businessName} onChange={(v) => set('businessName', v)} placeholder="e.g. Vidad Food Processing" />
-              <Field label="Your Name" required value={form.contactName} onChange={(v) => set('contactName', v)} placeholder="Founder / contact person" />
+              <Field label={copy.nameLabel} required value={form.businessName} onChange={(v) => set('businessName', v)} placeholder={copy.namePlaceholder} />
+              <Field label="Your Name" required value={form.contactName} onChange={(v) => set('contactName', v)} placeholder="Contact person" />
               <Field label="Email Address" type="email" required value={form.email} onChange={(v) => set('email', v)} placeholder="you@example.com" />
               <div className="grid grid-cols-2 gap-3">
                 <Field label="Password" type="password" required value={form.password} onChange={(v) => set('password', v)} placeholder="Min. 8 chars" />

@@ -6,12 +6,13 @@ import { toast } from 'sonner'
 import {
   ArrowLeft, Loader2, Upload, CheckCircle2, ExternalLink, Lock, ImageIcon, X,
   FileEdit, Monitor, Images, Quote, IdCard, Award, FileBadge2, CreditCard, PenSquare, Send,
+  Megaphone, Share2,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import {
   type SpotlightApplication, type PaymentMethod, type StoryQuestionKey,
   STATUS_LABELS, STATUS_COLORS, EDITABLE_STATUSES, PAYMENT_METHOD_LABELS,
-  INDUSTRIES, SPOTLIGHT_PACKAGE, STORY_QUESTIONS,
+  INDUSTRIES, PACKAGES, STORY_QUESTIONS,
 } from '@/types/spotlight'
 import { CONTRIBUTOR_REGIONS } from '@/types/contributor'
 
@@ -25,16 +26,26 @@ const PAYMENT_VISIBLE_STATUSES: SpotlightApplication['status'][] = [
 ]
 const PAYMENT_EDITABLE_STATUSES: SpotlightApplication['status'][] = ['approved', 'awaiting_payment']
 
-// What's included in the package — same list shown on the /get-featured marketing page.
-const PACKAGE_INCLUDED = [
-  { icon: FileEdit,   title: 'Startup Story Feature', desc: 'Professionally written story published on Amianan Ventures.' },
-  { icon: Monitor,    title: 'Homepage Featured Placement', desc: 'Featured on the Amianan Ventures homepage for 2 weeks.' },
-  { icon: Images,     title: 'Social Media Carousel', desc: 'Branded carousel post (5–6 slides) showcasing your story.' },
-  { icon: Quote,      title: 'Founder Quote Card', desc: 'Professional quote graphic featuring your insights.' },
-  { icon: IdCard,     title: 'Startup Directory Listing', desc: 'Permanent profile in the Northern Luzon Startup Directory.' },
-  { icon: Award,      title: 'Featured Startup Badge', desc: 'Recognition asset for your website and social media.' },
-  { icon: FileBadge2, title: 'Digital Feature Certificate', desc: 'Official recognition as an Amianan Ventures featured startup.' },
-]
+// What's included in each package — same lists shown on the /get-featured marketing page.
+const PACKAGE_INCLUDED = {
+  'founding-rate': [
+    { icon: FileEdit,   title: 'Startup Story Feature', desc: 'Professionally written story published on Amianan Ventures.' },
+    { icon: Monitor,    title: 'Homepage Featured Placement', desc: 'Featured on the Amianan Ventures homepage for 2 weeks.' },
+    { icon: Images,     title: 'Social Media Carousel', desc: 'Branded carousel post (5–6 slides) showcasing your story.' },
+    { icon: Quote,      title: 'Founder Quote Card', desc: 'Professional quote graphic featuring your insights.' },
+    { icon: IdCard,     title: 'Startup Directory Listing', desc: 'Permanent profile in the Northern Luzon Startup Directory.' },
+    { icon: Award,      title: 'Featured Startup Badge', desc: 'Recognition asset for your website and social media.' },
+    { icon: FileBadge2, title: 'Digital Feature Certificate', desc: 'Official recognition as an Amianan Ventures featured startup.' },
+  ],
+  'ecosystem-visibility': [
+    { icon: Monitor,    title: 'Homepage Banner Placement', desc: 'Your organization featured on the Amianan Ventures homepage.' },
+    { icon: Megaphone,  title: 'Article Banner Placement', desc: 'Your brand placed inside relevant articles read across the ecosystem.' },
+    { icon: FileEdit,   title: 'Featured Article', desc: 'A professionally written feature published on Amianan Ventures.' },
+    { icon: IdCard,     title: 'Directory Spotlight', desc: 'A standout profile in the Northern Luzon ecosystem directory.' },
+    { icon: Share2,     title: 'Social Media Feature', desc: 'Your organization shared across Amianan Ventures\' channels.' },
+    { icon: FileBadge2, title: 'Digital Partner Certificate', desc: 'Official recognition as an Amianan Ventures ecosystem partner.' },
+  ],
+}
 
 // What happens after saving/submitting — mirrors the "How It Works" steps on /get-featured.
 const NEXT_STEPS = [
@@ -51,6 +62,8 @@ function currentStepIndex(status: SpotlightApplication['status']) {
 
 export function SpotlightForm({ application }: { application: SpotlightApplication }) {
   const [app, setApp] = useState(application)
+  const pkg = PACKAGES[app.package]
+  const isOrgPackage = app.package === 'ecosystem-visibility'
   const [form, setForm] = useState({
     business_name: application.business_name,
     contact_name: application.contact_name,
@@ -120,12 +133,16 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
   async function handleSubmitForReview() {
     const required: (keyof typeof form)[] = ['business_name', 'contact_name', 'email', 'role', 'industry', 'region']
     const missingFields = required.filter((k) => !form[k].trim())
-    const missingStory = (['q1', 'q2', 'q3'] as StoryQuestionKey[]).filter((k) => !(answers[k] ?? '').trim())
+    // Organizations promoting a program don't necessarily have a single
+    // founder's origin story — only startups are required to answer it.
+    const missingStory = isOrgPackage
+      ? []
+      : (['q1', 'q2', 'q3'] as StoryQuestionKey[]).filter((k) => !(answers[k] ?? '').trim())
     if (missingFields.length > 0 || missingStory.length > 0) {
-      toast.error('Please fill out all required fields and the first 3 story questions before submitting.')
+      toast.error('Please fill out all required fields before submitting.')
       return
     }
-    if (!founderPhoto.url) {
+    if (!isOrgPackage && !founderPhoto.url) {
       toast.error('Please upload a founder photo.')
       return
     }
@@ -217,7 +234,7 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
         </Link>
 
         <div className="flex items-center justify-between gap-3 mb-2 flex-wrap">
-          <h1 className="text-2xl font-black text-zinc-900">Get Featured Application</h1>
+          <h1 className="text-2xl font-black text-zinc-900">{pkg.name} Application</h1>
           <span className={`text-xs font-bold uppercase tracking-wide px-2.5 py-1 rounded-full ${STATUS_COLORS[app.status]}`}>
             {STATUS_LABELS[app.status]}
           </span>
@@ -250,12 +267,16 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
         {/* What's included in the package */}
         <div className="rounded-2xl border border-zinc-200 bg-white p-6 mb-5">
           <div className="flex items-center justify-between mb-1">
-            <p className="text-sm font-black text-zinc-900">{SPOTLIGHT_PACKAGE.label} Package</p>
-            <p className="text-sm font-black text-zinc-900">₱{(app.amount_php ?? SPOTLIGHT_PACKAGE.amount_php).toLocaleString()}</p>
+            <p className="text-sm font-black text-zinc-900">{pkg.name}</p>
+            <p className="text-sm font-black text-zinc-900">₱{(app.amount_php ?? pkg.amount_php).toLocaleString()}</p>
           </div>
-          <p className="text-xs text-zinc-500 mb-4">Here&apos;s what you get once your story is featured.</p>
+          <p className="text-xs text-zinc-500 mb-4">
+            {isOrgPackage
+              ? 'Here’s what you get once your organization is featured.'
+              : 'Here’s what you get once your story is featured.'}
+          </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {PACKAGE_INCLUDED.map((item) => (
+            {PACKAGE_INCLUDED[app.package].map((item) => (
               <div key={item.title} className="flex items-start gap-3 rounded-lg bg-zinc-50 p-3">
                 <div className="w-7 h-7 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
                   <item.icon className="h-3.5 w-3.5 text-[#00a855]" />
@@ -312,8 +333,8 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
               <Field label="Email" type="email" required value={form.email} onChange={(v) => set('email', v)} disabled={locked} />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field label="Startup / Business Name" required value={form.business_name} onChange={(v) => set('business_name', v)} disabled={locked} />
-              <Field label="Your Role" required placeholder="e.g. Co-founder & CEO" value={form.role} onChange={(v) => set('role', v)} disabled={locked} />
+              <Field label={isOrgPackage ? 'Organization Name' : 'Startup / Business Name'} required value={form.business_name} onChange={(v) => set('business_name', v)} disabled={locked} />
+              <Field label="Your Role" required placeholder={isOrgPackage ? 'e.g. Program Director' : 'e.g. Co-founder & CEO'} value={form.role} onChange={(v) => set('role', v)} disabled={locked} />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="LinkedIn / Facebook Profile" type="url" value={form.social_link} onChange={(v) => set('social_link', v)} disabled={locked} />
@@ -327,16 +348,20 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
           </div>
         </div>
 
-        {/* Your Story — same questions as /share-your-story; first 3 required */}
+        {/* Your Story — same questions as /share-your-story; first 3 required for startups */}
         <div className="rounded-2xl border border-zinc-200 bg-white p-6 mb-5">
           <p className="text-sm font-black text-zinc-900 mb-1">Your Story</p>
-          <p className="text-xs text-zinc-400 mb-5">Answer as many as you can. Questions 1–3 are required.</p>
+          <p className="text-xs text-zinc-400 mb-5">
+            {isOrgPackage
+              ? 'Optional, but the more context you share the better your feature will be.'
+              : 'Answer as many as you can. Questions 1–3 are required.'}
+          </p>
           <div className="space-y-5">
             {STORY_QUESTIONS.map((q, i) => (
               <TextareaField
                 key={q.key}
                 label={`${i + 1}. ${q.label}`}
-                required={i < 3}
+                required={!isOrgPackage && i < 3}
                 value={answers[q.key] ?? ''}
                 onChange={(v) => setAnswer(q.key, v)}
                 maxLength={1000}
@@ -351,17 +376,17 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
           <p className="text-sm font-black text-zinc-900 mb-5">Photos &amp; Assets</p>
           <div className="space-y-5">
             <AssetUpload
-              label="Founder Photo"
-              hint="A clear headshot or portrait. Used on your story page."
-              required
+              label={isOrgPackage ? 'Representative Photo' : 'Founder Photo'}
+              hint={isOrgPackage ? 'A clear photo of your team or representative. Used on your feature page.' : 'A clear headshot or portrait. Used on your story page.'}
+              required={!isOrgPackage}
               field={founderPhoto}
               disabled={locked}
               onUpload={(f) => handleUploadAsset(f, 'founder')}
               onClear={() => setFounderPhoto({ url: null, uploading: false })}
             />
             <AssetUpload
-              label="Startup Logo"
-              hint="Your company logo. PNG with transparent background preferred."
+              label={isOrgPackage ? 'Organization Logo' : 'Startup Logo'}
+              hint="Your logo. PNG with transparent background preferred."
               field={startupLogo}
               disabled={locked}
               onUpload={(f) => handleUploadAsset(f, 'logo')}
@@ -421,14 +446,14 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
           <div className="rounded-2xl border border-zinc-200 bg-white p-6">
             <div className="flex items-center justify-between mb-1">
               <p className="text-sm font-black text-zinc-900">Payment</p>
-              <p className="text-sm font-black text-zinc-900">₱{(app.amount_php ?? SPOTLIGHT_PACKAGE.amount_php).toLocaleString()}</p>
+              <p className="text-sm font-black text-zinc-900">₱{(app.amount_php ?? pkg.amount_php).toLocaleString()}</p>
             </div>
-            <p className="text-xs text-zinc-500 mb-5">{SPOTLIGHT_PACKAGE.label} package</p>
+            <p className="text-xs text-zinc-500 mb-5">{pkg.name} · {pkg.badge}</p>
 
             {PAYMENT_EDITABLE_STATUSES.includes(app.status) ? (
               <div className="space-y-4">
                 <p className="text-xs text-zinc-500 leading-relaxed bg-zinc-50 rounded-lg p-3">
-                  Send ₱{(app.amount_php ?? SPOTLIGHT_PACKAGE.amount_php).toLocaleString()} via your chosen method below, then enter your reference number and upload a screenshot of the transaction. Our team will confirm receipt and update your status.
+                  Send ₱{(app.amount_php ?? pkg.amount_php).toLocaleString()} via your chosen method below, then enter your reference number and upload a screenshot of the transaction. Our team will confirm receipt and update your status.
                 </p>
                 <div>
                   <label className="block text-sm font-semibold text-zinc-700 mb-1.5">Payment Method <span className="text-red-400">*</span></label>

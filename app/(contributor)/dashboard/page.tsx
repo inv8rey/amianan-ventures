@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import {
   Plus, AlertCircle, FileText, CheckCircle, Clock, RotateCcw, PenLine, Star, ArrowRight,
-  Headset, Mail, MessageCircle, ImageIcon, User, Sparkles,
+  Headset, Mail, MessageCircle, ImageIcon, User, Sparkles, Megaphone,
 } from 'lucide-react'
 import { SubmissionCard } from '@/components/contributor/SubmissionCard'
 import {
@@ -118,34 +118,73 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      {/* Hero promo — Feature Your Business */}
-      <div className="relative rounded-2xl overflow-hidden bg-[#042212] mb-6">
-        <div className="absolute inset-0">
-          <Image
-            src="/get-featured-hero.png"
-            alt="Founders and agripreneurs building across Northern Luzon"
-            fill
-            className="object-cover object-center"
-            sizes="100vw"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#042212] via-[#042212]/85 to-[#042212]/10" />
+      {/* Hero promo — no application yet: let them choose a path; otherwise route back into it */}
+      {!spotlight ? (
+        <div className="relative rounded-2xl overflow-hidden bg-[#042212] mb-6">
+          <div className="absolute inset-0">
+            <Image
+              src="/get-featured-hero.png"
+              alt="Founders and agripreneurs building across Northern Luzon"
+              fill
+              className="object-cover object-center"
+              sizes="100vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#042212] via-[#042212]/85 to-[#042212]/10" />
+          </div>
+          <div className="relative z-10 p-8 sm:p-10">
+            <p className="text-xs font-black uppercase tracking-widest text-[#00cc6a] mb-3">Get Featured</p>
+            <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight mb-5">
+              What would you like to do?
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl">
+              <Link
+                href="/spotlight?package=founding-rate"
+                className="flex items-center gap-3 bg-white/95 hover:bg-white text-[#042212] px-5 py-4 rounded-xl font-bold text-sm transition-colors"
+              >
+                <Star className="h-4 w-4 shrink-0" />
+                Share Your Story
+                <ArrowRight className="h-4 w-4 ml-auto shrink-0" />
+              </Link>
+              <Link
+                href="/spotlight?package=ecosystem-visibility"
+                className="flex items-center gap-3 bg-white/10 hover:bg-white/15 border border-white/20 text-white px-5 py-4 rounded-xl font-bold text-sm transition-colors"
+              >
+                <Megaphone className="h-4 w-4 shrink-0" />
+                Promote Your Organization
+                <ArrowRight className="h-4 w-4 ml-auto shrink-0" />
+              </Link>
+            </div>
+          </div>
         </div>
-        <div className="relative z-10 p-8 sm:p-10 max-w-lg">
-          <p className="text-xs font-black uppercase tracking-widest text-[#00cc6a] mb-3">Feature Your Business</p>
-          <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight mb-3">
-            Share your story.<br />Grow your impact.
-          </h2>
-          <p className="text-sm text-zinc-300 leading-relaxed mb-6 max-w-sm">
-            Get featured on Amianan Ventures and connect with founders, customers, investors, and ecosystem builders.
-          </p>
-          <Link
-            href="/spotlight"
-            className="inline-flex items-center gap-2 bg-white text-[#042212] px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-zinc-100 transition-colors"
-          >
-            Apply for a Feature <ArrowRight className="h-4 w-4" />
-          </Link>
+      ) : !hasSubmittedSpotlight && (
+        <div className="relative rounded-2xl overflow-hidden bg-[#042212] mb-6">
+          <div className="absolute inset-0">
+            <Image
+              src="/get-featured-hero.png"
+              alt="Founders and agripreneurs building across Northern Luzon"
+              fill
+              className="object-cover object-center"
+              sizes="100vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#042212] via-[#042212]/85 to-[#042212]/10" />
+          </div>
+          <div className="relative z-10 p-8 sm:p-10 max-w-lg">
+            <p className="text-xs font-black uppercase tracking-widest text-[#00cc6a] mb-3">Continue Your Application</p>
+            <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight mb-3">
+              You started a feature.<br />Let&apos;s finish it.
+            </h2>
+            <p className="text-sm text-zinc-300 leading-relaxed mb-6 max-w-sm">
+              Pick up where you left off and submit your application for review.
+            </p>
+            <Link
+              href="/spotlight"
+              className="inline-flex items-center gap-2 bg-white text-[#042212] px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-zinc-100 transition-colors"
+            >
+              Continue Application <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Feature Application + Recent Stories */}
       <div className={`grid grid-cols-1 ${hasSubmittedSpotlight ? 'lg:grid-cols-[1fr_1.6fr]' : ''} gap-5 mb-6`}>

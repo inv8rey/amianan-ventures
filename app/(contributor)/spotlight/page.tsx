@@ -1,11 +1,18 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { SpotlightForm } from '@/components/contributor/SpotlightForm'
-import { SPOTLIGHT_PACKAGE, type SpotlightApplication } from '@/types/spotlight'
+import { PACKAGES, isPackageId, type SpotlightApplication } from '@/types/spotlight'
 
 export const dynamic = 'force-dynamic'
 
-export default async function SpotlightPage() {
+export default async function SpotlightPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ package?: string }>
+}) {
+  const { package: requestedPackage } = await searchParams
+  const pkg = PACKAGES[isPackageId(requestedPackage) ? requestedPackage : 'founding-rate']
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/contribute/login')
@@ -53,7 +60,8 @@ export default async function SpotlightPage() {
         contact_name: profile.display_name || '',
         email: user.email || '',
         status: 'draft',
-        amount_php: SPOTLIGHT_PACKAGE.amount_php,
+        package: pkg.id,
+        amount_php: pkg.amount_php,
       })
       .select('*')
       .single()

@@ -8,7 +8,7 @@ import {
   Star, ThumbsUp, MessageCircle, Send,
 } from 'lucide-react'
 import { createServiceClient } from '@/lib/supabase/service'
-import { SPOTLIGHT_PACKAGE, PARTNER_PACKAGE } from '@/types/spotlight'
+import { PACKAGES } from '@/types/spotlight'
 import { FaqAccordion } from '@/components/site/FaqAccordion'
 
 interface SpotlightExample {
@@ -234,7 +234,7 @@ export default async function GetFeaturedPage() {
               </p>
 
               <div className="flex items-baseline gap-2.5 mb-6">
-                <p className="text-4xl font-black text-zinc-900">₱{SPOTLIGHT_PACKAGE.amount_php}</p>
+                <p className="text-4xl font-black text-zinc-900">₱{PACKAGES['founding-rate'].amount_php}</p>
                 <span className="text-[10px] font-black uppercase tracking-widest text-[#00a855] bg-[#00a855]/10 px-2.5 py-1 rounded-full">
                   Founding Rate
                 </span>
@@ -250,10 +250,10 @@ export default async function GetFeaturedPage() {
               </div>
 
               <Link
-                href="/get-featured/apply"
+                href="/get-featured/apply?package=founding-rate"
                 className="mt-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-[#042212] text-white font-bold text-sm hover:bg-[#06331c] transition-colors"
               >
-                Apply Now <ArrowRight className="h-4 w-4" />
+                Share Your Story <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </div>
@@ -271,7 +271,7 @@ export default async function GetFeaturedPage() {
               </p>
 
               <div className="flex items-baseline gap-2.5 mb-6">
-                <p className="text-4xl font-black text-zinc-900">₱{PARTNER_PACKAGE.amount_php}</p>
+                <p className="text-4xl font-black text-zinc-900">₱{PACKAGES['ecosystem-visibility'].amount_php}</p>
                 <span className="text-[10px] font-black uppercase tracking-widest text-[#00a855] bg-[#00a855]/10 px-2.5 py-1 rounded-full">
                   Founding Rate
                 </span>
@@ -287,10 +287,10 @@ export default async function GetFeaturedPage() {
               </div>
 
               <Link
-                href="/partner"
+                href="/get-featured/apply?package=ecosystem-visibility"
                 className="mt-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-[#00a855] text-black font-bold text-sm hover:bg-[#00b85e] transition-colors"
               >
-                Become A Partner <ArrowRight className="h-4 w-4" />
+                Become An Ecosystem Partner <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </div>
@@ -456,17 +456,17 @@ export default async function GetFeaturedPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto text-left">
             <Link
-              href="/get-featured/apply"
+              href="/get-featured/apply?package=founding-rate"
               className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 hover:border-[#00a855]/40 transition-colors"
             >
               <p className="text-xs font-black uppercase tracking-widest text-[#00cc6a] mb-2">Startups &amp; Founders</p>
               <p className="text-base font-black text-white mb-4">Startup Spotlight Package</p>
               <span className="inline-flex items-center gap-2 text-sm font-bold text-white group-hover:text-[#00cc6a] transition-colors">
-                Apply For Startup Spotlight <ArrowRight className="h-4 w-4" />
+                Share Your Story <ArrowRight className="h-4 w-4" />
               </span>
             </Link>
             <Link
-              href="/partner"
+              href="/get-featured/apply?package=ecosystem-visibility"
               className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 hover:border-[#00a855]/40 transition-colors"
             >
               <p className="text-xs font-black uppercase tracking-widest text-[#00cc6a] mb-2">Organizations &amp; Programs</p>

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { SPOTLIGHT_PACKAGE } from '@/types/spotlight'
+import { PACKAGES, isPackageId } from '@/types/spotlight'
 
 // Called right after Get Featured signup to set up the applicant's
 // contributor profile + initial draft application row.
@@ -24,11 +24,13 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json()
-  const { userId, businessName, contactName, email } = body
+  const { userId, businessName, contactName, email, packageId } = body
 
   if (!userId || !businessName || !contactName || !email) {
     return NextResponse.json({ error: 'userId, businessName, contactName, and email are required' }, { status: 400 })
   }
+
+  const pkg = PACKAGES[isPackageId(packageId) ? packageId : 'founding-rate']
 
   const supabase = createClient(url, serviceKey, { auth: { persistSession: false } })
   const delays = [300, 600, 1200, 2000, 3000]
@@ -81,7 +83,8 @@ export async function POST(request: Request) {
         contact_name: contactName,
         email,
         status: 'draft',
-        amount_php: SPOTLIGHT_PACKAGE.amount_php,
+        package: pkg.id,
+        amount_php: pkg.amount_php,
       })
       .select('id')
       .single()
