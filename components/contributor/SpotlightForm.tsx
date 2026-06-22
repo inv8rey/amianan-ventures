@@ -54,7 +54,7 @@ const PACKAGE_INCLUDED: Record<PackageId, { icon: LucideIcon; title: string; des
 const NEXT_STEPS = [
   { icon: FileEdit,   title: 'Application Review', desc: 'Our team reviews your application within 1–3 business days.', statuses: ['draft', 'submitted', 'under_review'] },
   { icon: CreditCard, title: 'Approval & Payment', desc: 'If approved, payment instructions appear below. Pay to reserve the founding rate.', statuses: ['approved', 'rejected', 'awaiting_payment', 'payment_submitted'] },
-  { icon: PenSquare,  title: 'Story Production', desc: 'We interview you and create your story and content assets.', statuses: ['paid', 'in_production'] },
+  { icon: PenSquare,  title: 'Story Production', desc: 'Our team is drafting your article and preparing your feature assets.', statuses: ['paid', 'in_production'] },
   { icon: Send,       title: 'Publication', desc: 'Your story goes live and we promote it across our channels.', statuses: ['published'] },
 ] as const
 
