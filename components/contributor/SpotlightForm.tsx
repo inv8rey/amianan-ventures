@@ -5,8 +5,8 @@ import Link from 'next/link'
 import { toast } from 'sonner'
 import {
   ArrowLeft, Loader2, Upload, CheckCircle2, ExternalLink, Lock, ImageIcon, X,
-  FileEdit, Monitor, Images, Quote, IdCard, Award, FileBadge2, CreditCard, PenSquare, Send,
-  Megaphone, Share2,
+  FileEdit, Monitor, Quote, IdCard, FileBadge2, CreditCard, PenSquare, Send,
+  Megaphone, Share2, Mail,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import {
@@ -29,13 +29,12 @@ const PAYMENT_EDITABLE_STATUSES: SpotlightApplication['status'][] = ['approved',
 // What's included in each package — same lists shown on the /get-featured marketing page.
 const PACKAGE_INCLUDED = {
   'founding-rate': [
-    { icon: FileEdit,   title: 'Startup Story Feature', desc: 'Professionally written story published on Amianan Ventures.' },
-    { icon: Monitor,    title: 'Homepage Featured Placement', desc: 'Featured on the Amianan Ventures homepage for 2 weeks.' },
-    { icon: Images,     title: 'Social Media Carousel', desc: 'Branded carousel post (5–6 slides) showcasing your story.' },
-    { icon: Quote,      title: 'Founder Quote Card', desc: 'Professional quote graphic featuring your insights.' },
-    { icon: IdCard,     title: 'Startup Directory Listing', desc: 'Permanent profile in the Northern Luzon Startup Directory.' },
-    { icon: Award,      title: 'Featured Startup Badge', desc: 'Recognition asset for your website and social media.' },
-    { icon: FileBadge2, title: 'Digital Feature Certificate', desc: 'Official recognition as an Amianan Ventures featured startup.' },
+    { icon: FileEdit,  title: 'Featured Article', desc: 'A professionally written article about your startup, business, or innovation published on Amianan Ventures and shared with our community.' },
+    { icon: Monitor,   title: 'Homepage Feature', desc: 'Receive dedicated featured placement on the Amianan Ventures homepage for 2 weeks, helping more visitors discover your story.' },
+    { icon: Megaphone, title: 'Article Banner Placement', desc: 'Your business is promoted inside selected Amianan Ventures articles, reaching readers already interested in innovation, startups, and business.' },
+    { icon: Quote,     title: 'Founder Quote Card', desc: 'A professionally designed social media graphic featuring your story, insight, or message that is ready to share across your channels.' },
+    { icon: IdCard,    title: 'Featured Startup Listing', desc: 'Highlighted in the Featured Organizations section of the Northern Luzon Ecosystem Directory to help founders, investors, partners, and stakeholders discover your business.' },
+    { icon: Mail,      title: 'Newsletter Inclusion', desc: 'Your story is included in a future Amianan Ventures newsletter distributed to ecosystem stakeholders and community members.' },
   ],
   'ecosystem-visibility': [
     { icon: Monitor,    title: 'Homepage Banner Placement', desc: 'Your organization featured on the Amianan Ventures homepage.' },
