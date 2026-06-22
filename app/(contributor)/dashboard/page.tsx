@@ -49,7 +49,10 @@ export default async function DashboardPage() {
 
   const profile = profileResult.data
   const submissions = (submissionsResult.data ?? []) as ContributorSubmission[]
-  const spotlight = spotlightResult.data as SpotlightApplication | null
+  const rawSpotlight = spotlightResult.data as SpotlightApplication | null
+  // A cancelled application shouldn't block the dashboard from offering
+  // "Apply for a Feature" again — treat it the same as having none.
+  const spotlight = rawSpotlight?.status === 'cancelled' ? null : rawSpotlight
   // /spotlight auto-creates an empty draft row the moment a contributor visits
   // it, so a draft alone doesn't mean they've actually applied — only treat
   // it as a real application once they've submitted for real.

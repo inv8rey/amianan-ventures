@@ -21,7 +21,7 @@ export function SpotlightEditorActions({ application }: Props) {
   const [saving, setSaving] = useState(false)
 
   const status = application.status as SpotlightStatus
-  const isClosed = status === 'rejected' || status === 'published'
+  const isClosed = status === 'rejected' || status === 'published' || status === 'cancelled'
 
   async function updateStatus(newStatus: SpotlightStatus, extra: Record<string, unknown> = {}) {
     setSaving(true)
@@ -224,6 +224,8 @@ export function SpotlightEditorActions({ application }: Props) {
                 </a>
               )}
             </div>
+          ) : status === 'cancelled' ? (
+            <p className="text-xs text-muted-foreground text-center py-2">The applicant cancelled this application — no further actions.</p>
           ) : (
             <p className="text-xs text-muted-foreground text-center py-2">This application was rejected — no further actions.</p>
           )}

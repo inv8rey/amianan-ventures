@@ -9,6 +9,7 @@ export type SpotlightStatus =
   | 'paid'
   | 'in_production'
   | 'published'
+  | 'cancelled'
 
 export type PaymentMethod = 'gcash' | 'maya' | 'bdo' | 'bpi' | 'unionbank'
 
@@ -73,6 +74,7 @@ export const STATUS_LABELS: Record<SpotlightStatus, string> = {
   paid: 'Paid',
   in_production: 'In Production',
   published: 'Published',
+  cancelled: 'Cancelled',
 }
 
 export const STATUS_COLORS: Record<SpotlightStatus, string> = {
@@ -86,6 +88,7 @@ export const STATUS_COLORS: Record<SpotlightStatus, string> = {
   paid: 'bg-emerald-500/15 text-emerald-400',
   in_production: 'bg-purple-500/15 text-purple-400',
   published: 'bg-[#00a855]/15 text-[#00a855]',
+  cancelled: 'bg-zinc-500/15 text-zinc-400',
 }
 
 export const PAYMENT_METHOD_LABELS: Record<PaymentMethod, string> = {

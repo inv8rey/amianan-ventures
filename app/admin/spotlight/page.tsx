@@ -20,6 +20,7 @@ const STATUS_FILTERS: { value: string; label: string }[] = [
   { value: 'paid',              label: 'Paid' },
   { value: 'in_production',     label: 'In Production' },
   { value: 'published',         label: 'Published' },
+  { value: 'cancelled',         label: 'Cancelled' },
 ]
 
 export default async function AdminSpotlightPage({

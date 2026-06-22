@@ -91,6 +91,8 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
   const [saving, setSaving] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [payingLoading, setPayingLoading] = useState(false)
+  const [confirmingCancel, setConfirmingCancel] = useState(false)
+  const [cancelling, setCancelling] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const set = (key: keyof typeof form, val: string) => setForm((f) => ({ ...f, [key]: val }))
@@ -226,6 +228,14 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
     if (result) toast.success('Payment submitted! We\'ll confirm receipt shortly.')
   }
 
+  async function handleCancel() {
+    setCancelling(true)
+    const result = await saveRow({ status: 'cancelled' })
+    setCancelling(false)
+    setConfirmingCancel(false)
+    if (result) toast.success('Application cancelled.')
+  }
+
   return (
     <div className="min-h-screen bg-zinc-50">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 py-10">
@@ -249,6 +259,16 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
           <div className="rounded-xl border border-red-200 bg-red-50 p-4 mb-6">
             <p className="text-sm font-bold text-red-700 mb-1">Application not approved</p>
             <p className="text-sm text-red-600">{app.editor_notes}</p>
+          </div>
+        )}
+
+        {app.status === 'cancelled' && (
+          <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4 mb-6">
+            <p className="text-sm font-bold text-zinc-700 mb-1">Application cancelled</p>
+            <p className="text-sm text-zinc-500">
+              You cancelled this application. Changed your mind?{' '}
+              <Link href="/feature-packages" className="font-bold text-[#00a855] hover:underline">Start a new one</Link>.
+            </p>
           </div>
         )}
 
@@ -529,6 +549,42 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
         {locked && (
           <div className="flex items-center gap-2 text-xs text-zinc-400 justify-center mt-6">
             <Lock className="h-3 w-3" /> Editing is locked while your feature is in production.
+          </div>
+        )}
+
+        {/* Cancel application — intentionally tucked away and unobtrusive */}
+        {!locked && (
+          <div className="mt-10 pt-6 border-t border-zinc-100 text-center">
+            {!confirmingCancel ? (
+              <button
+                type="button"
+                onClick={() => setConfirmingCancel(true)}
+                className="text-xs text-zinc-400 hover:text-zinc-500 transition-colors"
+              >
+                Cancel application
+              </button>
+            ) : (
+              <div className="inline-flex flex-col items-center gap-2">
+                <p className="text-xs text-zinc-500">Cancel this application? This can&apos;t be undone.</p>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={handleCancel}
+                    disabled={cancelling}
+                    className="text-xs font-bold text-red-500 hover:underline disabled:opacity-60"
+                  >
+                    {cancelling ? <Loader2 className="h-3 w-3 animate-spin inline" /> : 'Yes, cancel it'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setConfirmingCancel(false)}
+                    className="text-xs text-zinc-400 hover:text-zinc-600"
+                  >
+                    Never mind
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

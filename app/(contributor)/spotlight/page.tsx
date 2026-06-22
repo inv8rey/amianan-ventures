@@ -50,8 +50,9 @@ export default async function SpotlightPage({
     .limit(1)
     .maybeSingle()
 
-  // No application yet (e.g. existing contributor visiting /spotlight directly) — start one.
-  if (!application) {
+  // No application yet, or their last one was cancelled (e.g. existing
+  // contributor visiting /spotlight directly) — start a fresh one.
+  if (!application || application.status === 'cancelled') {
     const { data: created } = await supabase
       .from('spotlight_applications')
       .insert({
