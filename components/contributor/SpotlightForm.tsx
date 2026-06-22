@@ -3,11 +3,13 @@
 import { useRef, useState } from 'react'
 import Link from 'next/link'
 import { toast } from 'sonner'
+import { format } from 'date-fns'
 import {
   Loader2, Upload, CheckCircle2, ExternalLink, Lock, ImageIcon, X,
   FileEdit, Monitor, Quote, IdCard, FileBadge2, CreditCard, PenSquare, Send,
   Megaphone, Share2, Mail, ChevronRight, Building2, User, Sparkles, Info,
-  ShieldCheck, Headset, Star, Check, PenLine,
+  ShieldCheck, Headset, Star, Check, PenLine, Phone, Link2, Calendar, MapPin,
+  ArrowUpRight, Globe, Briefcase,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -61,6 +63,22 @@ function currentStepIndex(status: SpotlightApplication['status']) {
   return idx === -1 ? 0 : idx
 }
 
+// Shown on the confirmation screen right after saving/submitting.
+const SUMMARY_COPY = {
+  submitted: {
+    heading: 'Application Submitted!',
+    body: 'Thank you for submitting your application. Our editorial team will review it within 1–3 business days.',
+  },
+  review: {
+    heading: 'Your Application Is Under Review',
+    body: "Our editorial team is currently reviewing your submission. We'll be in touch soon.",
+  },
+  updated: {
+    heading: 'Your Story Has Been Updated!',
+    body: 'Thank you for updating your information. Our editorial team will continue reviewing your submission.',
+  },
+} as const
+
 export function SpotlightForm({ application }: { application: SpotlightApplication }) {
   const [app, setApp] = useState(application)
   const pkg = PACKAGES[app.package]
@@ -94,12 +112,19 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
   const [payingLoading, setPayingLoading] = useState(false)
   const [confirmingCancel, setConfirmingCancel] = useState(false)
   const [cancelling, setCancelling] = useState(false)
+  const [view, setView] = useState<'edit' | 'summary'>(
+    application.status === 'submitted' || application.status === 'under_review' ? 'summary' : 'edit'
+  )
+  const [summaryReason, setSummaryReason] = useState<keyof typeof SUMMARY_COPY>(
+    application.status === 'under_review' ? 'review' : 'submitted'
+  )
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const set = (key: keyof typeof form, val: string) => setForm((f) => ({ ...f, [key]: val }))
   const setAnswer = (key: StoryQuestionKey, val: string) => setAnswers((a) => ({ ...a, [key]: val }))
   const locked = !EDITABLE_STATUSES.includes(app.status)
   const storyQuestions = STORY_SETS[app.package]
+  const submissionId = `AV-${isOrgPackage ? 'EP' : 'SS'}-${new Date(app.created_at).getFullYear()}-${app.id.slice(0, 6).toUpperCase()}`
 
   function currentAssetFields() {
     return {
@@ -159,6 +184,8 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
     setSubmitting(false)
     if (result) {
       toast.success('Application submitted for review!')
+      setSummaryReason('submitted')
+      setView('summary')
       fetch('/api/spotlight/send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -171,7 +198,13 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
     setSaving(true)
     const result = await saveRow(currentAssetFields())
     setSaving(false)
-    if (result) toast.success('Changes saved.')
+    if (result) {
+      toast.success('Changes saved.')
+      if (result.status === 'submitted' || result.status === 'under_review') {
+        setSummaryReason('updated')
+        setView('summary')
+      }
+    }
   }
 
   async function handleUploadAsset(file: File, kind: 'founder' | 'logo' | 'product') {
@@ -250,20 +283,24 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
           <span className="text-zinc-700 font-semibold">{shortPkgName}</span>
         </nav>
 
-        <div className="flex items-center justify-between gap-3 mb-2 flex-wrap">
-          <h1 className="text-2xl font-black text-zinc-900 flex items-center gap-2">
-            {isOrgPackage ? "Let's Build Your Partnership" : "Let's Tell Your Story"}
-            <Sparkles className="h-5 w-5 text-amber-400 fill-amber-400" />
-          </h1>
-          <span className={`text-xs font-bold uppercase tracking-wide px-2.5 py-1 rounded-full ${STATUS_COLORS[app.status]}`}>
-            {STATUS_LABELS[app.status]}
-          </span>
-        </div>
-        <p className="text-sm text-zinc-500 mb-6">
-          {locked
-            ? 'Your application is locked while we produce your feature.'
-            : `We'll use the information below to create your feature and showcase your ${isOrgPackage ? 'organization' : 'startup'} to the Northern Luzon innovation community.`}
-        </p>
+        {view === 'edit' && (
+          <>
+            <div className="flex items-center justify-between gap-3 mb-2 flex-wrap">
+              <h1 className="text-2xl font-black text-zinc-900 flex items-center gap-2">
+                {isOrgPackage ? "Let's Build Your Partnership" : "Let's Tell Your Story"}
+                <Sparkles className="h-5 w-5 text-amber-400 fill-amber-400" />
+              </h1>
+              <span className={`text-xs font-bold uppercase tracking-wide px-2.5 py-1 rounded-full ${STATUS_COLORS[app.status]}`}>
+                {STATUS_LABELS[app.status]}
+              </span>
+            </div>
+            <p className="text-sm text-zinc-500 mb-6">
+              {locked
+                ? 'Your application is locked while we produce your feature.'
+                : `We'll use the information below to create your feature and showcase your ${isOrgPackage ? 'organization' : 'startup'} to the Northern Luzon innovation community.`}
+            </p>
+          </>
+        )}
 
         {app.status === 'rejected' && app.editor_notes && (
           <div className="rounded-xl border border-red-200 bg-red-50 p-4 mb-6">
@@ -297,6 +334,80 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
           {/* Main column */}
           <div className="space-y-5">
+            {view === 'summary' ? (
+              <>
+                {/* Confirmation card */}
+                <div className="rounded-2xl border border-zinc-200 bg-gradient-to-br from-[#f3fbf6] to-white p-7 sm:p-8">
+                  <div className="flex justify-end mb-2">
+                    <span className={`text-xs font-bold uppercase tracking-wide px-2.5 py-1 rounded-full shrink-0 ${STATUS_COLORS[app.status]}`}>
+                      {STATUS_LABELS[app.status]}
+                    </span>
+                  </div>
+                  <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                    <div className="relative shrink-0">
+                      <div className="w-20 h-20 rounded-full bg-[#00a855]/10 flex items-center justify-center">
+                        <CheckCircle2 className="h-10 w-10 text-[#00a855]" />
+                      </div>
+                      <Sparkles className="absolute -top-1 -right-1 h-5 w-5 text-amber-400 fill-amber-400" />
+                    </div>
+                    <div className="flex-1 text-center sm:text-left">
+                      <h2 className="text-xl font-black text-zinc-900 mb-1.5">
+                        {SUMMARY_COPY[summaryReason].heading} 🎉
+                      </h2>
+                      <p className="text-sm text-zinc-500 leading-relaxed mb-4">
+                        {SUMMARY_COPY[summaryReason].body}
+                      </p>
+                      <div className="grid grid-cols-2 gap-4 bg-white rounded-xl border border-zinc-200 p-4 mb-4 max-w-sm mx-auto sm:mx-0">
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-wide text-zinc-400 mb-0.5">Submission ID</p>
+                          <p className="text-sm font-bold text-zinc-900">{submissionId}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-wide text-zinc-400 mb-0.5">Last Updated</p>
+                          <p className="text-sm font-bold text-zinc-900">{format(new Date(app.updated_at), "MMM d, yyyy 'at' h:mm a")}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-2 text-xs text-zinc-500 justify-center sm:justify-start">
+                        <Mail className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                        <p>We&apos;ll notify you via email if there are any updates. You can track your submission status anytime from your dashboard.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Application summary */}
+                <div className="rounded-2xl border border-zinc-200 bg-white p-6">
+                  <div className="flex items-center justify-between mb-5">
+                    <p className="text-sm font-black text-zinc-900">Your Application Summary</p>
+                    <button type="button" onClick={() => setView('edit')} className="inline-flex items-center gap-1 text-xs font-bold text-[#00a855] hover:underline">
+                      Edit Application <ArrowUpRight className="h-3 w-3" />
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                    <SummaryField icon={Building2} label={isOrgPackage ? 'Organization Name' : 'Startup Name'} value={app.business_name} />
+                    <SummaryField icon={User} label={isOrgPackage ? 'Representative' : 'Founder'} value={app.contact_name} />
+                    <SummaryField icon={Briefcase} label="Role" value={app.role || 'Not provided'} />
+                    <SummaryField icon={Globe} label="Website" value={app.website || 'Not provided'} />
+                    <SummaryField icon={Link2} label="LinkedIn / Facebook" value={app.social_link || 'Not provided'} />
+                    <SummaryField icon={Mail} label="Email" value={app.email} />
+                    <SummaryField icon={Phone} label="Contact Number" value={app.phone || 'Not provided'} />
+                    <SummaryField icon={Building2} label="Industry" value={app.industry || 'Not provided'} />
+                    <SummaryField icon={MapPin} label="Region" value={app.region || 'Not provided'} />
+                    <SummaryField icon={Calendar} label="Last Updated" value={format(new Date(app.updated_at), 'MMM d, yyyy')} />
+                    <SummaryField
+                      icon={CheckCircle2}
+                      label="Status"
+                      value={
+                        <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full ${STATUS_COLORS[app.status]}`}>
+                          {STATUS_LABELS[app.status]}
+                        </span>
+                      }
+                    />
+                  </div>
+                </div>
+              </>
+            ) : (
+            <>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <SectionCard number={1} icon={Building2} title={isOrgPackage ? 'About Your Organization' : 'About Your Startup'}>
                 <div className="space-y-5">
@@ -503,10 +614,13 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
                 )}
               </div>
             )}
+            </>
+            )}
           </div>
 
           {/* Sidebar */}
           <div className="space-y-5">
+            {view === 'edit' && (
             <div className="rounded-2xl border border-[#00a855]/20 bg-gradient-to-br from-[#eef8f1] to-white p-5">
               <p className="text-[10px] font-black uppercase tracking-widest text-[#00a855] mb-2">Package Selected</p>
               <div className="flex items-start justify-between gap-2 mb-2">
@@ -566,6 +680,23 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
                 </div>
               )}
             </div>
+            )}
+
+            {/* Need to make more changes — summary view only */}
+            {view === 'summary' && (
+              <div className="rounded-2xl border border-blue-100 bg-blue-50 p-5">
+                <div className="flex items-start gap-2.5 mb-3">
+                  <Info className="h-4 w-4 text-blue-500 shrink-0 mt-0.5" />
+                  <p className="text-sm font-bold text-blue-700">Need to make more changes?</p>
+                </div>
+                <p className="text-xs text-blue-600 leading-relaxed mb-3">
+                  You can edit your information anytime before your application is approved.
+                </p>
+                <button type="button" onClick={() => setView('edit')} className="inline-flex items-center gap-1 text-xs font-bold text-blue-700 hover:underline">
+                  Edit Application <ArrowUpRight className="h-3 w-3" />
+                </button>
+              </div>
+            )}
 
             {/* What Happens Next — only once they've engaged beyond the initial draft */}
             {app.status !== 'draft' && (
@@ -636,6 +767,22 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
             <FileEdit className="h-3.5 w-3.5" /> View Content Guidelines
           </Link>
         </div>
+      </div>
+    </div>
+  )
+}
+
+function SummaryField({
+  icon: Icon, label, value,
+}: { icon: LucideIcon; label: string; value: React.ReactNode }) {
+  return (
+    <div className="flex items-start gap-2.5">
+      <div className="w-7 h-7 rounded-lg bg-[#00a855]/10 flex items-center justify-center shrink-0 mt-0.5">
+        <Icon className="h-3.5 w-3.5 text-[#00a855]" />
+      </div>
+      <div>
+        <p className="text-xs font-bold text-zinc-900">{label}</p>
+        <p className="text-xs text-zinc-500 mt-0.5">{value}</p>
       </div>
     </div>
   )
