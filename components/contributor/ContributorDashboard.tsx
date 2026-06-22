@@ -259,7 +259,7 @@ function HeroCard({ spotlight, hasSubmittedSpotlight }: { spotlight: SpotlightAp
           </p>
           <div className="flex items-center gap-3 flex-wrap">
             <Link
-              href="/get-featured"
+              href="/feature-packages"
               className="inline-flex items-center gap-2 bg-[#042212] text-white px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-[#06331c] transition-colors"
             >
               Apply for a Feature <ArrowRight className="h-4 w-4" />
@@ -307,7 +307,7 @@ function WaysToGetInvolvedCard({ spotlight }: { spotlight: SpotlightApplication 
           title="Get Featured"
           desc="Amplify your story through a featured article, homepage placement, founder spotlight, and ecosystem visibility."
           cta={spotlight ? 'View your application' : 'Explore feature packages'}
-          href={spotlight ? '/spotlight' : '/get-featured'}
+          href={spotlight ? '/spotlight' : '/feature-packages'}
         />
       </div>
     </div>
@@ -485,7 +485,7 @@ function GettingStartedCard({
   const steps = [
     { icon: ClipboardCheck, title: 'Complete your profile', desc: 'Tell us about yourself or your organization', href: '/profile', done: profileComplete },
     { icon: FileText, title: 'Submit your first story', desc: 'Share your knowledge or insights', href: '/submit', done: hasSubmission },
-    { icon: Star, title: 'Apply for a feature', desc: 'Get featured on Amianan Ventures', href: '/get-featured', done: hasFeatureApp },
+    { icon: Star, title: 'Apply for a feature', desc: 'Get featured on Amianan Ventures', href: '/feature-packages', done: hasFeatureApp },
     { icon: Compass, title: 'Explore the ecosystem', desc: 'Discover opportunities and resources', href: '/ecosystem', done: false },
   ]
   const trackable = steps.slice(0, 3)
