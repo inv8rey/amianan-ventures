@@ -4,15 +4,17 @@ import { useRef, useState } from 'react'
 import Link from 'next/link'
 import { toast } from 'sonner'
 import {
-  ArrowLeft, Loader2, Upload, CheckCircle2, ExternalLink, Lock, ImageIcon, X,
+  Loader2, Upload, CheckCircle2, ExternalLink, Lock, ImageIcon, X,
   FileEdit, Monitor, Quote, IdCard, FileBadge2, CreditCard, PenSquare, Send,
-  Megaphone, Share2, Mail,
+  Megaphone, Share2, Mail, ChevronRight, Building2, User, Sparkles, Info,
+  ShieldCheck, Headset, Star, Check, PenLine,
 } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import {
-  type SpotlightApplication, type PaymentMethod, type StoryQuestionKey,
+  type SpotlightApplication, type PaymentMethod, type StoryQuestionKey, type PackageId,
   STATUS_LABELS, STATUS_COLORS, EDITABLE_STATUSES, PAYMENT_METHOD_LABELS,
-  INDUSTRIES, PACKAGES, STORY_QUESTIONS,
+  INDUSTRIES, PACKAGES,
 } from '@/types/spotlight'
 import { CONTRIBUTOR_REGIONS } from '@/types/contributor'
 
@@ -27,7 +29,7 @@ const PAYMENT_VISIBLE_STATUSES: SpotlightApplication['status'][] = [
 const PAYMENT_EDITABLE_STATUSES: SpotlightApplication['status'][] = ['approved', 'awaiting_payment']
 
 // What's included in each package — same lists shown on the /get-featured marketing page.
-const PACKAGE_INCLUDED = {
+const PACKAGE_INCLUDED: Record<PackageId, { icon: LucideIcon; title: string; desc: string }[]> = {
   'founding-rate': [
     { icon: FileEdit,  title: 'Featured Article', desc: 'A professionally written article about your startup, business, or innovation published on Amianan Ventures and shared with our community.' },
     { icon: Monitor,   title: 'Homepage Feature', desc: 'Receive dedicated featured placement on the Amianan Ventures homepage for 2 weeks, helping more visitors discover your story.' },
@@ -43,6 +45,23 @@ const PACKAGE_INCLUDED = {
     { icon: IdCard,     title: 'Directory Spotlight', desc: 'A standout profile in the Northern Luzon ecosystem directory.' },
     { icon: Share2,     title: 'Social Media Feature', desc: 'Your organization shared across Amianan Ventures\' channels.' },
     { icon: FileBadge2, title: 'Digital Partner Certificate', desc: 'Official recognition as an Amianan Ventures ecosystem partner.' },
+  ],
+}
+
+// Focused story questions shown on the application form — a trimmed,
+// package-specific subset of the full /share-your-story question bank.
+const STORY_SETS: Record<PackageId, { key: StoryQuestionKey; label: string; placeholder: string; required: boolean }[]> = {
+  'founding-rate': [
+    { key: 'q1', label: 'How did the startup begin?', placeholder: 'Tell us the story of how your startup started.', required: true },
+    { key: 'q2', label: 'What problem are you solving?', placeholder: 'Describe the problem your startup is addressing.', required: true },
+    { key: 'q3', label: 'What impact are you creating?', placeholder: 'What change are you making for your customers, community, or industry?', required: true },
+    { key: 'q4', label: 'What would you like people to know about your journey?', placeholder: 'Share any message, milestone, or vision you want our community to know.', required: false },
+  ],
+  'ecosystem-visibility': [
+    { key: 'q1', label: 'How did this organization begin?', placeholder: 'Tell us the story of how your organization or program started.', required: true },
+    { key: 'q2', label: 'What problem are you solving?', placeholder: 'Describe the gap or problem your organization is addressing.', required: true },
+    { key: 'q3', label: 'What impact are you creating?', placeholder: 'What change are you making for your community, sector, or the ecosystem?', required: true },
+    { key: 'q4', label: 'What would you like people to know about your work?', placeholder: 'Share any message, milestone, or vision you want our community to know.', required: false },
   ],
 }
 
@@ -63,6 +82,7 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
   const [app, setApp] = useState(application)
   const pkg = PACKAGES[app.package]
   const isOrgPackage = app.package === 'ecosystem-visibility'
+  const shortPkgName = isOrgPackage ? 'Ecosystem Partner' : 'Startup Spotlight'
   const [form, setForm] = useState({
     business_name: application.business_name,
     contact_name: application.contact_name,
@@ -97,6 +117,7 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
   const set = (key: keyof typeof form, val: string) => setForm((f) => ({ ...f, [key]: val }))
   const setAnswer = (key: StoryQuestionKey, val: string) => setAnswers((a) => ({ ...a, [key]: val }))
   const locked = !EDITABLE_STATUSES.includes(app.status)
+  const storyQuestions = STORY_SETS[app.package]
 
   function currentAssetFields() {
     return {
@@ -132,15 +153,15 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
   }
 
   async function handleSubmitForReview() {
-    const required: (keyof typeof form)[] = ['business_name', 'contact_name', 'email', 'role', 'industry', 'region']
+    const required: (keyof typeof form)[] = ['business_name', 'contact_name', 'email', 'phone', 'role', 'industry', 'region']
     const missingFields = required.filter((k) => !form[k].trim())
-    // Organizations promoting a program don't necessarily have a single
-    // founder's origin story — only startups are required to answer it.
-    const missingStory = isOrgPackage
-      ? []
-      : (['q1', 'q2', 'q3'] as StoryQuestionKey[]).filter((k) => !(answers[k] ?? '').trim())
+    const missingStory = (['q1', 'q2', 'q3'] as StoryQuestionKey[]).filter((k) => !(answers[k] ?? '').trim())
     if (missingFields.length > 0 || missingStory.length > 0) {
       toast.error('Please fill out all required fields before submitting.')
+      return
+    }
+    if (!startupLogo.url) {
+      toast.error(`Please upload a ${isOrgPackage ? 'logo' : 'startup logo'}.`)
       return
     }
     if (!isOrgPackage && !founderPhoto.url) {
@@ -237,21 +258,29 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
 
   return (
     <div className="min-h-screen bg-zinc-50">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 py-10">
-        <Link href="/dashboard" className="inline-flex items-center gap-2 mb-6 text-xs font-bold text-zinc-400 hover:text-zinc-700 transition-colors">
-          <ArrowLeft className="h-3.5 w-3.5" /> Back to Dashboard
-        </Link>
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 py-8">
+        {/* Breadcrumb */}
+        <nav className="flex items-center gap-1.5 text-xs text-zinc-400 mb-4">
+          <Link href="/dashboard" className="hover:text-zinc-600 transition-colors">Dashboard</Link>
+          <ChevronRight className="h-3 w-3" />
+          <Link href="/feature-packages" className="hover:text-zinc-600 transition-colors">Get Featured</Link>
+          <ChevronRight className="h-3 w-3" />
+          <span className="text-zinc-700 font-semibold">{shortPkgName}</span>
+        </nav>
 
         <div className="flex items-center justify-between gap-3 mb-2 flex-wrap">
-          <h1 className="text-2xl font-black text-zinc-900">{pkg.name} Application</h1>
+          <h1 className="text-2xl font-black text-zinc-900 flex items-center gap-2">
+            {isOrgPackage ? "Let's Build Your Partnership" : "Let's Tell Your Story"}
+            <Sparkles className="h-5 w-5 text-amber-400 fill-amber-400" />
+          </h1>
           <span className={`text-xs font-bold uppercase tracking-wide px-2.5 py-1 rounded-full ${STATUS_COLORS[app.status]}`}>
             {STATUS_LABELS[app.status]}
           </span>
         </div>
-        <p className="text-sm text-zinc-500 mb-8">
+        <p className="text-sm text-zinc-500 mb-6">
           {locked
             ? 'Your application is locked while we produce your feature.'
-            : 'Fill in your details below. You can save your progress and come back anytime before paying.'}
+            : `We'll use the information below to create your feature and showcase your ${isOrgPackage ? 'organization' : 'startup'} to the Northern Luzon innovation community.`}
         </p>
 
         {app.status === 'rejected' && app.editor_notes && (
@@ -283,310 +312,378 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
           </div>
         )}
 
-        {/* What's included in the package */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-6 mb-5">
-          <div className="flex items-center justify-between mb-1">
-            <p className="text-sm font-black text-zinc-900">{pkg.name}</p>
-            <p className="text-sm font-black text-zinc-900">₱{(app.amount_php ?? pkg.amount_php).toLocaleString()}</p>
-          </div>
-          <p className="text-xs text-zinc-500 mb-4">
-            {isOrgPackage
-              ? 'Here’s what you get once your organization is featured.'
-              : 'Here’s what you get once your story is featured.'}
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {PACKAGE_INCLUDED[app.package].map((item) => (
-              <div key={item.title} className="flex items-start gap-3 rounded-lg bg-zinc-50 p-3">
-                <div className="w-7 h-7 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
-                  <item.icon className="h-3.5 w-3.5 text-[#00a855]" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-zinc-900">{item.title}</p>
-                  <p className="text-[11px] text-zinc-500 leading-snug">{item.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* What happens next */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-6 mb-5">
-          <p className="text-sm font-black text-zinc-900 mb-4">What Happens Next</p>
-          <div className="space-y-0">
-            {NEXT_STEPS.map((step, i) => {
-              const current = currentStepIndex(app.status)
-              const isDone = i < current || app.status === 'published'
-              const isActive = i === current && app.status !== 'published'
-              return (
-                <div key={step.title} className="flex gap-3.5">
-                  <div className="flex flex-col items-center shrink-0">
-                    <div className={`w-7 h-7 rounded-full flex items-center justify-center ${
-                      isDone ? 'bg-[#0a3a22]' : isActive ? 'bg-[#00cc6a]' : 'bg-zinc-100'
-                    }`}>
-                      {isDone ? (
-                        <CheckCircle2 className="h-3.5 w-3.5 text-white" />
-                      ) : (
-                        <step.icon className={`h-3.5 w-3.5 ${isActive ? 'text-black' : 'text-zinc-400'}`} />
-                      )}
-                    </div>
-                    {i < NEXT_STEPS.length - 1 && <div className="w-px flex-1 bg-zinc-200 my-1" />}
-                  </div>
-                  <div className="pb-5">
-                    <p className={`text-sm font-bold mb-0.5 ${isActive ? 'text-zinc-900' : isDone ? 'text-zinc-700' : 'text-zinc-400'}`}>
-                      {step.title} {isActive && <span className="text-[10px] font-bold uppercase text-[#00a855] ml-1">You are here</span>}
-                    </p>
-                    <p className={`text-xs leading-relaxed ${isActive ? 'text-zinc-500' : 'text-zinc-400'}`}>{step.desc}</p>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* About You / Business Info — mirrors /share-your-story's "About You" section */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-6 mb-5">
-          <p className="text-sm font-black text-zinc-900 mb-5">About You</p>
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field label="Full Name" required value={form.contact_name} onChange={(v) => set('contact_name', v)} disabled={locked} />
-              <Field label="Email" type="email" required value={form.email} onChange={(v) => set('email', v)} disabled={locked} />
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field label={isOrgPackage ? 'Organization Name' : 'Startup / Business Name'} required value={form.business_name} onChange={(v) => set('business_name', v)} disabled={locked} />
-              <Field label="Your Role" required placeholder={isOrgPackage ? 'e.g. Program Director' : 'e.g. Co-founder & CEO'} value={form.role} onChange={(v) => set('role', v)} disabled={locked} />
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field label="LinkedIn / Facebook Profile" type="url" value={form.social_link} onChange={(v) => set('social_link', v)} disabled={locked} />
-              <Field label="Website" type="url" value={form.website} onChange={(v) => set('website', v)} disabled={locked} />
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <SelectField label="Industry" required value={form.industry} onChange={(v) => set('industry', v)} options={INDUSTRIES} disabled={locked} />
-              <SelectField label="Region" required value={form.region} onChange={(v) => set('region', v)} options={CONTRIBUTOR_REGIONS.map((r) => r.label)} disabled={locked} />
-            </div>
-            <Field label="Phone Number" type="tel" value={form.phone} onChange={(v) => set('phone', v)} disabled={locked} />
-          </div>
-        </div>
-
-        {/* Your Story — same questions as /share-your-story; first 3 required for startups */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-6 mb-5">
-          <p className="text-sm font-black text-zinc-900 mb-1">Your Story</p>
-          <p className="text-xs text-zinc-400 mb-5">
-            {isOrgPackage
-              ? 'Optional, but the more context you share the better your feature will be.'
-              : 'Answer as many as you can. Questions 1–3 are required.'}
-          </p>
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
+          {/* Main column */}
           <div className="space-y-5">
-            {STORY_QUESTIONS.map((q, i) => (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              <SectionCard number={1} icon={Building2} title={isOrgPackage ? 'About Your Organization' : 'About Your Startup'}>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <Field label={isOrgPackage ? 'Organization Name' : 'Startup Name'} required value={form.business_name} onChange={(v) => set('business_name', v)} disabled={locked} />
+                    <Field label="Website" type="url" value={form.website} onChange={(v) => set('website', v)} disabled={locked} />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <SelectField label="Industry" required value={form.industry} onChange={(v) => set('industry', v)} options={INDUSTRIES} disabled={locked} />
+                    <SelectField label="Region" required value={form.region} onChange={(v) => set('region', v)} options={CONTRIBUTOR_REGIONS.map((r) => r.label)} disabled={locked} />
+                  </div>
+                </div>
+              </SectionCard>
+
+              <SectionCard number={2} icon={User} title={isOrgPackage ? 'Representative Information' : 'Founder Information'}>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <Field label="Full Name" required value={form.contact_name} onChange={(v) => set('contact_name', v)} disabled={locked} />
+                    <Field label="Role / Position" required placeholder={isOrgPackage ? 'e.g. Program Director' : 'e.g. Co-founder & CEO'} value={form.role} onChange={(v) => set('role', v)} disabled={locked} />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <Field label="Email" type="email" required value={form.email} onChange={(v) => set('email', v)} disabled={locked} />
+                    <Field label="Contact Number" type="tel" required value={form.phone} onChange={(v) => set('phone', v)} disabled={locked} />
+                  </div>
+                  <Field label="LinkedIn / Facebook Profile (Optional)" type="url" value={form.social_link} onChange={(v) => set('social_link', v)} disabled={locked} />
+                </div>
+              </SectionCard>
+            </div>
+
+            <SectionCard number={3} icon={PenLine} title="Story Information">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                {storyQuestions.map((q) => (
+                  <TextareaField
+                    key={q.key}
+                    label={q.label}
+                    placeholder={q.placeholder}
+                    required={q.required}
+                    value={answers[q.key] ?? ''}
+                    onChange={(v) => setAnswer(q.key, v)}
+                    maxLength={1000}
+                    disabled={locked}
+                  />
+                ))}
+              </div>
+            </SectionCard>
+
+            <SectionCard number={4} icon={ImageIcon} title="Upload Assets">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <AssetUpload
+                  label={isOrgPackage ? 'Logo' : 'Startup Logo'}
+                  required
+                  field={startupLogo}
+                  disabled={locked}
+                  onUpload={(f) => handleUploadAsset(f, 'logo')}
+                  onClear={() => setStartupLogo({ url: null, uploading: false })}
+                />
+                <AssetUpload
+                  label={isOrgPackage ? 'Representative Photo' : 'Founder Photo'}
+                  required={!isOrgPackage}
+                  field={founderPhoto}
+                  disabled={locked}
+                  onUpload={(f) => handleUploadAsset(f, 'founder')}
+                  onClear={() => setFounderPhoto({ url: null, uploading: false })}
+                />
+                <AssetUpload
+                  label={isOrgPackage ? 'Photos (Optional)' : 'Startup Photos (Optional)'}
+                  field={productPhoto}
+                  disabled={locked}
+                  onUpload={(f) => handleUploadAsset(f, 'product')}
+                  onClear={() => setProductPhoto({ url: null, uploading: false })}
+                />
+              </div>
+            </SectionCard>
+
+            <SectionCard number={5} icon={FileEdit} title="Anything to Promote?">
               <TextareaField
-                key={q.key}
-                label={`${i + 1}. ${q.label}`}
-                required={!isOrgPackage && i < 3}
-                value={answers[q.key] ?? ''}
-                onChange={(v) => setAnswer(q.key, v)}
-                maxLength={1000}
+                label="Is there anything you'd like to promote or share with the community?"
+                value={form.promo}
+                onChange={(v) => set('promo', v)}
+                maxLength={500}
                 disabled={locked}
               />
-            ))}
-          </div>
-        </div>
+            </SectionCard>
 
-        {/* Photos & Assets — mirrors /share-your-story's "Photos & Assets" section */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-6 mb-5">
-          <p className="text-sm font-black text-zinc-900 mb-5">Photos &amp; Assets</p>
-          <div className="space-y-5">
-            <AssetUpload
-              label={isOrgPackage ? 'Representative Photo' : 'Founder Photo'}
-              hint={isOrgPackage ? 'A clear photo of your team or representative. Used on your feature page.' : 'A clear headshot or portrait. Used on your story page.'}
-              required={!isOrgPackage}
-              field={founderPhoto}
-              disabled={locked}
-              onUpload={(f) => handleUploadAsset(f, 'founder')}
-              onClear={() => setFounderPhoto({ url: null, uploading: false })}
-            />
-            <AssetUpload
-              label={isOrgPackage ? 'Organization Logo' : 'Startup Logo'}
-              hint="Your logo. PNG with transparent background preferred."
-              field={startupLogo}
-              disabled={locked}
-              onUpload={(f) => handleUploadAsset(f, 'logo')}
-              onClear={() => setStartupLogo({ url: null, uploading: false })}
-            />
-            <AssetUpload
-              label="Product Photo / Screenshot (optional)"
-              hint="A photo of your product, app screenshot, or team at work."
-              field={productPhoto}
-              disabled={locked}
-              onUpload={(f) => handleUploadAsset(f, 'product')}
-              onClear={() => setProductPhoto({ url: null, uploading: false })}
-            />
-          </div>
-        </div>
-
-        {/* Promo — mirrors /share-your-story's "Anything to Promote?" section */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-6 mb-5">
-          <p className="text-sm font-black text-zinc-900 mb-5">Anything to Promote?</p>
-          <TextareaField
-            label="Is there anything you'd like to promote or share with the community?"
-            value={form.promo}
-            onChange={(v) => set('promo', v)}
-            maxLength={500}
-            disabled={locked}
-          />
-        </div>
-
-        {/* Save / submit actions */}
-        {!locked && (
-          <div className="flex items-center justify-end gap-3 mb-5">
-            {app.status === 'draft' ? (
-              <>
-                <button onClick={handleSaveDraft} disabled={saving || submitting} className="px-5 py-2.5 rounded-lg border border-zinc-300 text-sm font-bold text-zinc-700 hover:bg-zinc-50 disabled:opacity-60 transition-colors">
-                  {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Save Draft'}
-                </button>
-                <button onClick={handleSubmitForReview} disabled={saving || submitting} className="px-5 py-2.5 rounded-lg bg-[#0a3a22] text-white text-sm font-bold hover:bg-[#042212] disabled:opacity-60 transition-colors">
-                  {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Submit for Review'}
-                </button>
-              </>
-            ) : (
-              <button onClick={handleSaveChanges} disabled={saving} className="px-5 py-2.5 rounded-lg bg-[#0a3a22] text-white text-sm font-bold hover:bg-[#042212] disabled:opacity-60 transition-colors">
-                {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Save Changes'}
-              </button>
+            {(app.status === 'submitted' || app.status === 'under_review') && (
+              <p className="text-xs text-zinc-400 text-center">
+                Your application is being reviewed. You can keep editing — we&apos;ll see your latest version.
+              </p>
             )}
-          </div>
-        )}
 
-        {(app.status === 'submitted' || app.status === 'under_review') && (
-          <p className="text-xs text-zinc-400 text-center mb-5">
-            Your application is being reviewed. You can keep editing — we&apos;ll see your latest version.
-          </p>
-        )}
-
-        {/* Payment */}
-        {PAYMENT_VISIBLE_STATUSES.includes(app.status) && (
-          <div className="rounded-2xl border border-zinc-200 bg-white p-6">
-            <div className="flex items-center justify-between mb-1">
-              <p className="text-sm font-black text-zinc-900">Payment</p>
-              <p className="text-sm font-black text-zinc-900">₱{(app.amount_php ?? pkg.amount_php).toLocaleString()}</p>
-            </div>
-            <p className="text-xs text-zinc-500 mb-5">{pkg.name} · {pkg.badge}</p>
-
-            {PAYMENT_EDITABLE_STATUSES.includes(app.status) ? (
-              <div className="space-y-4">
-                <p className="text-xs text-zinc-500 leading-relaxed bg-zinc-50 rounded-lg p-3">
-                  Send ₱{(app.amount_php ?? pkg.amount_php).toLocaleString()} via your chosen method below, then enter your reference number and upload a screenshot of the transaction. Our team will confirm receipt and update your status.
-                </p>
-                <div>
-                  <label className="block text-sm font-semibold text-zinc-700 mb-1.5">Payment Method <span className="text-red-400">*</span></label>
-                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-                    {(Object.entries(PAYMENT_METHOD_LABELS) as [PaymentMethod, string][]).map(([value, label]) => (
-                      <button
-                        key={value}
-                        type="button"
-                        onClick={() => setPayment((p) => ({ ...p, payment_method: value }))}
-                        className={`px-3 py-2.5 rounded-lg border text-sm font-bold transition-colors ${
-                          payment.payment_method === value ? 'border-[#00cc6a] bg-[#00cc6a]/10 text-zinc-900' : 'border-zinc-300 text-zinc-600 hover:bg-zinc-50'
-                        }`}
-                      >
-                        {label}
-                      </button>
-                    ))}
-                  </div>
+            {/* Payment */}
+            {PAYMENT_VISIBLE_STATUSES.includes(app.status) && (
+              <div className="rounded-2xl border border-zinc-200 bg-white p-6">
+                <div className="flex items-center justify-between mb-1">
+                  <p className="text-sm font-black text-zinc-900">Payment</p>
+                  <p className="text-sm font-black text-zinc-900">₱{(app.amount_php ?? pkg.amount_php).toLocaleString()}</p>
                 </div>
-                <Field label="Reference Number" required value={payment.payment_reference} onChange={(v) => setPayment((p) => ({ ...p, payment_reference: v }))} />
-                <div>
-                  <label className="block text-sm font-semibold text-zinc-700 mb-1.5">Proof of Payment <span className="text-red-400">*</span></label>
-                  <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleUploadProof(e.target.files[0])} />
-                  {proofUrl ? (
-                    /* eslint-disable-next-line @next/next/no-img-element */
-                    <img src={proofUrl} alt="Payment proof" className="w-full max-w-xs rounded-lg border border-zinc-200" />
-                  ) : (
+                <p className="text-xs text-zinc-500 mb-5">{pkg.name} · {pkg.badge}</p>
+
+                {PAYMENT_EDITABLE_STATUSES.includes(app.status) ? (
+                  <div className="space-y-4">
+                    <p className="text-xs text-zinc-500 leading-relaxed bg-zinc-50 rounded-lg p-3">
+                      Send ₱{(app.amount_php ?? pkg.amount_php).toLocaleString()} via your chosen method below, then enter your reference number and upload a screenshot of the transaction. Our team will confirm receipt and update your status.
+                    </p>
+                    <div>
+                      <label className="block text-sm font-semibold text-zinc-700 mb-1.5">Payment Method <span className="text-red-400">*</span></label>
+                      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                        {(Object.entries(PAYMENT_METHOD_LABELS) as [PaymentMethod, string][]).map(([value, label]) => (
+                          <button
+                            key={value}
+                            type="button"
+                            onClick={() => setPayment((p) => ({ ...p, payment_method: value }))}
+                            className={`px-3 py-2.5 rounded-lg border text-sm font-bold transition-colors ${
+                              payment.payment_method === value ? 'border-[#00cc6a] bg-[#00cc6a]/10 text-zinc-900' : 'border-zinc-300 text-zinc-600 hover:bg-zinc-50'
+                            }`}
+                          >
+                            {label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <Field label="Reference Number" required value={payment.payment_reference} onChange={(v) => setPayment((p) => ({ ...p, payment_reference: v }))} />
+                    <div>
+                      <label className="block text-sm font-semibold text-zinc-700 mb-1.5">Proof of Payment <span className="text-red-400">*</span></label>
+                      <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleUploadProof(e.target.files[0])} />
+                      {proofUrl ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img src={proofUrl} alt="Payment proof" className="w-full max-w-xs rounded-lg border border-zinc-200" />
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => fileInputRef.current?.click()}
+                          disabled={uploading}
+                          className="w-full rounded-lg border-2 border-dashed border-zinc-300 py-8 flex flex-col items-center gap-2 text-zinc-400 hover:border-zinc-400 transition-colors disabled:opacity-60"
+                        >
+                          {uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Upload className="h-5 w-5" />}
+                          <span className="text-xs font-semibold">{uploading ? 'Uploading…' : 'Upload screenshot'}</span>
+                        </button>
+                      )}
+                      {proofUrl && (
+                        <button type="button" onClick={() => fileInputRef.current?.click()} className="text-xs font-bold text-zinc-500 hover:underline mt-2">
+                          Replace screenshot
+                        </button>
+                      )}
+                    </div>
                     <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      disabled={uploading}
-                      className="w-full rounded-lg border-2 border-dashed border-zinc-300 py-8 flex flex-col items-center gap-2 text-zinc-400 hover:border-zinc-400 transition-colors disabled:opacity-60"
+                      onClick={handleSubmitPayment}
+                      disabled={payingLoading}
+                      className="w-full px-5 py-3 rounded-lg bg-[#00cc6a] text-black text-sm font-bold hover:bg-[#00b85e] disabled:opacity-60 transition-colors"
                     >
-                      {uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Upload className="h-5 w-5" />}
-                      <span className="text-xs font-semibold">{uploading ? 'Uploading…' : 'Upload screenshot'}</span>
+                      {payingLoading ? <Loader2 className="h-4 w-4 animate-spin mx-auto" /> : 'Submit Payment for Verification'}
                     </button>
-                  )}
-                  {proofUrl && (
-                    <button type="button" onClick={() => fileInputRef.current?.click()} className="text-xs font-bold text-zinc-500 hover:underline mt-2">
-                      Replace screenshot
-                    </button>
-                  )}
-                </div>
-                <button
-                  onClick={handleSubmitPayment}
-                  disabled={payingLoading}
-                  className="w-full px-5 py-3 rounded-lg bg-[#00cc6a] text-black text-sm font-bold hover:bg-[#00b85e] disabled:opacity-60 transition-colors"
-                >
-                  {payingLoading ? <Loader2 className="h-4 w-4 animate-spin mx-auto" /> : 'Submit Payment for Verification'}
-                </button>
+                  </div>
+                ) : (
+                  <div className="rounded-lg bg-zinc-50 p-4 space-y-2">
+                    <div className="flex items-center gap-2 text-sm">
+                      {app.status === 'payment_submitted' ? (
+                        <Loader2 className="h-4 w-4 text-amber-500" />
+                      ) : (
+                        <CheckCircle2 className="h-4 w-4 text-[#00a855]" />
+                      )}
+                      <span className="font-semibold text-zinc-700">
+                        {app.status === 'payment_submitted' ? 'Awaiting confirmation' : 'Payment confirmed'}
+                      </span>
+                    </div>
+                    {app.payment_method && (
+                      <p className="text-xs text-zinc-500">
+                        {PAYMENT_METHOD_LABELS[app.payment_method]} · Ref: {app.payment_reference}
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
-            ) : (
-              <div className="rounded-lg bg-zinc-50 p-4 space-y-2">
-                <div className="flex items-center gap-2 text-sm">
-                  {app.status === 'payment_submitted' ? (
-                    <Loader2 className="h-4 w-4 text-amber-500" />
-                  ) : (
-                    <CheckCircle2 className="h-4 w-4 text-[#00a855]" />
-                  )}
-                  <span className="font-semibold text-zinc-700">
-                    {app.status === 'payment_submitted' ? 'Awaiting confirmation' : 'Payment confirmed'}
-                  </span>
-                </div>
-                {app.payment_method && (
-                  <p className="text-xs text-zinc-500">
-                    {PAYMENT_METHOD_LABELS[app.payment_method]} · Ref: {app.payment_reference}
-                  </p>
+            )}
+
+            {locked && (
+              <div className="flex items-center gap-2 text-xs text-zinc-400 justify-center">
+                <Lock className="h-3 w-3" /> Editing is locked while your feature is in production.
+              </div>
+            )}
+
+            {/* Cancel application — intentionally tucked away and unobtrusive */}
+            {!locked && (
+              <div className="pt-4 border-t border-zinc-100 text-center">
+                {!confirmingCancel ? (
+                  <button
+                    type="button"
+                    onClick={() => setConfirmingCancel(true)}
+                    className="text-xs text-zinc-400 hover:text-zinc-500 transition-colors"
+                  >
+                    Cancel application
+                  </button>
+                ) : (
+                  <div className="inline-flex flex-col items-center gap-2">
+                    <p className="text-xs text-zinc-500">Cancel this application? This can&apos;t be undone.</p>
+                    <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={handleCancel}
+                        disabled={cancelling}
+                        className="text-xs font-bold text-red-500 hover:underline disabled:opacity-60"
+                      >
+                        {cancelling ? <Loader2 className="h-3 w-3 animate-spin inline" /> : 'Yes, cancel it'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setConfirmingCancel(false)}
+                        className="text-xs text-zinc-400 hover:text-zinc-600"
+                      >
+                        Never mind
+                      </button>
+                    </div>
+                  </div>
                 )}
               </div>
             )}
           </div>
-        )}
 
-        {locked && (
-          <div className="flex items-center gap-2 text-xs text-zinc-400 justify-center mt-6">
-            <Lock className="h-3 w-3" /> Editing is locked while your feature is in production.
-          </div>
-        )}
+          {/* Sidebar */}
+          <div className="space-y-5">
+            <div className="rounded-2xl border border-[#00a855]/20 bg-gradient-to-br from-[#eef8f1] to-white p-5">
+              <p className="text-[10px] font-black uppercase tracking-widest text-[#00a855] mb-2">Package Selected</p>
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <h2 className="text-base font-black text-zinc-900 leading-snug">{pkg.name}</h2>
+                <div className="w-9 h-9 rounded-full bg-amber-400/15 flex items-center justify-center shrink-0">
+                  <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
+                </div>
+              </div>
+              <p className="text-xs text-zinc-500 leading-relaxed mb-4">
+                {isOrgPackage
+                  ? "Promote your organization and get featured across the Amianan Ventures platform."
+                  : "Share your startup story and get featured across the Amianan Ventures platform."}
+              </p>
 
-        {/* Cancel application — intentionally tucked away and unobtrusive */}
-        {!locked && (
-          <div className="mt-10 pt-6 border-t border-zinc-100 text-center">
-            {!confirmingCancel ? (
-              <button
-                type="button"
-                onClick={() => setConfirmingCancel(true)}
-                className="text-xs text-zinc-400 hover:text-zinc-500 transition-colors"
-              >
-                Cancel application
-              </button>
-            ) : (
-              <div className="inline-flex flex-col items-center gap-2">
-                <p className="text-xs text-zinc-500">Cancel this application? This can&apos;t be undone.</p>
-                <div className="flex items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={handleCancel}
-                    disabled={cancelling}
-                    className="text-xs font-bold text-red-500 hover:underline disabled:opacity-60"
-                  >
-                    {cancelling ? <Loader2 className="h-3 w-3 animate-spin inline" /> : 'Yes, cancel it'}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setConfirmingCancel(false)}
-                    className="text-xs text-zinc-400 hover:text-zinc-600"
-                  >
-                    Never mind
-                  </button>
+              <p className="text-xs font-black text-zinc-900 mb-2">What&apos;s Included</p>
+              <div className="space-y-1.5 mb-4">
+                {PACKAGE_INCLUDED[app.package].map((item) => (
+                  <div key={item.title} className="flex items-center gap-2">
+                    <Check className="h-3.5 w-3.5 text-[#00a855] shrink-0" />
+                    <span className="text-xs text-zinc-700">{item.title}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="pt-3 border-t border-zinc-200/70 mb-4">
+                <p className="text-xs font-bold text-zinc-500 mb-0.5">Package Price</p>
+                <p className="text-2xl font-black text-[#00a855]">₱{(app.amount_php ?? pkg.amount_php).toLocaleString()}</p>
+                <p className="text-xs text-zinc-400">One-time payment</p>
+              </div>
+
+              <div className="flex items-start gap-2 rounded-lg bg-blue-50 border border-blue-100 p-3 mb-4">
+                <Info className="h-3.5 w-3.5 text-blue-500 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-xs font-bold text-blue-700 mb-0.5">What happens next?</p>
+                  <p className="text-[11px] text-blue-600 leading-relaxed">
+                    Our editorial team will review your submission. If approved, you&apos;ll receive an email with the next steps and payment details.
+                  </p>
+                </div>
+              </div>
+
+              {!locked && (
+                <div className="space-y-2">
+                  {app.status === 'draft' ? (
+                    <>
+                      <button onClick={handleSaveDraft} disabled={saving || submitting} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-zinc-300 bg-white text-sm font-bold text-zinc-700 hover:bg-zinc-50 disabled:opacity-60 transition-colors">
+                        {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <><FileBadge2 className="h-3.5 w-3.5" /> Save Draft</>}
+                      </button>
+                      <button onClick={handleSubmitForReview} disabled={saving || submitting} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#0a3a22] text-white text-sm font-bold hover:bg-[#042212] disabled:opacity-60 transition-colors">
+                        {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Send className="h-3.5 w-3.5" /> Submit Application</>}
+                      </button>
+                    </>
+                  ) : (
+                    <button onClick={handleSaveChanges} disabled={saving} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#0a3a22] text-white text-sm font-bold hover:bg-[#042212] disabled:opacity-60 transition-colors">
+                      {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Save Changes'}
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* What Happens Next — only once they've engaged beyond the initial draft */}
+            {app.status !== 'draft' && (
+              <div className="rounded-2xl border border-zinc-200 bg-white p-5">
+                <p className="text-sm font-black text-zinc-900 mb-4">What Happens Next</p>
+                <div className="space-y-0">
+                  {NEXT_STEPS.map((step, i) => {
+                    const current = currentStepIndex(app.status)
+                    const isDone = i < current || app.status === 'published'
+                    const isActive = i === current && app.status !== 'published'
+                    return (
+                      <div key={step.title} className="flex gap-3">
+                        <div className="flex flex-col items-center shrink-0">
+                          <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                            isDone ? 'bg-[#0a3a22]' : isActive ? 'bg-[#00cc6a]' : 'bg-zinc-100'
+                          }`}>
+                            {isDone ? (
+                              <CheckCircle2 className="h-3 w-3 text-white" />
+                            ) : (
+                              <step.icon className={`h-3 w-3 ${isActive ? 'text-black' : 'text-zinc-400'}`} />
+                            )}
+                          </div>
+                          {i < NEXT_STEPS.length - 1 && <div className="w-px flex-1 bg-zinc-200 my-1" />}
+                        </div>
+                        <div className="pb-4">
+                          <p className={`text-xs font-bold mb-0.5 ${isActive ? 'text-zinc-900' : isDone ? 'text-zinc-700' : 'text-zinc-400'}`}>
+                            {step.title} {isActive && <span className="text-[9px] font-bold uppercase text-[#00a855] ml-1">You are here</span>}
+                          </p>
+                          <p className={`text-[11px] leading-relaxed ${isActive ? 'text-zinc-500' : 'text-zinc-400'}`}>{step.desc}</p>
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
             )}
+
+            <div className="rounded-2xl border border-zinc-200 bg-white p-5">
+              <p className="text-sm font-black text-zinc-900 mb-1">Need help?</p>
+              <p className="text-xs text-zinc-500 leading-relaxed mb-4">
+                We&apos;re here to help you showcase your story. Contact us and we&apos;ll get back to you.
+              </p>
+              <a
+                href="mailto:amiananventures@gmail.com"
+                className="inline-flex items-center justify-center gap-2 border border-zinc-300 text-zinc-700 px-4 py-2.5 rounded-lg font-bold text-sm hover:bg-zinc-50 transition-colors w-full"
+              >
+                <Headset className="h-3.5 w-3.5" /> Contact Support
+              </a>
+            </div>
           </div>
-        )}
+        </div>
+
+        {/* Secure & Confidential footer banner */}
+        <div className="mt-6 flex items-center justify-between gap-4 flex-wrap rounded-2xl border border-[#00a855]/20 bg-[#00a855]/5 p-5">
+          <div className="flex items-center gap-3">
+            <ShieldCheck className="h-5 w-5 text-[#00a855] shrink-0" />
+            <div>
+              <p className="text-sm font-bold text-zinc-900">Secure &amp; Confidential</p>
+              <p className="text-xs text-zinc-500 mt-0.5">
+                Your information and assets are safe with us. We only use them to create your feature and never share without your permission.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/share-your-story"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-zinc-300 bg-white text-zinc-700 text-xs font-bold hover:bg-zinc-50 transition-colors shrink-0"
+          >
+            <FileEdit className="h-3.5 w-3.5" /> View Content Guidelines
+          </Link>
+        </div>
       </div>
+    </div>
+  )
+}
+
+function SectionCard({
+  number, icon: Icon, title, children,
+}: { number: number; icon: LucideIcon; title: string; children: React.ReactNode }) {
+  return (
+    <div className="rounded-2xl border border-zinc-200 bg-white p-6">
+      <div className="flex items-center gap-3 mb-5">
+        <div className="w-6 h-6 rounded-full bg-[#0a3a22] text-white flex items-center justify-center text-xs font-black shrink-0">
+          {number}
+        </div>
+        <p className="text-sm font-black text-zinc-900 flex-1">{title}</p>
+        <div className="w-8 h-8 rounded-lg bg-[#00a855]/10 flex items-center justify-center shrink-0">
+          <Icon className="h-4 w-4 text-[#00a855]" />
+        </div>
+      </div>
+      {children}
     </div>
   )
 }
@@ -700,8 +797,8 @@ function SelectField({
 }
 
 function TextareaField({
-  label, value, onChange, maxLength, required, disabled,
-}: { label: string; value: string; onChange: (v: string) => void; maxLength: number; required?: boolean; disabled?: boolean }) {
+  label, value, onChange, maxLength, required, disabled, placeholder,
+}: { label: string; value: string; onChange: (v: string) => void; maxLength: number; required?: boolean; disabled?: boolean; placeholder?: string }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-1.5">
@@ -714,8 +811,9 @@ function TextareaField({
         rows={3}
         maxLength={maxLength}
         value={value}
+        placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-xl border border-zinc-300 px-4 py-3 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#00cc6a]/40 focus:border-[#00cc6a] disabled:bg-zinc-50 disabled:text-zinc-400 transition-colors resize-none"
+        className="w-full rounded-xl border border-zinc-300 px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#00cc6a]/40 focus:border-[#00cc6a] disabled:bg-zinc-50 disabled:text-zinc-400 transition-colors resize-none"
       />
     </div>
   )
