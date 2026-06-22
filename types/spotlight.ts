@@ -13,7 +13,7 @@ export type SpotlightStatus =
 
 export type PaymentMethod = 'gcash' | 'maya' | 'bdo' | 'bpi' | 'unionbank'
 
-export type StoryQuestionKey = 'q1' | 'q2' | 'q3' | 'q4' | 'q5' | 'q6' | 'q7' | 'q8'
+export type StoryQuestionKey = 'q1' | 'q2' | 'q3' | 'q4' | 'q5' | 'q6' | 'q7' | 'q8' | 'q9' | 'q10' | 'q11'
 
 export interface SpotlightApplication {
   id: string
@@ -48,20 +48,6 @@ export interface SpotlightApplication {
   created_at: string
   updated_at: string
 }
-
-// Same questions used on the public /share-your-story submission form —
-// the Get Featured package produces this same feature story, so the
-// application collects identical story inputs.
-export const STORY_QUESTIONS: { key: StoryQuestionKey; label: string }[] = [
-  { key: 'q1', label: 'How did the idea for your startup begin?' },
-  { key: 'q2', label: 'What problem are you trying to solve?' },
-  { key: 'q3', label: 'What does your startup actually do?' },
-  { key: 'q4', label: 'What have you built or done so far?' },
-  { key: 'q5', label: 'What has been the biggest challenge in building your startup?' },
-  { key: 'q6', label: 'What keeps you motivated to continue building this startup?' },
-  { key: 'q7', label: 'What are you working toward in the next 6 to 12 months?' },
-  { key: 'q8', label: 'What advice would you give someone starting their first startup in the region?' },
-]
 
 export const STATUS_LABELS: Record<SpotlightStatus, string> = {
   draft: 'Draft',
@@ -134,4 +120,36 @@ export const PACKAGES: Record<PackageId, { id: PackageId; name: string; badge: s
 
 export function isPackageId(value: string | null | undefined): value is PackageId {
   return value === 'founding-rate' || value === 'ecosystem-visibility'
+}
+
+export interface StoryQuestion {
+  key: StoryQuestionKey
+  label: string
+  placeholder: string
+  required: boolean
+}
+
+// Canonical story questions per package — same set used on the public
+// /share-your-story founder track and on the /spotlight application form,
+// so the question bank never drifts between the two entry points.
+export const STORY_SETS: Record<PackageId, StoryQuestion[]> = {
+  'founding-rate': [
+    { key: 'q1', label: 'How did your business or startup begin?', placeholder: 'Tell us the story behind how it started. What inspired you to build it?', required: true },
+    { key: 'q2', label: 'What problem are you trying to solve?', placeholder: 'What challenge, need, or opportunity made you decide to start this business or project?', required: true },
+    { key: 'q3', label: 'What do you do?', placeholder: 'Tell us about your product, service, or solution and how it helps your customers or community.', required: true },
+    { key: 'q4', label: 'What have you achieved so far?', placeholder: "Share any milestones, customers, partnerships, awards, grants, events, sales, or accomplishments you're proud of.", required: false },
+    { key: 'q5', label: "What has been the biggest challenge you've faced?", placeholder: 'What has been the hardest part of building your business or startup, and how did you overcome it?', required: true },
+    { key: 'q6', label: 'What keeps you motivated?', placeholder: 'What inspires you to keep going, especially during difficult times?', required: true },
+    { key: 'q7', label: 'What are your goals for the next 6 to 12 months?', placeholder: 'What are you working toward, and what would success look like for you?', required: true },
+    { key: 'q8', label: "What is one lesson you've learned from your journey so far?", placeholder: 'Something you wish you knew earlier or something that might help other entrepreneurs.', required: false },
+    { key: 'q9', label: 'What advice would you give someone who wants to start a business or startup?', placeholder: 'Share a piece of advice for aspiring entrepreneurs, founders, or innovators.', required: true },
+    { key: 'q10', label: 'Where can people find or support you?', placeholder: 'Share your website, Facebook page, social media accounts, email, or other contact details.', required: false },
+    { key: 'q11', label: "Is there anything else you'd like people to know about your journey?", placeholder: "Feel free to share a story, lesson, challenge, or message that wasn't covered above.", required: false },
+  ],
+  'ecosystem-visibility': [
+    { key: 'q1', label: 'How did this organization begin?', placeholder: 'Tell us the story of how your organization or program started.', required: true },
+    { key: 'q2', label: 'What problem are you solving?', placeholder: 'Describe the gap or problem your organization is addressing.', required: true },
+    { key: 'q3', label: 'What impact are you creating?', placeholder: 'What change are you making for your community, sector, or the ecosystem?', required: true },
+    { key: 'q4', label: 'What would you like people to know about your work?', placeholder: 'Share any message, milestone, or vision you want our community to know.', required: false },
+  ],
 }

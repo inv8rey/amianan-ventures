@@ -4,34 +4,28 @@ import { useState, useRef } from 'react'
 import Link from 'next/link'
 import { ArrowRight, ArrowLeft, Loader2, CheckCircle2, Upload, X, ImageIcon, Rocket, Lightbulb } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { STORY_SETS } from '@/types/spotlight'
 
 // ── Story tracks ────────────────────────────────────────────────
 type Track = 'founder' | 'innovation'
 
-const FOUNDER_QUESTIONS = [
-  { key: 'q1', label: 'How did the idea for your startup begin?' },
-  { key: 'q2', label: 'What problem are you trying to solve?' },
-  { key: 'q3', label: 'What does your startup actually do?' },
-  { key: 'q4', label: 'What have you built or done so far?' },
-  { key: 'q5', label: 'What has been the biggest challenge in building your startup?' },
-  { key: 'q6', label: 'What keeps you motivated to continue building this startup?' },
-  { key: 'q7', label: 'What are you working toward in the next 6 to 12 months?' },
-  { key: 'q8', label: 'What advice would you give someone starting their first startup in the region?' },
-] as const
+// Same canonical question bank used on the /spotlight Get Featured
+// application form, so the two entry points never drift apart.
+const FOUNDER_QUESTIONS = STORY_SETS['founding-rate']
 
 const INNOVATION_QUESTIONS = [
-  { key: 'q1', label: 'What is your role in the innovation or business ecosystem?' },
-  { key: 'q2', label: 'How did you get involved in this work?' },
-  { key: 'q3', label: 'What does your day-to-day work focus on?' },
-  { key: 'q4', label: "What's a project, program, or initiative you're proud of?" },
-  { key: 'q5', label: 'What has been the biggest challenge in this work?' },
-  { key: 'q6', label: 'What keeps you motivated to keep doing this work?' },
-  { key: 'q7', label: 'What are you working toward in the next 6 to 12 months?' },
-  { key: 'q8', label: 'What advice would you give to someone starting out in this space?' },
-  { key: 'q9', label: "What's an insight you've gained from working in the innovation or business ecosystem?" },
+  { key: 'q1', label: 'What is your role in the innovation or business ecosystem?', placeholder: 'Share your thoughts…', required: true },
+  { key: 'q2', label: 'How did you get involved in this work?', placeholder: 'Share your thoughts…', required: true },
+  { key: 'q3', label: 'What does your day-to-day work focus on?', placeholder: 'Share your thoughts…', required: true },
+  { key: 'q4', label: "What's a project, program, or initiative you're proud of?", placeholder: 'Share your thoughts…', required: false },
+  { key: 'q5', label: 'What has been the biggest challenge in this work?', placeholder: 'Share your thoughts…', required: false },
+  { key: 'q6', label: 'What keeps you motivated to keep doing this work?', placeholder: 'Share your thoughts…', required: false },
+  { key: 'q7', label: 'What are you working toward in the next 6 to 12 months?', placeholder: 'Share your thoughts…', required: false },
+  { key: 'q8', label: 'What advice would you give to someone starting out in this space?', placeholder: 'Share your thoughts…', required: false },
+  { key: 'q9', label: "What's an insight you've gained from working in the innovation or business ecosystem?", placeholder: 'Share your thoughts…', required: false },
 ] as const
 
-const ALL_QUESTION_KEYS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9'] as const
+const ALL_QUESTION_KEYS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10', 'q11'] as const
 type QuestionKey = typeof ALL_QUESTION_KEYS[number]
 
 const TRACK_COPY = {
@@ -249,11 +243,10 @@ export default function FounderStoryPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
-    // Require at least the first 3 questions answered
-    const required: QuestionKey[] = ['q1', 'q2', 'q3']
-    for (const key of required) {
-      if (!answers[key].trim()) {
-        setErrorMsg(`Please answer question ${required.indexOf(key) + 1}.`)
+    const requiredQuestions = copy.questions.filter((q) => q.required)
+    for (const q of requiredQuestions) {
+      if (!answers[q.key as QuestionKey].trim()) {
+        setErrorMsg(`Please answer: ${q.label}`)
         setState('error')
         return
       }
@@ -391,19 +384,19 @@ export default function FounderStoryPage() {
           <h2 className="text-xs font-black uppercase tracking-widest text-zinc-400 border-b border-zinc-200 pb-2 mb-5">
             Your Story
           </h2>
-          <p className="text-xs text-zinc-400 mb-5">Answer as many as you can. Questions 1–3 are required.</p>
+          <p className="text-xs text-zinc-400 mb-5">Answer as many as you can. Required questions are marked with an asterisk.</p>
           <div className="space-y-6">
             {copy.questions.map((q, i) => (
               <div key={q.key}>
                 <label className="block text-sm font-semibold text-zinc-700 mb-1.5">
                   {i + 1}. {q.label}
-                  {i < 3 && <span className="text-red-400 ml-1">*</span>}
+                  {q.required && <span className="text-red-400 ml-1">*</span>}
                 </label>
                 <textarea
                   rows={4}
-                  value={answers[q.key]}
-                  onChange={(e) => setAnswer(q.key, e.target.value)}
-                  placeholder="Share your thoughts…"
+                  value={answers[q.key as QuestionKey]}
+                  onChange={(e) => setAnswer(q.key as QuestionKey, e.target.value)}
+                  placeholder={q.placeholder}
                   className={textareaCls}
                 />
               </div>

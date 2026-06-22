@@ -5,7 +5,7 @@ import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { format } from 'date-fns'
 import { ArrowLeft, ExternalLink } from 'lucide-react'
 import {
-  STATUS_LABELS, STATUS_COLORS, PAYMENT_METHOD_LABELS, STORY_QUESTIONS,
+  STATUS_LABELS, STATUS_COLORS, PAYMENT_METHOD_LABELS, STORY_SETS,
   type SpotlightApplication, type SpotlightStatus, type PaymentMethod,
 } from '@/types/spotlight'
 import { SpotlightEditorActions } from '@/components/contributor/SpotlightEditorActions'
@@ -89,7 +89,7 @@ export default async function SpotlightReviewPage({
           {/* Story */}
           <div className="rounded-lg border border-border/40 bg-card p-4 space-y-3">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Story</p>
-            {STORY_QUESTIONS.map((q, i) => (
+            {STORY_SETS[application.package].map((q, i) => (
               <StoryBlock key={q.key} label={`${i + 1}. ${q.label}`} value={application.story_answers?.[q.key] ?? null} />
             ))}
             {application.promo && <StoryBlock label="Anything to promote?" value={application.promo} />}

@@ -14,7 +14,7 @@ import { createClient } from '@/lib/supabase/client'
 import {
   type SpotlightApplication, type PaymentMethod, type StoryQuestionKey, type PackageId,
   STATUS_LABELS, STATUS_COLORS, EDITABLE_STATUSES, PAYMENT_METHOD_LABELS,
-  INDUSTRIES, PACKAGES,
+  INDUSTRIES, PACKAGES, STORY_SETS,
 } from '@/types/spotlight'
 import { CONTRIBUTOR_REGIONS } from '@/types/contributor'
 
@@ -45,23 +45,6 @@ const PACKAGE_INCLUDED: Record<PackageId, { icon: LucideIcon; title: string; des
     { icon: IdCard,     title: 'Directory Spotlight', desc: 'A standout profile in the Northern Luzon ecosystem directory.' },
     { icon: Share2,     title: 'Social Media Feature', desc: 'Your organization shared across Amianan Ventures\' channels.' },
     { icon: FileBadge2, title: 'Digital Partner Certificate', desc: 'Official recognition as an Amianan Ventures ecosystem partner.' },
-  ],
-}
-
-// Focused story questions shown on the application form — a trimmed,
-// package-specific subset of the full /share-your-story question bank.
-const STORY_SETS: Record<PackageId, { key: StoryQuestionKey; label: string; placeholder: string; required: boolean }[]> = {
-  'founding-rate': [
-    { key: 'q1', label: 'How did the startup begin?', placeholder: 'Tell us the story of how your startup started.', required: true },
-    { key: 'q2', label: 'What problem are you solving?', placeholder: 'Describe the problem your startup is addressing.', required: true },
-    { key: 'q3', label: 'What impact are you creating?', placeholder: 'What change are you making for your customers, community, or industry?', required: true },
-    { key: 'q4', label: 'What would you like people to know about your journey?', placeholder: 'Share any message, milestone, or vision you want our community to know.', required: false },
-  ],
-  'ecosystem-visibility': [
-    { key: 'q1', label: 'How did this organization begin?', placeholder: 'Tell us the story of how your organization or program started.', required: true },
-    { key: 'q2', label: 'What problem are you solving?', placeholder: 'Describe the gap or problem your organization is addressing.', required: true },
-    { key: 'q3', label: 'What impact are you creating?', placeholder: 'What change are you making for your community, sector, or the ecosystem?', required: true },
-    { key: 'q4', label: 'What would you like people to know about your work?', placeholder: 'Share any message, milestone, or vision you want our community to know.', required: false },
   ],
 }
 
@@ -155,7 +138,7 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
   async function handleSubmitForReview() {
     const required: (keyof typeof form)[] = ['business_name', 'contact_name', 'email', 'phone', 'role', 'industry', 'region']
     const missingFields = required.filter((k) => !form[k].trim())
-    const missingStory = (['q1', 'q2', 'q3'] as StoryQuestionKey[]).filter((k) => !(answers[k] ?? '').trim())
+    const missingStory = storyQuestions.filter((q) => q.required && !(answers[q.key] ?? '').trim())
     if (missingFields.length > 0 || missingStory.length > 0) {
       toast.error('Please fill out all required fields before submitting.')
       return
@@ -345,7 +328,7 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
             </div>
 
             <SectionCard number={3} icon={PenLine} title="Story Information">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div className="space-y-5">
                 {storyQuestions.map((q) => (
                   <TextareaField
                     key={q.key}
