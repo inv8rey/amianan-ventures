@@ -257,7 +257,8 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
   }
 
   return (
-    <>
+    <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen">
+      <div className="mx-auto max-w-[1480px] px-4 sm:px-6 lg:px-10">
       {/* Breadcrumb */}
         <nav className="flex items-center gap-1.5 text-xs text-zinc-400 mb-4">
           <Link href="/dashboard" className="hover:text-zinc-600 transition-colors">Dashboard</Link>
@@ -311,17 +312,17 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
           {/* Main column */}
           <div className="space-y-5">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <SectionCard number={1} icon={Building2} title={isOrgPackage ? 'About Your Organization' : 'About Your Startup'}>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <Field label={isOrgPackage ? 'Organization Name' : 'Startup Name'} required value={form.business_name} onChange={(v) => set('business_name', v)} disabled={locked} />
                     <Field label="Website" type="url" value={form.website} onChange={(v) => set('website', v)} disabled={locked} />
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <SelectField label="Industry" required value={form.industry} onChange={(v) => set('industry', v)} options={INDUSTRIES} disabled={locked} />
                     <SelectField label="Region" required value={form.region} onChange={(v) => set('region', v)} options={CONTRIBUTOR_REGIONS.map((r) => r.label)} disabled={locked} />
                   </div>
@@ -329,12 +330,12 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
               </SectionCard>
 
               <SectionCard number={2} icon={User} title={isOrgPackage ? 'Representative Information' : 'Founder Information'}>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <Field label="Full Name" required value={form.contact_name} onChange={(v) => set('contact_name', v)} disabled={locked} />
                     <Field label="Role / Position" required placeholder={isOrgPackage ? 'e.g. Program Director' : 'e.g. Co-founder & CEO'} value={form.role} onChange={(v) => set('role', v)} disabled={locked} />
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <Field label="Email" type="email" required value={form.email} onChange={(v) => set('email', v)} disabled={locked} />
                     <Field label="Contact Number" type="tel" required value={form.phone} onChange={(v) => set('phone', v)} disabled={locked} />
                   </div>
@@ -663,7 +664,8 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
             <FileEdit className="h-3.5 w-3.5" /> View Content Guidelines
           </Link>
         </div>
-    </>
+      </div>
+    </div>
   )
 }
 
@@ -671,8 +673,8 @@ function SectionCard({
   number, icon: Icon, title, children,
 }: { number: number; icon: LucideIcon; title: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-6">
-      <div className="flex items-center gap-3 mb-5">
+    <div className="rounded-2xl border border-zinc-200 bg-white p-7">
+      <div className="flex items-center gap-3 mb-6">
         <div className="w-6 h-6 rounded-full bg-[#0a3a22] text-white flex items-center justify-center text-xs font-black shrink-0">
           {number}
         </div>
