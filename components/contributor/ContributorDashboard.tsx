@@ -308,6 +308,8 @@ function WaysToGetInvolvedCard({ spotlight }: { spotlight: SpotlightApplication 
           desc="Amplify your story through a featured article, homepage placement, founder spotlight, and ecosystem visibility."
           cta={spotlight ? 'View your application' : 'Explore feature packages'}
           href={spotlight ? '/spotlight' : '/feature-packages'}
+          secondaryCta={spotlight ? 'View packages' : undefined}
+          secondaryHref={spotlight ? '/feature-packages' : undefined}
         />
       </div>
     </div>
@@ -315,16 +317,23 @@ function WaysToGetInvolvedCard({ spotlight }: { spotlight: SpotlightApplication 
 }
 
 function InvolvementCard({
-  icon, iconBg, title, desc, cta, href,
-}: { icon: React.ReactNode; iconBg: string; title: string; desc: string; cta: string; href: string }) {
+  icon, iconBg, title, desc, cta, href, secondaryCta, secondaryHref,
+}: { icon: React.ReactNode; iconBg: string; title: string; desc: string; cta: string; href: string; secondaryCta?: string; secondaryHref?: string }) {
   return (
     <div className="rounded-xl border border-zinc-200 p-4">
       <div className={`w-8 h-8 rounded-lg ${iconBg} flex items-center justify-center mb-3`}>{icon}</div>
       <p className="text-sm font-bold text-zinc-900 mb-1">{title}</p>
       <p className="text-xs text-zinc-500 leading-relaxed mb-3">{desc}</p>
-      <Link href={href} className="inline-flex items-center gap-1 text-xs font-bold text-[#00a855] hover:underline">
-        {cta} <ArrowRight className="h-3 w-3" />
-      </Link>
+      <div className="flex items-center gap-3 flex-wrap">
+        <Link href={href} className="inline-flex items-center gap-1 text-xs font-bold text-[#00a855] hover:underline">
+          {cta} <ArrowRight className="h-3 w-3" />
+        </Link>
+        {secondaryCta && secondaryHref && (
+          <Link href={secondaryHref} className="inline-flex items-center gap-1 text-xs font-semibold text-zinc-400 hover:text-zinc-600 hover:underline">
+            {secondaryCta}
+          </Link>
+        )}
+      </div>
     </div>
   )
 }
