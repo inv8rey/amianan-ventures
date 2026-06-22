@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { format } from 'date-fns'
 import {
-  ArrowRight, Star, Megaphone, CalendarDays, ClipboardCheck, FileText,
+  ArrowRight, Star, Rocket, ClipboardCheck, FileText,
   Compass, Info, Users, BookOpen, HelpCircle, Mail, CheckCircle2, Loader2,
   PenLine, AlertCircle, Plus, CheckCircle, Clock, RotateCcw, ImageIcon,
   Headset, MessageCircle, ExternalLink,
@@ -280,37 +280,34 @@ function HeroCard({ spotlight, hasSubmittedSpotlight }: { spotlight: SpotlightAp
 
 // ─── Ways to Get Involved ──────────────────────────────────────────
 function WaysToGetInvolvedCard({ spotlight }: { spotlight: SpotlightApplication | null }) {
-  const hasFoundingRate = spotlight?.package === 'founding-rate'
-  const hasEcosystem = spotlight?.package === 'ecosystem-visibility'
-
   return (
     <div className="rounded-2xl border border-zinc-200 bg-white p-6">
       <p className="text-sm font-black text-zinc-900">Ways to Get Involved</p>
       <p className="text-xs text-zinc-400 mt-0.5 mb-5">Choose what best fits you and start your journey with us.</p>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <InvolvementCard
-          icon={<Star className="h-4 w-4 text-[#00a855]" />}
+          icon={<PenLine className="h-4 w-4 text-[#00a855]" />}
           iconBg="bg-[#00a855]/10"
-          title="Share Your Story"
-          desc="Apply for the Startup Spotlight Package and get featured."
-          cta={hasFoundingRate ? 'View application' : 'Apply now'}
-          href={hasFoundingRate ? '/spotlight' : '/spotlight?package=founding-rate'}
+          title="Share a Perspective"
+          desc="Share your insights, experiences, lessons, or ideas with the Northern Luzon innovation community."
+          cta="Create an article"
+          href="/submit"
         />
         <InvolvementCard
-          icon={<Megaphone className="h-4 w-4 text-blue-500" />}
+          icon={<Rocket className="h-4 w-4 text-blue-500" />}
           iconBg="bg-blue-500/10"
-          title="Promote Your Organization"
-          desc="Showcase your organization, programs, or initiatives."
-          cta={hasEcosystem ? 'View application' : 'Become a partner'}
-          href={hasEcosystem ? '/spotlight' : '/spotlight?package=ecosystem-visibility'}
+          title="List Your Startup"
+          desc="Create a public startup profile and help founders, investors, and customers discover what you're building."
+          cta="Add your startup"
+          href="/submit-startup"
         />
         <InvolvementCard
-          icon={<CalendarDays className="h-4 w-4 text-orange-500" />}
-          iconBg="bg-orange-500/10"
-          title="Feature an Event"
-          desc="Promote your event to the innovation community."
-          cta="Submit your event"
-          href="/partner"
+          icon={<Star className="h-4 w-4 text-amber-500" />}
+          iconBg="bg-amber-500/10"
+          title="Get Featured"
+          desc="Amplify your story through a featured article, homepage placement, founder spotlight, and ecosystem visibility."
+          cta={spotlight ? 'View your application' : 'Explore feature packages'}
+          href={spotlight ? '/spotlight' : '/get-featured'}
         />
       </div>
     </div>
