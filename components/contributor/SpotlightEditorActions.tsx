@@ -19,6 +19,28 @@ function toLocalInputValue(iso: string | null): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
 }
 
+function slugify(str: string) {
+  return str
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+// Builds a clean, professional URL from the business name — capped at a
+// short word count so the slug never sprawls into something unwieldy.
+function generatePublishedUrl(businessName: string) {
+  const words = slugify(businessName).split('-').filter(Boolean)
+  let slug = ''
+  for (const word of words) {
+    const next = slug ? `${slug}-${word}` : word
+    if (next.length > 50) break
+    slug = next
+  }
+  return `https://amiananventures.org/founder-stories/${slug}`
+}
+
 export function SpotlightEditorActions({ application }: Props) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
@@ -288,7 +310,10 @@ export function SpotlightEditorActions({ application }: Props) {
         <div className="space-y-2">
           {mode !== 'publish' ? (
             <button
-              onClick={() => setMode('publish')}
+              onClick={() => {
+                if (!publishUrl.trim()) setPublishUrl(generatePublishedUrl(application.business_name))
+                setMode('publish')
+              }}
               className="w-full flex items-center gap-2 px-3 py-2 rounded-md bg-[#00a855] text-white text-xs font-bold hover:bg-[#008f49] transition-colors"
             >
               <Globe className="h-3.5 w-3.5" />
