@@ -76,7 +76,6 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
     region: application.region ?? '',
     role: application.role ?? '',
     social_link: application.social_link ?? '',
-    promo: application.promo ?? '',
   })
   const [answers, setAnswers] = useState<Partial<Record<StoryQuestionKey, string>>>(
     application.story_answers ?? {}
@@ -370,16 +369,6 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
                   onClear={() => setProductPhoto({ url: null, uploading: false })}
                 />
               </div>
-            </SectionCard>
-
-            <SectionCard number={5} icon={FileEdit} title="Anything to Promote?">
-              <TextareaField
-                label="Is there anything you'd like to promote or share with the community?"
-                value={form.promo}
-                onChange={(v) => set('promo', v)}
-                maxLength={500}
-                disabled={locked}
-              />
             </SectionCard>
 
             {(app.status === 'submitted' || app.status === 'under_review') && (

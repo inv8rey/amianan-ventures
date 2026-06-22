@@ -223,7 +223,6 @@ export default function FounderStoryPage() {
   const [answers, setAnswers] = useState<Record<QuestionKey, string>>(
     Object.fromEntries(ALL_QUESTION_KEYS.map((k) => [k, ''])) as Record<QuestionKey, string>
   )
-  const [promo, setPromo] = useState('')
   const [founderPhoto, setFounderPhoto] = useState<FileField>(emptyFile())
   const [startupLogo, setStartupLogo] = useState<FileField>(emptyFile())
   const [productPhoto, setProductPhoto] = useState<FileField>(emptyFile())
@@ -278,7 +277,6 @@ export default function FounderStoryPage() {
         founder_photo_url: founderPhoto.url,
         startup_logo_url: startupLogo.url,
         product_photo_url: productPhoto.url,
-        promo: promo,
         answers,
       },
     })
@@ -428,25 +426,6 @@ export default function FounderStoryPage() {
               hint={copy.workPhotoHint}
               field={productPhoto}
               onChange={setProductPhoto}
-            />
-          </div>
-        </section>
-
-        {/* ── Section 4: Promo ── */}
-        <section>
-          <h2 className="text-xs font-black uppercase tracking-widest text-zinc-400 border-b border-zinc-200 pb-2 mb-5">
-            Anything to Promote?
-          </h2>
-          <div>
-            <label className="block text-sm font-semibold text-zinc-700 mb-1.5">
-              Is there anything you&apos;d like to promote or share with the community?
-            </label>
-            <textarea
-              rows={3}
-              value={promo}
-              onChange={(e) => setPromo(e.target.value)}
-              placeholder="e.g. We're hiring, launching soon, looking for investors, running a workshop…"
-              className={textareaCls}
             />
           </div>
         </section>
