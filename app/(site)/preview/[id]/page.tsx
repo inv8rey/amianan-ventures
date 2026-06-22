@@ -122,6 +122,7 @@ export default async function PreviewPage({
                   fill
                   priority
                   className="object-cover"
+                  style={{ objectPosition: article.cover_position ?? '50% 50%' }}
                   sizes="(max-width: 896px) 100vw, 896px"
                 />
               </div>

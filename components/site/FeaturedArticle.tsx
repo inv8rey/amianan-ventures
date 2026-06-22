@@ -24,6 +24,7 @@ export function FeaturedArticle({ article }: { article: Article }) {
             fill
             priority
             className="object-cover group-hover:scale-[1.02] transition-transform duration-700 opacity-70"
+            style={{ objectPosition: article.cover_position ?? '50% 50%' }}
             sizes="100vw"
           />
         ) : (

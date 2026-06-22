@@ -129,7 +129,7 @@ export default async function FounderStoryPage({ params }: { params: Promise<{ s
 
             {article.cover_image && (
               <div className="relative aspect-video rounded-xl overflow-hidden mb-8 bg-zinc-100">
-                <Image src={article.cover_image} alt={article.title} fill priority className="object-cover" sizes="(max-width: 1024px) 100vw, 66vw" />
+                <Image src={article.cover_image} alt={article.title} fill priority className="object-cover" style={{ objectPosition: article.cover_position ?? '50% 50%' }} sizes="(max-width: 1024px) 100vw, 66vw" />
               </div>
             )}
 
@@ -155,7 +155,7 @@ export default async function FounderStoryPage({ params }: { params: Promise<{ s
                       <Link key={a.id} href={`/founder-stories/${a.slug}`} className="group flex gap-3 py-3 first:pt-0">
                         {a.cover_image && (
                           <div className="relative shrink-0 w-16 h-11 rounded overflow-hidden bg-zinc-100">
-                            <Image src={a.cover_image} alt={a.title} fill className="object-cover" sizes="64px" />
+                            <Image src={a.cover_image} alt={a.title} fill className="object-cover" style={{ objectPosition: a.cover_position ?? '50% 50%' }} sizes="64px" />
                           </div>
                         )}
                         <div className="min-w-0">

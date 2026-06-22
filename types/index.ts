@@ -53,6 +53,7 @@ export interface Article {
   location: Location | null
   author: string
   cover_image: string | null
+  cover_position: string | null
   tags: string[]
   status: 'draft' | 'published' | 'scheduled'
   featured: boolean
@@ -124,6 +125,7 @@ export interface ArticleFormData {
   location: Location | null
   author: string
   cover_image: string | null
+  cover_position: string | null
   tags: string[]
   status: 'draft' | 'published' | 'scheduled'
   featured: boolean

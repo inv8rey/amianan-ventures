@@ -93,6 +93,7 @@ function HeroColumn({ featured, below }: { featured: Article; below: Article[] }
               fill
               priority
               className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
+              style={{ objectPosition: featured.cover_position ?? '50% 50%' }}
               sizes="(max-width: 1024px) 100vw, 65vw"
             />
           </div>
@@ -129,6 +130,7 @@ function HeroColumn({ featured, below }: { featured: Article; below: Article[] }
                     alt={article.title}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    style={{ objectPosition: article.cover_position ?? '50% 50%' }}
                     sizes="25vw"
                   />
                 </div>
@@ -343,6 +345,7 @@ function RecentArticles({ articles }: { articles: Article[] }) {
                   alt={article.title}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  style={{ objectPosition: article.cover_position ?? '50% 50%' }}
                   sizes="33vw"
                 />
               </div>
@@ -389,7 +392,7 @@ function FounderStoriesStrip({ articles }: { articles: Article[] }) {
           <Link key={article.id} href={`/founder-stories/${article.slug}`} className="group flex flex-col gap-2">
             {article.cover_image && (
               <div className="relative aspect-video rounded-lg overflow-hidden bg-zinc-100">
-                <Image src={article.cover_image} alt={article.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="25vw" />
+                <Image src={article.cover_image} alt={article.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" style={{ objectPosition: article.cover_position ?? '50% 50%' }} sizes="25vw" />
               </div>
             )}
             <ArticleTag article={article} />
@@ -604,7 +607,7 @@ export default async function HomePage() {
                 <Link key={article.id} href={`/${article.category}/${article.slug}`} className="group flex gap-3 py-3">
                   {article.cover_image && (
                     <div className="relative shrink-0 w-16 h-11 rounded overflow-hidden bg-zinc-100">
-                      <Image src={article.cover_image} alt={article.title} fill className="object-cover" sizes="64px" />
+                      <Image src={article.cover_image} alt={article.title} fill className="object-cover" style={{ objectPosition: article.cover_position ?? '50% 50%' }} sizes="64px" />
                     </div>
                   )}
                   <div>

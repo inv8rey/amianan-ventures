@@ -62,6 +62,7 @@ export function ArticleForm({ article }: ArticleFormProps) {
     location: article?.location ?? null,
     author: article?.author ?? 'Amianan Ventures',
     cover_image: article?.cover_image ?? null,
+    cover_position: article?.cover_position ?? '50% 50%',
     tags: article?.tags ?? [],
     status: article?.status ?? 'draft',
     featured: article?.featured ?? false,
@@ -479,7 +480,12 @@ export function ArticleForm({ article }: ArticleFormProps) {
         </div>
 
         {/* Cover image */}
-        <ImageUpload value={form.cover_image} onChange={(url) => set('cover_image', url)} />
+        <ImageUpload
+          value={form.cover_image}
+          onChange={(url) => set('cover_image', url)}
+          position={form.cover_position}
+          onPositionChange={(pos) => set('cover_position', pos)}
+        />
 
         {/* Delete */}
         {!isNew && (
