@@ -9,12 +9,25 @@ import {
   Headset, Mail, MessageCircle, ImageIcon, User, Sparkles, Megaphone,
 } from 'lucide-react'
 import { SubmissionCard } from '@/components/contributor/SubmissionCard'
+import { NewContributorDashboard, type CommunityStoryPreview } from '@/components/contributor/NewContributorDashboard'
 import {
   CONTENT_TYPE_LABELS, STATUS_LABELS, STATUS_COLORS,
   type ContributorSubmission, type SubmissionStatus,
 } from '@/types/contributor'
 import type { SpotlightApplication } from '@/types/spotlight'
 import { STATUS_LABELS as SPOTLIGHT_STATUS_LABELS } from '@/types/spotlight'
+
+async function getRecentCommunityStories(): Promise<CommunityStoryPreview[]> {
+  const { createServiceClient } = await import('@/lib/supabase/service')
+  const supabase = createServiceClient()
+  const { data } = await supabase
+    .from('contributor_submissions')
+    .select('id, headline, summary, content_type, cover_image_url')
+    .eq('status', 'published')
+    .order('published_at', { ascending: false })
+    .limit(3)
+  return (data ?? []) as CommunityStoryPreview[]
+}
 
 export const dynamic = 'force-dynamic'
 
@@ -65,6 +78,20 @@ export default async function DashboardPage() {
   if (!profile) redirect('/contribute/login')
 
   const firstName = (profile.display_name || 'Contributor').split(' ')[0]
+
+  // Genuinely brand new — no feature application and no story submissions
+  // at all (not even a draft) — gets the dedicated welcome/onboarding view.
+  if (!spotlight && submissions.length === 0) {
+    const recentStories = await getRecentCommunityStories()
+    return (
+      <NewContributorDashboard
+        firstName={firstName}
+        email={user.email ?? ''}
+        profileComplete={!profileIncomplete(profile)}
+        recentStories={recentStories}
+      />
+    )
+  }
 
   // Compute analytics (exclude drafts from "total" since they're not submitted)
   const draftCount = submissions.filter((s) => s.status === 'draft').length
