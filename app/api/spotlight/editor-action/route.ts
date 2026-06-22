@@ -27,45 +27,55 @@ export async function POST(request: Request) {
   const supabase = createAdminClient(supabaseUrl, serviceKey, { auth: { persistSession: false } })
 
   const body = await request.json()
-  const { applicationId, status, editorNotes, publishedUrl, silent } = body as {
+  const { applicationId, status, editorNotes, publishedUrl, silent, deliverables, scheduledPublishAt } = body as {
     applicationId: string
-    status: SpotlightStatus
+    status?: SpotlightStatus
     editorNotes?: string
     publishedUrl?: string
     silent?: boolean
+    deliverables?: Record<string, boolean>
+    scheduledPublishAt?: string | null
   }
 
-  if (!applicationId || !status) {
-    return NextResponse.json({ error: 'applicationId and status required' }, { status: 400 })
+  if (!applicationId) {
+    return NextResponse.json({ error: 'applicationId required' }, { status: 400 })
+  }
+  if (!status && deliverables === undefined && scheduledPublishAt === undefined) {
+    return NextResponse.json({ error: 'status, deliverables, or scheduledPublishAt required' }, { status: 400 })
   }
 
   const now = new Date().toISOString()
-  const updatePayload: Record<string, unknown> = { status }
+  const updatePayload: Record<string, unknown> = {}
   if (editorNotes !== undefined) updatePayload.editor_notes = editorNotes || null
+  if (deliverables !== undefined) updatePayload.deliverables = deliverables
+  if (scheduledPublishAt !== undefined) updatePayload.scheduled_publish_at = scheduledPublishAt || null
 
-  switch (status) {
-    case 'under_review':
-      updatePayload.reviewed_at = now
-      break
-    case 'approved':
-      updatePayload.reviewed_at = now
-      updatePayload.status = 'awaiting_payment'
-      break
-    case 'rejected':
-      updatePayload.reviewed_at = now
-      break
-    case 'awaiting_payment':
-      // Used to send payment proof back for resubmission
-      break
-    case 'paid':
-      updatePayload.paid_at = now
-      break
-    case 'in_production':
-      break
-    case 'published':
-      updatePayload.published_at = now
-      updatePayload.published_url = publishedUrl ?? null
-      break
+  if (status) {
+    updatePayload.status = status
+    switch (status) {
+      case 'under_review':
+        updatePayload.reviewed_at = now
+        break
+      case 'approved':
+        updatePayload.reviewed_at = now
+        updatePayload.status = 'awaiting_payment'
+        break
+      case 'rejected':
+        updatePayload.reviewed_at = now
+        break
+      case 'awaiting_payment':
+        // Used to send payment proof back for resubmission
+        break
+      case 'paid':
+        updatePayload.paid_at = now
+        break
+      case 'in_production':
+        break
+      case 'published':
+        updatePayload.published_at = now
+        updatePayload.published_url = publishedUrl ?? null
+        break
+    }
   }
 
   const { data: updated, error } = await supabase
@@ -79,11 +89,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  const actualStatus = updatePayload.status as SpotlightStatus
+  const actualStatus = updatePayload.status as SpotlightStatus | undefined
   const email = updated.email as string
   const businessName = updated.business_name as string
 
-  if (email && !silent) {
+  if (email && !silent && actualStatus) {
     try {
       switch (actualStatus) {
         case 'awaiting_payment':

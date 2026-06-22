@@ -6,17 +6,17 @@ import { toast } from 'sonner'
 import { format } from 'date-fns'
 import {
   Loader2, Upload, CheckCircle2, ExternalLink, Lock, ImageIcon, X,
-  FileEdit, Monitor, Quote, IdCard, FileBadge2, CreditCard, PenSquare, Send,
-  Megaphone, Share2, Mail, ChevronRight, Building2, User, Sparkles, Info,
+  FileEdit, FileBadge2, CreditCard, PenSquare, Send,
+  Mail, ChevronRight, Building2, User, Sparkles, Info,
   ShieldCheck, Headset, Star, Check, PenLine, Phone, Link2, Calendar, MapPin,
   ArrowUpRight, Globe, Briefcase,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import {
-  type SpotlightApplication, type PaymentMethod, type StoryQuestionKey, type PackageId,
+  type SpotlightApplication, type PaymentMethod, type StoryQuestionKey,
   STATUS_LABELS, STATUS_COLORS, EDITABLE_STATUSES, PAYMENT_METHOD_LABELS,
-  INDUSTRIES, PACKAGES, STORY_SETS,
+  INDUSTRIES, PACKAGES, STORY_SETS, DELIVERABLES,
 } from '@/types/spotlight'
 import { CONTRIBUTOR_REGIONS } from '@/types/contributor'
 
@@ -29,26 +29,6 @@ const PAYMENT_VISIBLE_STATUSES: SpotlightApplication['status'][] = [
   'approved', 'awaiting_payment', 'payment_submitted', 'paid', 'in_production', 'published',
 ]
 const PAYMENT_EDITABLE_STATUSES: SpotlightApplication['status'][] = ['approved', 'awaiting_payment']
-
-// What's included in each package — same lists shown on the /get-featured marketing page.
-const PACKAGE_INCLUDED: Record<PackageId, { icon: LucideIcon; title: string; desc: string }[]> = {
-  'founding-rate': [
-    { icon: FileEdit,  title: 'Featured Article', desc: 'A professionally written article about your startup, business, or innovation published on Amianan Ventures and shared with our community.' },
-    { icon: Monitor,   title: 'Homepage Feature', desc: 'Receive dedicated featured placement on the Amianan Ventures homepage for 2 weeks, helping more visitors discover your story.' },
-    { icon: Megaphone, title: 'Article Banner Placement', desc: 'Your business is promoted inside selected Amianan Ventures articles, reaching readers already interested in innovation, startups, and business.' },
-    { icon: Quote,     title: 'Founder Quote Card', desc: 'A professionally designed social media graphic featuring your story, insight, or message that is ready to share across your channels.' },
-    { icon: IdCard,    title: 'Featured Startup Listing', desc: 'Highlighted in the Featured Organizations section of the Northern Luzon Ecosystem Directory to help founders, investors, partners, and stakeholders discover your business.' },
-    { icon: Mail,      title: 'Newsletter Inclusion', desc: 'Your story is included in a future Amianan Ventures newsletter distributed to ecosystem stakeholders and community members.' },
-  ],
-  'ecosystem-visibility': [
-    { icon: Monitor,    title: 'Homepage Banner Placement', desc: 'Your organization featured on the Amianan Ventures homepage.' },
-    { icon: Megaphone,  title: 'Article Banner Placement', desc: 'Your brand placed inside relevant articles read across the ecosystem.' },
-    { icon: FileEdit,   title: 'Featured Article', desc: 'A professionally written feature published on Amianan Ventures.' },
-    { icon: IdCard,     title: 'Directory Spotlight', desc: 'A standout profile in the Northern Luzon ecosystem directory.' },
-    { icon: Share2,     title: 'Social Media Feature', desc: 'Your organization shared across Amianan Ventures\' channels.' },
-    { icon: FileBadge2, title: 'Digital Partner Certificate', desc: 'Official recognition as an Amianan Ventures ecosystem partner.' },
-  ],
-}
 
 // What happens after saving/submitting — mirrors the "How It Works" steps on /get-featured.
 const NEXT_STEPS = [
@@ -637,7 +617,7 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
 
               <p className="text-xs font-black text-zinc-900 mb-2">What&apos;s Included</p>
               <div className="space-y-1.5 mb-4">
-                {PACKAGE_INCLUDED[app.package].map((item) => (
+                {DELIVERABLES[app.package].map((item) => (
                   <div key={item.title} className="flex items-center gap-2">
                     <Check className="h-3.5 w-3.5 text-[#00a855] shrink-0" />
                     <span className="text-xs text-zinc-700">{item.title}</span>
@@ -726,7 +706,33 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
                             {step.title} {isActive && <span className="text-[9px] font-bold uppercase text-[#00a855] ml-1">You are here</span>}
                           </p>
                           <p className={`text-[11px] leading-relaxed ${isActive ? 'text-zinc-500' : 'text-zinc-400'}`}>{step.desc}</p>
+                          {step.title === 'Publication' && app.scheduled_publish_at && app.status !== 'published' && (
+                            <p className="text-[11px] font-bold text-[#00a855] mt-1">
+                              Expected: {format(new Date(app.scheduled_publish_at), 'MMM d, yyyy')}
+                            </p>
+                          )}
                         </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Deliverables progress — read-only, visible once production has started */}
+            {(app.status === 'paid' || app.status === 'in_production' || app.status === 'published') && (
+              <div className="rounded-2xl border border-zinc-200 bg-white p-5">
+                <p className="text-sm font-black text-zinc-900 mb-1">Deliverables Progress</p>
+                <p className="text-xs text-zinc-400 mb-4">What our team has completed so far.</p>
+                <div className="space-y-2.5">
+                  {DELIVERABLES[app.package].map((item) => {
+                    const done = app.deliverables?.[item.title] ?? false
+                    return (
+                      <div key={item.title} className="flex items-start gap-2.5">
+                        <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${done ? 'bg-[#00a855]' : 'bg-zinc-100'}`}>
+                          {done && <Check className="h-3 w-3 text-white" />}
+                        </div>
+                        <span className={`text-xs ${done ? 'text-zinc-700 font-semibold' : 'text-zinc-400'}`}>{item.title}</span>
                       </div>
                     )
                   })}

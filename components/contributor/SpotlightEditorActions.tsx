@@ -2,15 +2,22 @@
 
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
-import { Loader2, CheckCircle, XCircle, Globe, ExternalLink, Banknote } from 'lucide-react'
+import { Loader2, CheckCircle, XCircle, Globe, ExternalLink, Banknote, CalendarClock, ListChecks, Check } from 'lucide-react'
 import { toast } from 'sonner'
-import type { SpotlightApplication, SpotlightStatus } from '@/types/spotlight'
+import { DELIVERABLES, type SpotlightApplication, type SpotlightStatus } from '@/types/spotlight'
 
 interface Props {
   application: SpotlightApplication
 }
 
 type ActionMode = null | 'reject' | 'reject_payment' | 'publish'
+
+function toLocalInputValue(iso: string | null): string {
+  if (!iso) return ''
+  const d = new Date(iso)
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+}
 
 export function SpotlightEditorActions({ application }: Props) {
   const router = useRouter()
@@ -19,6 +26,10 @@ export function SpotlightEditorActions({ application }: Props) {
   const [editorNotes, setEditorNotes] = useState(application.editor_notes ?? '')
   const [publishUrl, setPublishUrl] = useState(application.published_url ?? '')
   const [saving, setSaving] = useState(false)
+  const [scheduledDate, setScheduledDate] = useState(toLocalInputValue(application.scheduled_publish_at))
+  const [savingSchedule, setSavingSchedule] = useState(false)
+  const [deliverables, setDeliverables] = useState<Record<string, boolean>>(application.deliverables ?? {})
+  const [savingDeliverable, setSavingDeliverable] = useState<string | null>(null)
 
   const status = application.status as SpotlightStatus
   const isClosed = status === 'rejected' || status === 'published' || status === 'cancelled'
@@ -49,6 +60,52 @@ export function SpotlightEditorActions({ application }: Props) {
     }
   }
 
+  async function saveSchedule() {
+    setSavingSchedule(true)
+    try {
+      const res = await fetch('/api/spotlight/editor-action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          applicationId: application.id,
+          scheduledPublishAt: scheduledDate ? new Date(scheduledDate).toISOString() : null,
+        }),
+      })
+      if (!res.ok) {
+        const err = await res.json()
+        throw new Error(err.error ?? 'Failed to save date')
+      }
+      toast.success('Publish date saved.')
+      startTransition(() => router.refresh())
+    } catch (e) {
+      toast.error((e as Error).message)
+    } finally {
+      setSavingSchedule(false)
+    }
+  }
+
+  async function toggleDeliverable(title: string) {
+    const next = { ...deliverables, [title]: !deliverables[title] }
+    setDeliverables(next)
+    setSavingDeliverable(title)
+    try {
+      const res = await fetch('/api/spotlight/editor-action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ applicationId: application.id, deliverables: next }),
+      })
+      if (!res.ok) {
+        const err = await res.json()
+        throw new Error(err.error ?? 'Failed to update deliverable')
+      }
+    } catch (e) {
+      setDeliverables(deliverables)
+      toast.error((e as Error).message)
+    } finally {
+      setSavingDeliverable(null)
+    }
+  }
+
   return (
     <div className="rounded-lg border border-border/40 bg-card p-4 space-y-4">
       <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Editor Actions</p>
@@ -66,6 +123,60 @@ export function SpotlightEditorActions({ application }: Props) {
           disabled={isClosed}
         />
       </div>
+
+      {/* Scheduled publish date — set once production starts */}
+      {(status === 'paid' || status === 'in_production') && (
+        <div className="rounded-md border border-border/40 bg-muted/30 p-3 space-y-2">
+          <label className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+            <CalendarClock className="h-3.5 w-3.5" /> Expected Publish Date
+          </label>
+          <p className="text-[10px] text-muted-foreground">Shown to the applicant as an expected timeline — does not auto-publish.</p>
+          <div className="flex gap-2">
+            <input
+              type="datetime-local"
+              value={scheduledDate}
+              onChange={(e) => setScheduledDate(e.target.value)}
+              className="flex-1 rounded-md border border-border/40 bg-background px-3 py-2 text-xs text-foreground outline-none focus:border-border"
+            />
+            <button
+              onClick={saveSchedule}
+              disabled={savingSchedule}
+              className="px-3 py-2 rounded-md bg-foreground text-background text-xs font-bold hover:opacity-90 disabled:opacity-50 transition-colors shrink-0"
+            >
+              {savingSchedule ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'Save'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Deliverables checklist — mark each item completed/posted */}
+      {(status === 'paid' || status === 'in_production' || status === 'published') && (
+        <div className="rounded-md border border-border/40 bg-muted/30 p-3 space-y-2">
+          <label className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
+            <ListChecks className="h-3.5 w-3.5" /> Deliverables
+          </label>
+          <div className="space-y-1.5">
+            {DELIVERABLES[application.package].map((item) => {
+              const done = !!deliverables[item.title]
+              const isSaving = savingDeliverable === item.title
+              return (
+                <button
+                  key={item.title}
+                  type="button"
+                  onClick={() => toggleDeliverable(item.title)}
+                  disabled={isSaving}
+                  className="w-full flex items-center gap-2 text-left disabled:opacity-60"
+                >
+                  <span className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${done ? 'bg-emerald-600' : 'bg-border/60'}`}>
+                    {isSaving ? <Loader2 className="h-2.5 w-2.5 animate-spin text-white" /> : done && <Check className="h-2.5 w-2.5 text-white" />}
+                  </span>
+                  <span className={`text-xs ${done ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>{item.title}</span>
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       {/* under_review → approve or reject */}
       {status === 'under_review' && (

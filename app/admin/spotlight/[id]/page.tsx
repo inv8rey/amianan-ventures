@@ -70,6 +70,7 @@ export default async function SpotlightReviewPage({
               Created {format(new Date(application.created_at), 'MMMM d, yyyy')}
               {application.submitted_at && ` · Submitted ${format(new Date(application.submitted_at), 'MMM d')}`}
               {application.reviewed_at && ` · Reviewed ${format(new Date(application.reviewed_at), 'MMM d')}`}
+              {application.scheduled_publish_at && ` · Expected publish ${format(new Date(application.scheduled_publish_at), 'MMM d, yyyy')}`}
             </p>
           </div>
 

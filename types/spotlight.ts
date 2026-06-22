@@ -40,6 +40,8 @@ export interface SpotlightApplication {
   payment_proof_url: string | null
   editor_notes: string | null
   published_url: string | null
+  scheduled_publish_at: string | null
+  deliverables: Record<string, boolean> | null
   submitted_at: string | null
   reviewed_at: string | null
   payment_submitted_at: string | null
@@ -151,5 +153,33 @@ export const STORY_SETS: Record<PackageId, StoryQuestion[]> = {
     { key: 'q2', label: 'What problem are you solving?', placeholder: 'Describe the gap or problem your organization is addressing.', required: true },
     { key: 'q3', label: 'What impact are you creating?', placeholder: 'What change are you making for your community, sector, or the ecosystem?', required: true },
     { key: 'q4', label: 'What would you like people to know about your work?', placeholder: 'Share any message, milestone, or vision you want our community to know.', required: false },
+  ],
+}
+
+export interface Deliverable {
+  title: string
+  desc: string
+}
+
+// Canonical per-package deliverables — same list shown on the public
+// /get-featured page, the in-portal /feature-packages page, the
+// applicant's "Deliverables Progress" tracker, and the admin checklist
+// used to mark each item as completed/posted.
+export const DELIVERABLES: Record<PackageId, Deliverable[]> = {
+  'founding-rate': [
+    { title: 'Featured Article', desc: 'A professionally written article about your startup, business, or innovation published on Amianan Ventures and shared with our community.' },
+    { title: 'Homepage Feature', desc: 'Receive dedicated featured placement on the Amianan Ventures homepage for 2 weeks, helping more visitors discover your story.' },
+    { title: 'Article Banner Placement', desc: 'Your business is promoted inside selected Amianan Ventures articles, reaching readers already interested in innovation, startups, and business.' },
+    { title: 'Founder Quote Card', desc: 'A professionally designed social media graphic featuring your story, insight, or message that is ready to share across your channels.' },
+    { title: 'Featured Startup Listing', desc: 'Highlighted in the Featured Organizations section of the Northern Luzon Ecosystem Directory to help founders, investors, partners, and stakeholders discover your business.' },
+    { title: 'Newsletter Inclusion', desc: 'Your story is included in a future Amianan Ventures newsletter distributed to ecosystem stakeholders and community members.' },
+  ],
+  'ecosystem-visibility': [
+    { title: 'Homepage Banner Placement', desc: 'Your organization featured on the Amianan Ventures homepage.' },
+    { title: 'Article Banner Placement', desc: 'Your brand placed inside relevant articles read across the ecosystem.' },
+    { title: 'Featured Article', desc: 'A professionally written feature published on Amianan Ventures.' },
+    { title: 'Directory Spotlight', desc: 'A standout profile in the Northern Luzon ecosystem directory.' },
+    { title: 'Social Media Feature', desc: 'Your organization shared across Amianan Ventures\' channels.' },
+    { title: 'Digital Partner Certificate', desc: 'Official recognition as an Amianan Ventures ecosystem partner.' },
   ],
 }
