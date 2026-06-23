@@ -97,7 +97,11 @@ export function ResourceHub({ resources, articles }: { resources: FounderResourc
           sizes="100vw"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-white via-white/85 lg:via-white/60 to-white/10" />
+        <div
+          className="absolute inset-0 hidden lg:block"
+          style={{ background: 'linear-gradient(to right, white 0%, white 32%, rgba(255,255,255,0.7) 42%, rgba(255,255,255,0) 56%)' }}
+        />
+        <div className="absolute inset-0 bg-white/80 lg:hidden" />
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
           <div className="max-w-xl">
