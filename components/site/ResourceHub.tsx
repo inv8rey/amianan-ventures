@@ -88,73 +88,70 @@ export function ResourceHub({ resources, articles }: { resources: FounderResourc
   return (
     <div className="bg-white">
       {/* Hero */}
-      <div className="border-b border-zinc-200 bg-gradient-to-br from-emerald-50 via-white to-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-            <div>
-              <span className="inline-flex items-center gap-1.5 bg-[#00a855]/10 text-[#00a855] text-[11px] font-bold uppercase tracking-wide px-3 py-1.5 rounded-full mb-5">
-                <LayoutGrid className="h-3.5 w-3.5" /> Resource Hub
-              </span>
-              <h1 className="text-4xl sm:text-5xl font-black leading-tight mb-4 text-zinc-900">
-                Founder Resource<br />
-                <span className="text-[#00a855] inline-flex items-center gap-2">Hub <Sparkles className="h-7 w-7 sm:h-8 sm:w-8" /></span>
-              </h1>
-              <p className="text-zinc-500 text-base leading-relaxed mb-5 max-w-lg">
-                Practical templates and tools used by founders, innovators, and entrepreneurs across Northern Luzon.
-              </p>
-              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-7">
-                {HERO_CHECKS.map((c) => (
-                  <span key={c} className="inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-700">
-                    <CheckCircle2 className="h-4 w-4 text-[#00a855]" /> {c}
-                  </span>
-                ))}
-              </div>
-              <div className="flex flex-wrap gap-3 mb-7">
-                <a
-                  href="#resources"
-                  className="inline-flex items-center gap-2 bg-[#00a855] text-white px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-[#009449] transition-colors"
-                >
-                  <FileText className="h-4 w-4" /> Browse Resources
-                </a>
-                <a
-                  href="#subscribe"
-                  className="inline-flex items-center gap-2 border-2 border-zinc-900 text-zinc-900 px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-zinc-50 transition-colors"
-                >
-                  <Mail className="h-4 w-4" /> Subscribe for Updates
-                </a>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex -space-x-2.5">
-                  {['#00a855', '#0ea5e9', '#f59e0b', '#a855f7'].map((c, i) => (
-                    <div
-                      key={c}
-                      className="w-9 h-9 rounded-full border-2 border-white"
-                      style={{ backgroundColor: c, zIndex: 4 - i }}
-                    />
-                  ))}
-                  <div className="w-9 h-9 rounded-full border-2 border-white bg-[#00a855]/10 text-[#00a855] text-[10px] font-black flex items-center justify-center">
-                    +500
-                  </div>
-                </div>
-                <p className="text-sm text-zinc-500">
-                  Join 500+ founders and innovators<br className="hidden sm:block" /> growing in Northern Luzon.
-                </p>
-              </div>
-            </div>
+      <div className="relative overflow-hidden border-b border-zinc-200">
+        <Image
+          src="/resources-hero.png"
+          alt=""
+          fill
+          className="object-cover"
+          sizes="100vw"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-white via-white/85 lg:via-white/60 to-white/10" />
 
-            <div className="relative aspect-[16/9] rounded-2xl overflow-hidden hidden lg:block">
-              <Image
-                src="/resources-hero.png"
-                alt="Founder Resource Hub"
-                fill
-                className="object-contain"
-                sizes="(max-width: 1024px) 0px, 50vw"
-                priority
-              />
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
+          <div className="max-w-xl">
+            <span className="inline-flex items-center gap-1.5 bg-[#00a855]/10 text-[#00a855] text-[11px] font-bold uppercase tracking-wide px-3 py-1.5 rounded-full mb-5">
+              <LayoutGrid className="h-3.5 w-3.5" /> Resource Hub
+            </span>
+            <h1 className="text-4xl sm:text-5xl font-black leading-tight mb-4 text-zinc-900">
+              Founder Resource<br />
+              <span className="text-[#00a855] inline-flex items-center gap-2">Hub <Sparkles className="h-7 w-7 sm:h-8 sm:w-8" /></span>
+            </h1>
+            <p className="text-zinc-500 text-base leading-relaxed mb-5 max-w-lg">
+              Practical templates and tools used by founders, innovators, and entrepreneurs across Northern Luzon.
+            </p>
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-7">
+              {HERO_CHECKS.map((c) => (
+                <span key={c} className="inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-700">
+                  <CheckCircle2 className="h-4 w-4 text-[#00a855]" /> {c}
+                </span>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-3 mb-7">
+              <a
+                href="#resources"
+                className="inline-flex items-center gap-2 bg-[#00a855] text-white px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-[#009449] transition-colors"
+              >
+                <FileText className="h-4 w-4" /> Browse Resources
+              </a>
+              <a
+                href="#subscribe"
+                className="inline-flex items-center gap-2 border-2 border-zinc-900 text-zinc-900 px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-zinc-50 transition-colors bg-white/70"
+              >
+                <Mail className="h-4 w-4" /> Subscribe for Updates
+              </a>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex -space-x-2.5">
+                {['#00a855', '#0ea5e9', '#f59e0b', '#a855f7'].map((c, i) => (
+                  <div
+                    key={c}
+                    className="w-9 h-9 rounded-full border-2 border-white"
+                    style={{ backgroundColor: c, zIndex: 4 - i }}
+                  />
+                ))}
+                <div className="w-9 h-9 rounded-full border-2 border-white bg-[#00a855]/10 text-[#00a855] text-[10px] font-black flex items-center justify-center">
+                  +500
+                </div>
+              </div>
+              <p className="text-sm text-zinc-500">
+                Join 500+ founders and innovators<br className="hidden sm:block" /> growing in Northern Luzon.
+              </p>
             </div>
           </div>
 
-          <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 border-t border-zinc-200 pt-8">
+          <div className="relative mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 border-t border-zinc-200/70 bg-white/85 backdrop-blur-sm rounded-xl px-4 pt-8 pb-4 -mx-4">
             {HERO_FEATURES.map((f) => (
               <div key={f.title} className="flex items-start gap-3">
                 <div className="w-9 h-9 rounded-lg bg-[#00a855]/10 flex items-center justify-center shrink-0">
