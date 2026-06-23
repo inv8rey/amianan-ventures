@@ -1,6 +1,11 @@
+'use client'
+
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { ExternalLink } from 'lucide-react'
 import type { FeaturedListing } from '@/types'
+
+const ROTATE_MS = 5000
 
 interface FeaturedListingsProps {
   listings: FeaturedListing[]
@@ -102,6 +107,16 @@ function PromoBanner() {
 }
 
 export function FeaturedListings({ listings }: FeaturedListingsProps) {
+  const [index, setIndex] = useState(0)
+
+  useEffect(() => {
+    if (listings.length <= 1) return
+    const id = setInterval(() => {
+      setIndex((i) => (i + 1) % listings.length)
+    }, ROTATE_MS)
+    return () => clearInterval(id)
+  }, [listings.length])
+
   if (listings.length === 0) {
     return (
       <section className="py-6 border-t border-zinc-100">
@@ -110,20 +125,33 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
     )
   }
 
+  const listing = listings[index % listings.length]
+
   return (
     <section className="py-6 border-t border-zinc-100">
-      <div className="flex items-center gap-2 mb-4">
-        <span className="w-1 h-4 bg-[#00cc6a] rounded-full shrink-0" />
-        <span className="text-xs font-black uppercase tracking-widest text-zinc-800">Featured Partners</span>
-      </div>
-      <div className={`grid gap-4 ${listings.length === 1 ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2'}`}>
-        {listings.map((listing) =>
-          listing.image_url ? (
-            <PhotoCard key={listing.id} listing={listing} />
-          ) : (
-            <PlaceholderCard key={listing.id} listing={listing} />
-          )
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <span className="w-1 h-4 bg-[#00cc6a] rounded-full shrink-0" />
+          <span className="text-xs font-black uppercase tracking-widest text-zinc-800">Featured Partners</span>
+        </div>
+        {listings.length > 1 && (
+          <div className="flex items-center gap-1.5">
+            {listings.map((l, i) => (
+              <button
+                key={l.id}
+                type="button"
+                onClick={() => setIndex(i)}
+                aria-label={`Show featured partner ${i + 1}`}
+                className={`h-1.5 rounded-full transition-all ${
+                  i === index ? 'w-6 bg-[#00cc6a]' : 'w-1.5 bg-zinc-200 hover:bg-zinc-300'
+                }`}
+              />
+            ))}
+          </div>
         )}
+      </div>
+      <div key={listing.id} className="animate-in fade-in duration-500">
+        {listing.image_url ? <PhotoCard listing={listing} /> : <PlaceholderCard listing={listing} />}
       </div>
     </section>
   )
