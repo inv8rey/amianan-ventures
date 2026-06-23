@@ -136,23 +136,6 @@ export function ResourceHub({ resources, articles }: { resources: FounderResourc
                 <Mail className="h-4 w-4" /> Subscribe for Updates
               </a>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="flex -space-x-2.5">
-                {['#00a855', '#0ea5e9', '#f59e0b', '#a855f7'].map((c, i) => (
-                  <div
-                    key={c}
-                    className="w-9 h-9 rounded-full border-2 border-white"
-                    style={{ backgroundColor: c, zIndex: 4 - i }}
-                  />
-                ))}
-                <div className="w-9 h-9 rounded-full border-2 border-white bg-[#00a855]/10 text-[#00a855] text-[10px] font-black flex items-center justify-center">
-                  +500
-                </div>
-              </div>
-              <p className="text-sm text-zinc-500">
-                Join 500+ founders and innovators<br className="hidden sm:block" /> growing in Northern Luzon.
-              </p>
-            </div>
           </div>
 
           <div className="relative mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 border-t border-zinc-200/70 bg-white/85 backdrop-blur-sm rounded-xl px-4 pt-8 pb-4 -mx-4">
