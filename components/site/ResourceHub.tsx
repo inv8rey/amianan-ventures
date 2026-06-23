@@ -54,10 +54,6 @@ export function ResourceHub({ resources, articles }: { resources: FounderResourc
     return Array.from(map.entries())
   }, [published])
 
-  const totalDownloads = useMemo(
-    () => resources.reduce((sum, r) => sum + r.download_count, 0),
-    [resources]
-  )
 
   async function startDownload(resource: FounderResource) {
     if (savedEmail) {
@@ -271,15 +267,6 @@ export function ResourceHub({ resources, articles }: { resources: FounderResourc
               <p className="text-xs text-zinc-500 leading-relaxed">
                 We create practical, easy-to-use resources to help founders turn ideas into impact — built for Northern Luzon, kept simple, and updated regularly.
               </p>
-            </div>
-
-            <div className="rounded-xl border border-zinc-200 p-5">
-              <div className="flex items-center gap-2 mb-2">
-                <BarChart3 className="h-4 w-4 text-[#00a855]" />
-                <h3 className="text-sm font-bold text-zinc-900">Resource Usage</h3>
-              </div>
-              <p className="text-3xl font-black text-zinc-900">{totalDownloads}</p>
-              <p className="text-xs text-zinc-400 mt-1">Downloads by founders and innovators in Northern Luzon.</p>
             </div>
 
             <div className="rounded-xl border border-zinc-200 p-5">
