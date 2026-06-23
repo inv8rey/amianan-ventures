@@ -151,7 +151,7 @@ export function ResourceHub({ resources, articles }: { resources: FounderResourc
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-10">
           {/* Main column */}
           <div id="resources" className="space-y-12">
             {/* Featured Resources */}
