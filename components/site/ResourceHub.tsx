@@ -2,9 +2,10 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   Download, Mail, FileText, Lock, Loader2, X, CheckCircle2,
-  Sparkles, BarChart3, ClipboardList, ArrowRight,
+  Sparkles, BarChart3, ClipboardList, ArrowRight, LayoutGrid, Wrench, ShieldCheck,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
@@ -21,6 +22,15 @@ const COMING_SOON_TEASERS = [
 ]
 
 const STORAGE_KEY = 'av_resource_email'
+
+const HERO_CHECKS = ['Free to access', 'Founder-focused', 'Always up to date']
+
+const HERO_FEATURES = [
+  { icon: FileText, title: 'Essential Templates', desc: 'Ready-to-use frameworks to plan and grow your startup.' },
+  { icon: Wrench, title: 'Practical Guides', desc: 'Step-by-step guides to help you take action with clarity.' },
+  { icon: BarChart3, title: 'Founder Tools', desc: 'Useful tools to simplify your startup journey.' },
+  { icon: ShieldCheck, title: 'Curated for You', desc: 'High-quality resources you can trust and rely on.' },
+]
 
 export function ResourceHub({ resources, articles }: { resources: FounderResource[]; articles: Article[] }) {
   const [savedEmail, setSavedEmail] = useState<string | null>(
@@ -80,27 +90,82 @@ export function ResourceHub({ resources, articles }: { resources: FounderResourc
       {/* Hero */}
       <div className="border-b border-zinc-200 bg-gradient-to-br from-emerald-50 via-white to-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
-          <div className="max-w-2xl">
-            <h1 className="text-4xl sm:text-5xl font-black leading-tight mb-4 text-zinc-900">
-              Founder Resource Hub
-            </h1>
-            <p className="text-zinc-500 text-base leading-relaxed mb-7 max-w-lg">
-              Practical templates and tools used by founders, innovators, and entrepreneurs across Northern Luzon.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <a
-                href="#resources"
-                className="inline-flex items-center gap-2 bg-[#00cc6a] text-black px-5 py-2.5 rounded font-bold text-sm hover:bg-[#00b85e] transition-colors uppercase tracking-wide"
-              >
-                Browse Resources <ArrowRight className="h-4 w-4" />
-              </a>
-              <a
-                href="#subscribe"
-                className="inline-flex items-center gap-2 border-2 border-zinc-900 text-zinc-900 px-5 py-2.5 rounded font-bold text-sm hover:bg-zinc-50 transition-colors uppercase tracking-wide"
-              >
-                <Mail className="h-4 w-4" /> Subscribe for Updates
-              </a>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <div>
+              <span className="inline-flex items-center gap-1.5 bg-[#00a855]/10 text-[#00a855] text-[11px] font-bold uppercase tracking-wide px-3 py-1.5 rounded-full mb-5">
+                <LayoutGrid className="h-3.5 w-3.5" /> Resource Hub
+              </span>
+              <h1 className="text-4xl sm:text-5xl font-black leading-tight mb-4 text-zinc-900">
+                Founder Resource<br />
+                <span className="text-[#00a855] inline-flex items-center gap-2">Hub <Sparkles className="h-7 w-7 sm:h-8 sm:w-8" /></span>
+              </h1>
+              <p className="text-zinc-500 text-base leading-relaxed mb-5 max-w-lg">
+                Practical templates and tools used by founders, innovators, and entrepreneurs across Northern Luzon.
+              </p>
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-7">
+                {HERO_CHECKS.map((c) => (
+                  <span key={c} className="inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-700">
+                    <CheckCircle2 className="h-4 w-4 text-[#00a855]" /> {c}
+                  </span>
+                ))}
+              </div>
+              <div className="flex flex-wrap gap-3 mb-7">
+                <a
+                  href="#resources"
+                  className="inline-flex items-center gap-2 bg-[#00a855] text-white px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-[#009449] transition-colors"
+                >
+                  <FileText className="h-4 w-4" /> Browse Resources
+                </a>
+                <a
+                  href="#subscribe"
+                  className="inline-flex items-center gap-2 border-2 border-zinc-900 text-zinc-900 px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-zinc-50 transition-colors"
+                >
+                  <Mail className="h-4 w-4" /> Subscribe for Updates
+                </a>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex -space-x-2.5">
+                  {['#00a855', '#0ea5e9', '#f59e0b', '#a855f7'].map((c, i) => (
+                    <div
+                      key={c}
+                      className="w-9 h-9 rounded-full border-2 border-white"
+                      style={{ backgroundColor: c, zIndex: 4 - i }}
+                    />
+                  ))}
+                  <div className="w-9 h-9 rounded-full border-2 border-white bg-[#00a855]/10 text-[#00a855] text-[10px] font-black flex items-center justify-center">
+                    +500
+                  </div>
+                </div>
+                <p className="text-sm text-zinc-500">
+                  Join 500+ founders and innovators<br className="hidden sm:block" /> growing in Northern Luzon.
+                </p>
+              </div>
             </div>
+
+            <div className="relative aspect-[16/9] rounded-2xl overflow-hidden hidden lg:block">
+              <Image
+                src="/resources-hero.png"
+                alt="Founder Resource Hub"
+                fill
+                className="object-contain"
+                sizes="(max-width: 1024px) 0px, 50vw"
+                priority
+              />
+            </div>
+          </div>
+
+          <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 border-t border-zinc-200 pt-8">
+            {HERO_FEATURES.map((f) => (
+              <div key={f.title} className="flex items-start gap-3">
+                <div className="w-9 h-9 rounded-lg bg-[#00a855]/10 flex items-center justify-center shrink-0">
+                  <f.icon className="h-4 w-4 text-[#00a855]" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-zinc-900">{f.title}</p>
+                  <p className="text-xs text-zinc-500 leading-snug mt-0.5">{f.desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
