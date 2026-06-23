@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { ExternalLink } from 'lucide-react'
+import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react'
 import type { FeaturedListing } from '@/types'
 
 const ROTATE_MS = 5000
@@ -109,13 +109,15 @@ function PromoBanner() {
 export function FeaturedListings({ listings }: FeaturedListingsProps) {
   const [index, setIndex] = useState(0)
 
+  // Re-armed every time `index` changes — including manual nav clicks —
+  // so a manual click resets the 5s countdown instead of fighting it.
   useEffect(() => {
     if (listings.length <= 1) return
-    const id = setInterval(() => {
+    const id = setTimeout(() => {
       setIndex((i) => (i + 1) % listings.length)
     }, ROTATE_MS)
-    return () => clearInterval(id)
-  }, [listings.length])
+    return () => clearTimeout(id)
+  }, [index, listings.length])
 
   if (listings.length === 0) {
     return (
@@ -126,6 +128,11 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
   }
 
   const listing = listings[index % listings.length]
+  const hasMultiple = listings.length > 1
+
+  function goTo(i: number) {
+    setIndex(((i % listings.length) + listings.length) % listings.length)
+  }
 
   return (
     <section className="py-6 border-t border-zinc-100">
@@ -134,15 +141,15 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
           <span className="w-1 h-4 bg-[#00cc6a] rounded-full shrink-0" />
           <span className="text-xs font-black uppercase tracking-widest text-zinc-800">Featured Partners</span>
         </div>
-        {listings.length > 1 && (
+        {hasMultiple && (
           <div className="flex items-center gap-1.5">
             {listings.map((l, i) => (
               <button
                 key={l.id}
                 type="button"
-                onClick={() => setIndex(i)}
+                onClick={() => goTo(i)}
                 aria-label={`Show featured partner ${i + 1}`}
-                className={`h-1.5 rounded-full transition-all ${
+                className={`h-1.5 rounded-full transition-all duration-300 ${
                   i === index ? 'w-6 bg-[#00cc6a]' : 'w-1.5 bg-zinc-200 hover:bg-zinc-300'
                 }`}
               />
@@ -150,8 +157,31 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
           </div>
         )}
       </div>
-      <div key={listing.id} className="animate-in fade-in duration-500">
-        {listing.image_url ? <PhotoCard listing={listing} /> : <PlaceholderCard listing={listing} />}
+      <div className="group relative">
+        <div key={listing.id} className="animate-in fade-in duration-700 ease-out">
+          {listing.image_url ? <PhotoCard listing={listing} /> : <PlaceholderCard listing={listing} />}
+        </div>
+
+        {hasMultiple && (
+          <>
+            <button
+              type="button"
+              onClick={() => goTo(index - 1)}
+              aria-label="Previous featured partner"
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/20 text-white opacity-0 backdrop-blur-sm transition-all duration-200 hover:bg-black/40 group-hover:opacity-100"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => goTo(index + 1)}
+              aria-label="Next featured partner"
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/20 text-white opacity-0 backdrop-blur-sm transition-all duration-200 hover:bg-black/40 group-hover:opacity-100"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </>
+        )}
       </div>
     </section>
   )
