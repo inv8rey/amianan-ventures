@@ -33,7 +33,7 @@ const navLinks = [
   { href: '/news', label: 'News' },
   { href: '/founder-stories', label: 'Founder Stories' },
   { href: '/ecosystem', label: 'Ecosystem' },
-  { href: '/events', label: 'Events' },
+  { href: '/resources', label: 'Resources' },
   { href: '/about', label: 'About' },
 ]
 
