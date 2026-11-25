@@ -403,7 +403,7 @@ export function SubmissionForm({ contributorId, editSubmission }: SubmissionForm
                 type="button"
                 onClick={handleSubmit}
                 disabled={submitting || draftSaving || !canSubmit}
-                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#00cc6a] text-black text-xs font-bold hover:bg-[#00b85e] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#befc65] text-black text-xs font-bold hover:bg-[#d0ff8a] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 {submitting
                   ? <Loader2 className="h-3.5 w-3.5 animate-spin" />

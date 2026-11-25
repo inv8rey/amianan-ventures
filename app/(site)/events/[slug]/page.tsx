@@ -118,14 +118,14 @@ export default async function EventPage({
         {/* Event details card */}
         <div className="rounded-lg border border-border/40 bg-card p-5 mb-8 space-y-3">
           <div className="flex items-start gap-3 text-sm">
-            <Calendar className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+            <Calendar className="h-4 w-4 text-[#131314] mt-0.5 shrink-0" />
             <div>
               <p className="font-medium text-foreground">{dateStr}</p>
               <p className="text-muted-foreground">{timeStr}{endDateStr ? ` → ${endDateStr}` : ''}</p>
             </div>
           </div>
           <div className="flex items-start gap-3 text-sm">
-            <MapPin className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+            <MapPin className="h-4 w-4 text-[#131314] mt-0.5 shrink-0" />
             <div>
               <p className="font-medium text-foreground">{event.location}</p>
               {event.event_url && (
@@ -133,7 +133,7 @@ export default async function EventPage({
                   href={event.event_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary hover:underline text-xs flex items-center gap-1 mt-0.5"
+                  className="text-[#131314] hover:underline text-xs flex items-center gap-1 mt-0.5"
                 >
                   Event page <ExternalLink className="h-3 w-3" />
                 </a>

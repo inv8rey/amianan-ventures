@@ -266,7 +266,7 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
         {view === 'edit' && (
           <>
             <div className="flex items-center justify-between gap-3 mb-2 flex-wrap">
-              <h1 className="text-2xl font-black text-zinc-900 flex items-center gap-2">
+              <h1 className="text-2xl font-semibold text-zinc-900 flex items-center gap-2">
                 {isOrgPackage ? "Let's Build Your Partnership" : "Let's Tell Your Story"}
                 <Sparkles className="h-5 w-5 text-amber-400 fill-amber-400" />
               </h1>
@@ -294,18 +294,18 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
             <p className="text-sm font-bold text-zinc-700 mb-1">Application cancelled</p>
             <p className="text-sm text-zinc-500">
               You cancelled this application. Changed your mind?{' '}
-              <Link href="/feature-packages" className="font-bold text-[#00a855] hover:underline">Start a new one</Link>.
+              <Link href="/feature-packages" className="font-bold text-[#131314] hover:underline">Start a new one</Link>.
             </p>
           </div>
         )}
 
         {app.status === 'published' && app.published_url && (
-          <div className="rounded-xl border border-[#00a855]/20 bg-[#00a855]/5 p-4 mb-6 flex items-center justify-between gap-3 flex-wrap">
+          <div className="rounded-xl border border-[#131314]/20 bg-[#131314]/5 p-4 mb-6 flex items-center justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-[#00a855]" />
+              <CheckCircle2 className="h-4 w-4 text-[#131314]" />
               <p className="text-sm font-bold text-zinc-900">Your story is live!</p>
             </div>
-            <a href={app.published_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-bold text-[#00a855] hover:underline">
+            <a href={app.published_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm font-bold text-[#131314] hover:underline">
               View Story <ExternalLink className="h-3.5 w-3.5" />
             </a>
           </div>
@@ -325,13 +325,13 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
                   </div>
                   <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                     <div className="relative shrink-0">
-                      <div className="w-20 h-20 rounded-full bg-[#00a855]/10 flex items-center justify-center">
-                        <CheckCircle2 className="h-10 w-10 text-[#00a855]" />
+                      <div className="w-20 h-20 rounded-full bg-[#131314]/10 flex items-center justify-center">
+                        <CheckCircle2 className="h-10 w-10 text-[#131314]" />
                       </div>
                       <Sparkles className="absolute -top-1 -right-1 h-5 w-5 text-amber-400 fill-amber-400" />
                     </div>
                     <div className="flex-1 text-center sm:text-left">
-                      <h2 className="text-xl font-black text-zinc-900 mb-1.5">
+                      <h2 className="text-xl font-semibold text-zinc-900 mb-1.5">
                         {SUMMARY_COPY[summaryReason].heading} 🎉
                       </h2>
                       <p className="text-sm text-zinc-500 leading-relaxed mb-4">
@@ -358,8 +358,8 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
                 {/* Application summary */}
                 <div className="rounded-2xl border border-zinc-200 bg-white p-6">
                   <div className="flex items-center justify-between mb-5">
-                    <p className="text-sm font-black text-zinc-900">Your Application Summary</p>
-                    <button type="button" onClick={() => setView('edit')} className="inline-flex items-center gap-1 text-xs font-bold text-[#00a855] hover:underline">
+                    <p className="text-sm font-semibold text-zinc-900">Your Application Summary</p>
+                    <button type="button" onClick={() => setView('edit')} className="inline-flex items-center gap-1 text-xs font-bold text-[#131314] hover:underline">
                       Edit Application <ArrowUpRight className="h-3 w-3" />
                     </button>
                   </div>
@@ -472,8 +472,8 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
             {PAYMENT_VISIBLE_STATUSES.includes(app.status) && (
               <div className="rounded-2xl border border-zinc-200 bg-white p-6">
                 <div className="flex items-center justify-between mb-1">
-                  <p className="text-sm font-black text-zinc-900">Payment</p>
-                  <p className="text-sm font-black text-zinc-900">₱{(app.amount_php ?? pkg.amount_php).toLocaleString()}</p>
+                  <p className="text-sm font-semibold text-zinc-900">Payment</p>
+                  <p className="text-sm font-semibold text-zinc-900">₱{(app.amount_php ?? pkg.amount_php).toLocaleString()}</p>
                 </div>
                 <p className="text-xs text-zinc-500 mb-5">{pkg.name} · {pkg.badge}</p>
 
@@ -491,7 +491,7 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
                             type="button"
                             onClick={() => setPayment((p) => ({ ...p, payment_method: value }))}
                             className={`px-3 py-2.5 rounded-lg border text-sm font-bold transition-colors ${
-                              payment.payment_method === value ? 'border-[#00cc6a] bg-[#00cc6a]/10 text-zinc-900' : 'border-zinc-300 text-zinc-600 hover:bg-zinc-50'
+                              payment.payment_method === value ? 'border-[#befc65] bg-[#befc65]/10 text-zinc-900' : 'border-zinc-300 text-zinc-600 hover:bg-zinc-50'
                             }`}
                           >
                             {label}
@@ -526,7 +526,7 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
                     <button
                       onClick={handleSubmitPayment}
                       disabled={payingLoading}
-                      className="w-full px-5 py-3 rounded-lg bg-[#00cc6a] text-black text-sm font-bold hover:bg-[#00b85e] disabled:opacity-60 transition-colors"
+                      className="w-full px-5 py-3 rounded-lg bg-[#befc65] text-black text-sm font-bold hover:bg-[#d0ff8a] disabled:opacity-60 transition-colors"
                     >
                       {payingLoading ? <Loader2 className="h-4 w-4 animate-spin mx-auto" /> : 'Submit Payment for Verification'}
                     </button>
@@ -537,7 +537,7 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
                       {app.status === 'payment_submitted' ? (
                         <Loader2 className="h-4 w-4 text-amber-500" />
                       ) : (
-                        <CheckCircle2 className="h-4 w-4 text-[#00a855]" />
+                        <CheckCircle2 className="h-4 w-4 text-[#131314]" />
                       )}
                       <span className="font-semibold text-zinc-700">
                         {app.status === 'payment_submitted' ? 'Awaiting confirmation' : 'Payment confirmed'}
@@ -601,10 +601,10 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
           {/* Sidebar */}
           <div className="space-y-5">
             {view === 'edit' && (
-            <div className="rounded-2xl border border-[#00a855]/20 bg-gradient-to-br from-[#eef8f1] to-white p-5">
-              <p className="text-[10px] font-black uppercase tracking-widest text-[#00a855] mb-2">Package Selected</p>
+            <div className="rounded-2xl border border-[#131314]/20 bg-gradient-to-br from-[#eef8f1] to-white p-5">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-[#131314] mb-2">Package Selected</p>
               <div className="flex items-start justify-between gap-2 mb-2">
-                <h2 className="text-base font-black text-zinc-900 leading-snug">{pkg.name}</h2>
+                <h2 className="text-base font-semibold text-zinc-900 leading-snug">{pkg.name}</h2>
                 <div className="w-9 h-9 rounded-full bg-amber-400/15 flex items-center justify-center shrink-0">
                   <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
                 </div>
@@ -615,11 +615,11 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
                   : "Share your startup story and get featured across the Amianan Ventures platform."}
               </p>
 
-              <p className="text-xs font-black text-zinc-900 mb-2">What&apos;s Included</p>
+              <p className="text-xs font-semibold text-zinc-900 mb-2">What&apos;s Included</p>
               <div className="space-y-1.5 mb-4">
                 {DELIVERABLES[app.package].map((item) => (
                   <div key={item.title} className="flex items-center gap-2">
-                    <Check className="h-3.5 w-3.5 text-[#00a855] shrink-0" />
+                    <Check className="h-3.5 w-3.5 text-[#131314] shrink-0" />
                     <span className="text-xs text-zinc-700">{item.title}</span>
                   </div>
                 ))}
@@ -627,7 +627,7 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
 
               <div className="pt-3 border-t border-zinc-200/70 mb-4">
                 <p className="text-xs font-bold text-zinc-500 mb-0.5">Package Price</p>
-                <p className="text-2xl font-black text-[#00a855]">₱{(app.amount_php ?? pkg.amount_php).toLocaleString()}</p>
+                <p className="text-2xl font-semibold text-[#131314]">₱{(app.amount_php ?? pkg.amount_php).toLocaleString()}</p>
                 <p className="text-xs text-zinc-400">One-time payment</p>
               </div>
 
@@ -648,12 +648,12 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
                       <button onClick={handleSaveDraft} disabled={saving || submitting} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-zinc-300 bg-white text-sm font-bold text-zinc-700 hover:bg-zinc-50 disabled:opacity-60 transition-colors">
                         {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <><FileBadge2 className="h-3.5 w-3.5" /> Save Draft</>}
                       </button>
-                      <button onClick={handleSubmitForReview} disabled={saving || submitting} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#0a3a22] text-white text-sm font-bold hover:bg-[#042212] disabled:opacity-60 transition-colors">
+                      <button onClick={handleSubmitForReview} disabled={saving || submitting} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#232325] text-white text-sm font-bold hover:bg-[#131314] disabled:opacity-60 transition-colors">
                         {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Send className="h-3.5 w-3.5" /> Submit Application</>}
                       </button>
                     </>
                   ) : (
-                    <button onClick={handleSaveChanges} disabled={saving} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#0a3a22] text-white text-sm font-bold hover:bg-[#042212] disabled:opacity-60 transition-colors">
+                    <button onClick={handleSaveChanges} disabled={saving} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#232325] text-white text-sm font-bold hover:bg-[#131314] disabled:opacity-60 transition-colors">
                       {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Save Changes'}
                     </button>
                   )}
@@ -681,7 +681,7 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
             {/* What Happens Next — only once they've engaged beyond the initial draft */}
             {app.status !== 'draft' && (
               <div className="rounded-2xl border border-zinc-200 bg-white p-5">
-                <p className="text-sm font-black text-zinc-900 mb-4">What Happens Next</p>
+                <p className="text-sm font-semibold text-zinc-900 mb-4">What Happens Next</p>
                 <div className="space-y-0">
                   {NEXT_STEPS.map((step, i) => {
                     const current = currentStepIndex(app.status)
@@ -691,7 +691,7 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
                       <div key={step.title} className="flex gap-3">
                         <div className="flex flex-col items-center shrink-0">
                           <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                            isDone ? 'bg-[#0a3a22]' : isActive ? 'bg-[#00cc6a]' : 'bg-zinc-100'
+                            isDone ? 'bg-[#232325]' : isActive ? 'bg-[#befc65]' : 'bg-zinc-100'
                           }`}>
                             {isDone ? (
                               <CheckCircle2 className="h-3 w-3 text-white" />
@@ -703,11 +703,11 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
                         </div>
                         <div className="pb-4">
                           <p className={`text-xs font-bold mb-0.5 ${isActive ? 'text-zinc-900' : isDone ? 'text-zinc-700' : 'text-zinc-400'}`}>
-                            {step.title} {isActive && <span className="text-[9px] font-bold uppercase text-[#00a855] ml-1">You are here</span>}
+                            {step.title} {isActive && <span className="text-[9px] font-bold uppercase text-[#131314] ml-1">You are here</span>}
                           </p>
                           <p className={`text-[11px] leading-relaxed ${isActive ? 'text-zinc-500' : 'text-zinc-400'}`}>{step.desc}</p>
                           {step.title === 'Publication' && app.scheduled_publish_at && app.status !== 'published' && (
-                            <p className="text-[11px] font-bold text-[#00a855] mt-1">
+                            <p className="text-[11px] font-bold text-[#131314] mt-1">
                               Expected: {format(new Date(app.scheduled_publish_at), 'MMM d, yyyy')}
                             </p>
                           )}
@@ -722,14 +722,14 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
             {/* Deliverables progress — read-only, visible once production has started */}
             {(app.status === 'paid' || app.status === 'in_production' || app.status === 'published') && (
               <div className="rounded-2xl border border-zinc-200 bg-white p-5">
-                <p className="text-sm font-black text-zinc-900 mb-1">Deliverables Progress</p>
+                <p className="text-sm font-semibold text-zinc-900 mb-1">Deliverables Progress</p>
                 <p className="text-xs text-zinc-400 mb-4">What our team has completed so far.</p>
                 <div className="space-y-2.5">
                   {DELIVERABLES[app.package].map((item) => {
                     const done = app.deliverables?.[item.title] ?? false
                     return (
                       <div key={item.title} className="flex items-start gap-2.5">
-                        <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${done ? 'bg-[#00a855]' : 'bg-zinc-100'}`}>
+                        <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${done ? 'bg-[#131314]' : 'bg-zinc-100'}`}>
                           {done && <Check className="h-3 w-3 text-white" />}
                         </div>
                         <span className={`text-xs ${done ? 'text-zinc-700 font-semibold' : 'text-zinc-400'}`}>{item.title}</span>
@@ -741,7 +741,7 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
             )}
 
             <div className="rounded-2xl border border-zinc-200 bg-white p-5">
-              <p className="text-sm font-black text-zinc-900 mb-1">Need help?</p>
+              <p className="text-sm font-semibold text-zinc-900 mb-1">Need help?</p>
               <p className="text-xs text-zinc-500 leading-relaxed mb-4">
                 We&apos;re here to help you showcase your story. Contact us and we&apos;ll get back to you.
               </p>
@@ -756,9 +756,9 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
         </div>
 
         {/* Secure & Confidential footer banner */}
-        <div className="mt-6 flex items-center justify-between gap-4 flex-wrap rounded-2xl border border-[#00a855]/20 bg-[#00a855]/5 p-5">
+        <div className="mt-6 flex items-center justify-between gap-4 flex-wrap rounded-2xl border border-[#131314]/20 bg-[#131314]/5 p-5">
           <div className="flex items-center gap-3">
-            <ShieldCheck className="h-5 w-5 text-[#00a855] shrink-0" />
+            <ShieldCheck className="h-5 w-5 text-[#131314] shrink-0" />
             <div>
               <p className="text-sm font-bold text-zinc-900">Secure &amp; Confidential</p>
               <p className="text-xs text-zinc-500 mt-0.5">
@@ -783,8 +783,8 @@ function SummaryField({
 }: { icon: LucideIcon; label: string; value: React.ReactNode }) {
   return (
     <div className="flex items-start gap-2.5">
-      <div className="w-7 h-7 rounded-lg bg-[#00a855]/10 flex items-center justify-center shrink-0 mt-0.5">
-        <Icon className="h-3.5 w-3.5 text-[#00a855]" />
+      <div className="w-7 h-7 rounded-lg bg-[#131314]/10 flex items-center justify-center shrink-0 mt-0.5">
+        <Icon className="h-3.5 w-3.5 text-[#131314]" />
       </div>
       <div>
         <p className="text-xs font-bold text-zinc-900">{label}</p>
@@ -800,12 +800,12 @@ function SectionCard({
   return (
     <div className="rounded-2xl border border-zinc-200 bg-white p-7">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-6 h-6 rounded-full bg-[#0a3a22] text-white flex items-center justify-center text-xs font-black shrink-0">
+        <div className="w-6 h-6 rounded-full bg-[#232325] text-white flex items-center justify-center text-xs font-semibold shrink-0">
           {number}
         </div>
-        <p className="text-sm font-black text-zinc-900 flex-1">{title}</p>
-        <div className="w-8 h-8 rounded-lg bg-[#00a855]/10 flex items-center justify-center shrink-0">
-          <Icon className="h-4 w-4 text-[#00a855]" />
+        <p className="text-sm font-semibold text-zinc-900 flex-1">{title}</p>
+        <div className="w-8 h-8 rounded-lg bg-[#131314]/10 flex items-center justify-center shrink-0">
+          <Icon className="h-4 w-4 text-[#131314]" />
         </div>
       </div>
       {children}
@@ -828,7 +828,7 @@ function Field({
         value={value}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-xl border border-zinc-300 px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#00cc6a]/40 focus:border-[#00cc6a] disabled:bg-zinc-50 disabled:text-zinc-400 transition-colors"
+        className="w-full rounded-xl border border-zinc-300 px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#131314]/40 focus:border-[#befc65] disabled:bg-zinc-50 disabled:text-zinc-400 transition-colors"
       />
     </div>
   )
@@ -880,7 +880,7 @@ function AssetUpload({
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={disabled || field.uploading}
-          className="w-full cursor-pointer rounded-lg border-2 border-dashed border-zinc-300 hover:border-[#00cc6a] transition-colors px-4 py-6 text-center disabled:opacity-60"
+          className="w-full cursor-pointer rounded-lg border-2 border-dashed border-zinc-300 hover:border-[#befc65] transition-colors px-4 py-6 text-center disabled:opacity-60"
         >
           {field.uploading ? (
             <div className="flex items-center justify-center gap-2 text-sm text-zinc-500">
@@ -912,7 +912,7 @@ function SelectField({
         disabled={disabled}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-xl border border-zinc-300 px-4 py-3 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#00cc6a]/40 focus:border-[#00cc6a] disabled:bg-zinc-50 disabled:text-zinc-400 transition-colors bg-white"
+        className="w-full rounded-xl border border-zinc-300 px-4 py-3 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#131314]/40 focus:border-[#befc65] disabled:bg-zinc-50 disabled:text-zinc-400 transition-colors bg-white"
       >
         <option value="">Select…</option>
         {options.map((o) => <option key={o} value={o}>{o}</option>)}
@@ -938,7 +938,7 @@ function TextareaField({
         value={value}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-xl border border-zinc-300 px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#00cc6a]/40 focus:border-[#00cc6a] disabled:bg-zinc-50 disabled:text-zinc-400 transition-colors resize-none"
+        className="w-full rounded-xl border border-zinc-300 px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#131314]/40 focus:border-[#befc65] disabled:bg-zinc-50 disabled:text-zinc-400 transition-colors resize-none"
       />
     </div>
   )

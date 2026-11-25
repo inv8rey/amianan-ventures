@@ -53,9 +53,9 @@ export function EcosystemPulseWidget({ reports }: { reports: Report[] }) {
     <div className="pt-7">
       {/* Section header */}
       <div className="flex items-center gap-2 mb-3 pb-2 border-b-2 border-black">
-        <span className="w-1 h-4 bg-[#00cc6a] rounded-full" />
+        <span className="w-1 h-4 bg-[#befc65] rounded-full" />
         <BarChart2 className="h-3.5 w-3.5 text-zinc-700" />
-        <span className="text-xs font-black uppercase tracking-widest text-black">Ecosystem Pulse</span>
+        <span className="text-xs font-semibold uppercase tracking-widest text-black">Ecosystem Pulse</span>
         <Tooltip />
       </div>
 
@@ -81,13 +81,13 @@ export function EcosystemPulseWidget({ reports }: { reports: Report[] }) {
               </div>
             ) : (
               <div className="shrink-0 w-16 h-11 rounded bg-zinc-900 flex items-center justify-center">
-                <BarChart2 className="h-5 w-5 text-[#00cc6a]" />
+                <BarChart2 className="h-5 w-5 text-[#befc65]" />
               </div>
             )}
 
             {/* Info */}
             <div className="min-w-0 flex-1">
-              <h4 className="text-xs font-semibold text-zinc-800 group-hover:text-[#00a855] transition-colors line-clamp-2 leading-snug">
+              <h4 className="text-xs font-semibold text-zinc-800 group-hover:text-[#131314] transition-colors line-clamp-2 leading-snug">
                 {report.title}
               </h4>
               <p className="text-[10px] text-zinc-400 mt-1 flex items-center gap-1">

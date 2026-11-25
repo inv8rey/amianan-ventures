@@ -49,11 +49,11 @@ export function ArticleCard({ article, variant = 'default' }: ArticleCardProps) 
         <div className="flex flex-col justify-between min-w-0 flex-1">
           <div>
             {article.location && (
-              <span className="text-[10px] font-bold text-[#00a855] uppercase tracking-wider mb-1 block">
+              <span className="text-[10px] font-bold text-[#131314] uppercase tracking-wider mb-1 block">
                 {locationLabel[article.location]}
               </span>
             )}
-            <h3 className="text-xs font-semibold line-clamp-2 text-zinc-800 group-hover:text-[#00a855] transition-colors leading-snug">
+            <h3 className="text-xs font-semibold line-clamp-2 text-zinc-800 group-hover:text-[#131314] transition-colors leading-snug">
               {article.title}
             </h3>
           </div>
@@ -67,7 +67,7 @@ export function ArticleCard({ article, variant = 'default' }: ArticleCardProps) 
     return (
       <Link href={href} className="group block">
         <p className="text-[10px] text-zinc-400 mb-1">{date}</p>
-        <h3 className="text-sm font-semibold text-zinc-800 group-hover:text-[#00a855] transition-colors line-clamp-2 leading-snug">
+        <h3 className="text-sm font-semibold text-zinc-800 group-hover:text-[#131314] transition-colors line-clamp-2 leading-snug">
           {article.title}
         </h3>
       </Link>
@@ -99,7 +99,7 @@ export function ArticleCard({ article, variant = 'default' }: ArticleCardProps) 
       <div className="p-4 flex flex-col flex-1">
         <div className="flex items-center gap-2 mb-2">
           <span className={`text-[10px] font-bold uppercase tracking-wider ${
-            article.category === 'founder-stories' ? 'text-[#d97706]' : 'text-[#00a855]'
+            article.category === 'founder-stories' ? 'text-[#d97706]' : 'text-[#131314]'
           }`}>
             {categoryLabel[article.category]}
           </span>
@@ -113,7 +113,7 @@ export function ArticleCard({ article, variant = 'default' }: ArticleCardProps) 
           )}
           <span className="ml-auto text-[10px] text-zinc-400">{date}</span>
         </div>
-        <h3 className="text-sm font-bold line-clamp-2 text-zinc-900 group-hover:text-[#00a855] transition-colors leading-snug mb-2">
+        <h3 className="text-sm font-bold line-clamp-2 text-zinc-900 group-hover:text-[#131314] transition-colors leading-snug mb-2">
           {article.title}
         </h3>
         <p className="text-xs text-zinc-500 line-clamp-2 leading-relaxed flex-1">

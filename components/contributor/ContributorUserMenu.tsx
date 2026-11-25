@@ -48,7 +48,7 @@ export function ContributorUserMenu({
           </div>
         ) : (
           <div className="w-8 h-8 rounded-full bg-zinc-900 flex items-center justify-center shrink-0">
-            <span className="text-xs font-black text-white">{firstName.charAt(0).toUpperCase()}</span>
+            <span className="text-xs font-semibold text-white">{firstName.charAt(0).toUpperCase()}</span>
           </div>
         )}
         <span className="text-sm font-bold text-zinc-900 hidden sm:block">{firstName}</span>

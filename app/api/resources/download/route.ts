@@ -3,11 +3,33 @@ import { createServiceClient } from '@/lib/supabase/service'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
+// The Resources page lives on the main studio site and downloads through here.
+const ALLOWED_ORIGINS = new Set([
+  'https://amiananventures.org',
+  'https://www.amiananventures.org',
+  'http://localhost:4173',
+])
+
+function cors(req: Request): Record<string, string> {
+  const origin = req.headers.get('origin') ?? ''
+  if (!ALLOWED_ORIGINS.has(origin)) return {}
+  return {
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    Vary: 'Origin',
+  }
+}
+
+export function OPTIONS(req: Request) {
+  return new NextResponse(null, { status: 204, headers: cors(req) })
+}
+
 export async function POST(req: Request) {
   const { resourceId, email } = await req.json()
 
   if (!resourceId || typeof email !== 'string' || !EMAIL_RE.test(email.trim())) {
-    return NextResponse.json({ error: 'A valid email is required' }, { status: 400 })
+    return NextResponse.json({ error: 'A valid email is required' }, { status: 400, headers: cors(req) })
   }
 
   const cleanEmail = email.trim().toLowerCase()
@@ -20,7 +42,7 @@ export async function POST(req: Request) {
     .single()
 
   if (fetchError || !resource || resource.status !== 'published' || !resource.file_url) {
-    return NextResponse.json({ error: 'Resource not available' }, { status: 404 })
+    return NextResponse.json({ error: 'Resource not available' }, { status: 404, headers: cors(req) })
   }
 
   await supabase.from('resource_downloads').insert({ resource_id: resourceId, email: cleanEmail })
@@ -32,5 +54,5 @@ export async function POST(req: Request) {
     .from('newsletter_subscribers')
     .insert({ email: cleanEmail, source: 'resource_download' })
 
-  return NextResponse.json({ file_url: resource.file_url })
+  return NextResponse.json({ file_url: resource.file_url }, { headers: cors(req) })
 }

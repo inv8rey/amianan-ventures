@@ -115,7 +115,7 @@ export function SubmissionCard({ submission: sub }: SubmissionCardProps) {
           <a
             href={sub.published_url}
             rel="noopener noreferrer"
-            className="text-xs font-bold text-[#00a855] hover:underline shrink-0"
+            className="text-xs font-bold text-[#131314] hover:underline shrink-0"
           >
             Read Live →
           </a>

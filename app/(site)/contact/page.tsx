@@ -68,8 +68,8 @@ export default function ContactPage() {
 
       {/* Header */}
       <div className="mb-10">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-[#00cc6a] mb-2">Contact</p>
-        <h1 className="text-4xl font-black text-zinc-900 mb-3 leading-tight">Get in Touch</h1>
+        <p className="font-mono text-[10px] font-medium uppercase tracking-[0.1em] text-[#66646d] mb-2">Contact</p>
+        <h1 className="text-4xl font-semibold text-zinc-900 mb-3 leading-tight">Get in Touch</h1>
         <p className="text-zinc-500 leading-relaxed max-w-xl">
           Whether you have a story to share, a startup to list, a partnership inquiry, or want to explore how we work with institutions — reach out below.
         </p>
@@ -77,13 +77,13 @@ export default function ContactPage() {
 
       {/* Contact info */}
       <div className="rounded-xl bg-zinc-50 border border-zinc-200 p-6 mb-12">
-        <p className="text-xs font-black uppercase tracking-widest text-zinc-400 mb-4">Direct Contact</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-4">Direct Contact</p>
         <div className="flex flex-col sm:flex-row gap-5">
           <a
             href="mailto:amiananventures@gmail.com"
             className="flex items-center gap-3 text-sm font-semibold text-zinc-700 hover:text-black transition-colors"
           >
-            <Mail className="h-4 w-4 text-[#00cc6a] shrink-0" />
+            <Mail className="h-4 w-4 text-[#befc65] shrink-0" />
             amiananventures@gmail.com
           </a>
           <a
@@ -102,16 +102,16 @@ export default function ContactPage() {
 
       {/* For Institutions */}
       <div className="mb-14">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-[#00cc6a] mb-2">For Institutions</p>
-        <h2 className="text-2xl font-black text-zinc-900 mb-2 leading-tight">What We Offer</h2>
+        <p className="font-mono text-[10px] font-medium uppercase tracking-[0.1em] text-[#66646d] mb-2">For Institutions</p>
+        <h2 className="text-2xl font-semibold text-zinc-900 mb-2 leading-tight">What We Offer</h2>
         <p className="text-zinc-500 text-sm leading-relaxed max-w-xl mb-8">
           We work with universities, government agencies, LGUs, and development organizations to strengthen the innovation ecosystem across Northern Luzon.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {SERVICES.map((s) => (
             <div key={s.title} className="rounded-xl border border-zinc-200 bg-white p-5">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#00cc6a] mb-3" />
-              <p className="font-black text-zinc-900 mb-1.5 text-sm">{s.title}</p>
+              <div className="w-1.5 h-1.5 rounded-full bg-[#befc65] mb-3" />
+              <p className="font-semibold text-zinc-900 mb-1.5 text-sm">{s.title}</p>
               <p className="text-sm text-zinc-500 leading-relaxed">{s.description}</p>
             </div>
           ))}
@@ -120,15 +120,15 @@ export default function ContactPage() {
 
       {/* Ambassador Program */}
       <div className="mb-14">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-[#00cc6a] mb-2">Join the Team</p>
-        <h2 className="text-2xl font-black text-zinc-900 mb-2 leading-tight">Regional Ambassador Program</h2>
+        <p className="font-mono text-[10px] font-medium uppercase tracking-[0.1em] text-[#66646d] mb-2">Join the Team</p>
+        <h2 className="text-2xl font-semibold text-zinc-900 mb-2 leading-tight">Regional Ambassador Program</h2>
         <p className="text-zinc-500 text-sm leading-relaxed max-w-xl mb-8">
           We&apos;re building a network of on-the-ground ambassadors who know their regions, their founders, and their communities. If you&apos;re embedded in the Northern Luzon innovation scene and want to help grow it — we want to hear from you.
         </p>
 
         {/* What ambassadors do */}
         <div className="rounded-xl border border-zinc-200 bg-white p-6 mb-6">
-          <p className="text-xs font-black uppercase tracking-widest text-zinc-400 mb-4">What You&apos;ll Do</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-4">What You&apos;ll Do</p>
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2.5">
             {[
               'Scout and surface local startup stories worth telling',
@@ -139,7 +139,7 @@ export default function ContactPage() {
               'Represent Amianan Ventures at local events and forums',
             ].map((item) => (
               <li key={item} className="flex items-start gap-2.5 text-sm text-zinc-600">
-                <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#00cc6a] shrink-0" />
+                <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#befc65] shrink-0" />
                 {item}
               </li>
             ))}
@@ -147,7 +147,7 @@ export default function ContactPage() {
         </div>
 
         {/* Open regions */}
-        <p className="text-xs font-black uppercase tracking-widest text-zinc-400 mb-4">Open Regions</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-4">Open Regions</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           {[
             {
@@ -175,7 +175,7 @@ export default function ContactPage() {
             <div key={r.region} className={`rounded-xl border p-5 ${r.color}`}>
               <div className="flex items-center gap-2 mb-3">
                 <MapPin className="h-4 w-4 text-zinc-500 shrink-0" />
-                <p className="font-black text-zinc-900 text-sm">{r.region}</p>
+                <p className="font-semibold text-zinc-900 text-sm">{r.region}</p>
                 <span className={`ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide ${r.badge}`}>
                   Open
                 </span>
@@ -188,12 +188,12 @@ export default function ContactPage() {
         {/* CTA */}
         <div className="rounded-xl border border-zinc-900 bg-zinc-900 p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <p className="font-black text-white mb-1">Ready to represent your region?</p>
+            <p className="font-semibold text-white mb-1">Ready to represent your region?</p>
             <p className="text-sm text-zinc-400">Send us a message below — tell us your region, your background, and why you want to be part of this.</p>
           </div>
           <a
             href="#quick-message"
-            className="shrink-0 inline-flex items-center gap-2 bg-[#00cc6a] text-black px-6 py-2.5 rounded font-bold text-sm hover:bg-[#00b85e] transition-colors uppercase tracking-wide whitespace-nowrap"
+            className="shrink-0 inline-flex items-center gap-2 bg-[#befc65] text-black px-6 py-2.5 rounded font-bold text-sm hover:bg-[#d0ff8a] transition-colors uppercase tracking-wide whitespace-nowrap"
           >
             Apply Now <ArrowRight className="h-4 w-4" />
           </a>
@@ -202,8 +202,8 @@ export default function ContactPage() {
 
       {/* Quick Message */}
       <div id="quick-message" className="mb-14">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-[#00cc6a] mb-2">Quick Message</p>
-        <h2 className="text-2xl font-black text-zinc-900 mb-2 leading-tight">Send Us a Message</h2>
+        <p className="font-mono text-[10px] font-medium uppercase tracking-[0.1em] text-[#66646d] mb-2">Quick Message</p>
+        <h2 className="text-2xl font-semibold text-zinc-900 mb-2 leading-tight">Send Us a Message</h2>
         <p className="text-zinc-500 text-sm leading-relaxed max-w-lg mb-8">
           Have a quick question or want to start a conversation? Fill out the form and we&apos;ll get back to you within 2–3 business days.
         </p>
@@ -221,7 +221,7 @@ export default function ContactPage() {
               className="group flex items-center justify-between gap-6 rounded-xl border border-zinc-200 bg-white p-6 hover:border-black hover:shadow-md transition-all"
             >
               <div>
-                <p className="font-black text-zinc-900 mb-1">{item.label}</p>
+                <p className="font-semibold text-zinc-900 mb-1">{item.label}</p>
                 <p className="text-sm text-zinc-500">{item.description}</p>
               </div>
               <span className="shrink-0 inline-flex items-center gap-1.5 text-sm font-bold text-zinc-700 group-hover:text-black transition-colors">

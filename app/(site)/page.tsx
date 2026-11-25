@@ -16,6 +16,7 @@ import { SubmitStoryBanner } from '@/components/site/SubmitStoryBanner'
 import type { CommunityContribution } from '@/components/site/CommunityContributions'
 import type { Article, DirectoryEntry, DirectoryType, Location } from '@/types'
 import { ROLE_LABELS, type ContributorRole, type ContentType } from '@/types/contributor'
+import { SHOW_FEATURED_PARTNERS } from '@/lib/site'
 
 async function getEcosystemContributions(): Promise<CommunityContribution[]> {
   try {
@@ -67,13 +68,13 @@ function formatDate(date: string | null) {
 function ArticleTag({ article }: { article: Article }) {
   if (article.category === 'founder-stories') {
     return (
-      <span className="text-[10px] font-black text-[#d97706] uppercase tracking-wider">
+      <span className="text-[10px] font-semibold text-[#d97706] uppercase tracking-wider">
         Founder Story
       </span>
     )
   }
   return (
-    <span className="text-[10px] font-black text-[#00cc6a] uppercase tracking-wider">
+    <span className="rounded-full bg-[#befc65] px-2 py-0.5 text-[10px] font-semibold text-[#131314] uppercase tracking-wider">
       {article.featured ? 'Featured' : 'News'}
     </span>
   )
@@ -99,7 +100,7 @@ function HeroColumn({ featured, below }: { featured: Article; below: Article[] }
           </div>
         )}
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-[10px] font-black text-[#00cc6a] uppercase tracking-wider">Featured</span>
+          <span className="rounded-full bg-[#befc65] px-2 py-0.5 text-[10px] font-semibold text-[#131314] uppercase tracking-wider">Featured</span>
           {featured.location && (
             <>
               <span className="text-zinc-300">·</span>
@@ -109,7 +110,7 @@ function HeroColumn({ featured, below }: { featured: Article; below: Article[] }
             </>
           )}
         </div>
-        <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-normal text-zinc-900 leading-tight mb-2 group-hover:text-[#00a855] transition-colors">
+        <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-normal text-zinc-900 leading-tight mb-2 group-hover:text-[#131314] transition-colors">
           {featured.title}
         </h1>
         <p className="text-sm text-zinc-500 leading-relaxed line-clamp-2 mb-3">{featured.excerpt}</p>
@@ -146,7 +147,7 @@ function HeroColumn({ featured, below }: { featured: Article; below: Article[] }
                   </>
                 )}
               </div>
-              <h3 className="text-sm font-bold text-zinc-800 group-hover:text-[#00a855] transition-colors leading-snug line-clamp-2">
+              <h3 className="text-sm font-bold text-zinc-800 group-hover:text-[#131314] transition-colors leading-snug line-clamp-2">
                 {article.title}
               </h3>
               <p className="text-[11px] text-zinc-400 mt-1">{formatDate(article.published_at)}</p>
@@ -165,8 +166,8 @@ function RightColumn({ latest, featuredStartups, topContributors, ecosystemRepor
       {/* Latest */}
       <div>
         <div className="flex items-center gap-2 mb-3 pb-2 border-b-2 border-black">
-          <span className="w-1 h-4 bg-[#00cc6a] rounded-full" />
-          <span className="text-xs font-black uppercase tracking-widest text-black">Latest</span>
+          <span className="w-1 h-4 bg-[#befc65] rounded-full" />
+          <span className="text-xs font-semibold uppercase tracking-widest text-black">Latest</span>
         </div>
         <div className="divide-y divide-zinc-100">
           {latest.slice(0, 7).map((article) => (
@@ -186,7 +187,7 @@ function RightColumn({ latest, featuredStartups, topContributors, ecosystemRepor
                   {formatDate(article.published_at)}
                 </span>
               </div>
-              <span className="text-xs font-semibold text-zinc-800 group-hover:text-[#00a855] transition-colors leading-snug line-clamp-2">
+              <span className="text-xs font-semibold text-zinc-800 group-hover:text-[#131314] transition-colors leading-snug line-clamp-2">
                 {article.title}
               </span>
             </Link>
@@ -204,8 +205,8 @@ function RightColumn({ latest, featuredStartups, topContributors, ecosystemRepor
       {featuredStartups.length > 0 && (
         <div className="pt-7">
           <div className="flex items-center gap-2 mb-3 pb-2 border-b-2 border-black">
-            <span className="w-1 h-4 bg-[#00cc6a] rounded-full" />
-            <span className="text-xs font-black uppercase tracking-widest text-black">Featured Startups</span>
+            <span className="w-1 h-4 bg-[#befc65] rounded-full" />
+            <span className="text-xs font-semibold uppercase tracking-widest text-black">Featured Startups</span>
           </div>
           <div className="space-y-3">
             {featuredStartups.map((startup) => (
@@ -232,7 +233,7 @@ function RightColumn({ latest, featuredStartups, topContributors, ecosystemRepor
                       href={startup.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs font-bold text-zinc-800 hover:text-[#00a855] transition-colors truncate block leading-snug"
+                      className="text-xs font-bold text-zinc-800 hover:text-[#131314] transition-colors truncate block leading-snug"
                     >
                       {startup.name}
                     </a>
@@ -269,8 +270,8 @@ function RightColumn({ latest, featuredStartups, topContributors, ecosystemRepor
       {topContributors.length > 0 && (
         <div className="pt-7">
           <div className="flex items-center gap-2 mb-3 pb-2 border-b-2 border-black">
-            <span className="w-1 h-4 bg-[#00cc6a] rounded-full" />
-            <span className="text-xs font-black uppercase tracking-widest text-black">Top Contributors</span>
+            <span className="w-1 h-4 bg-[#befc65] rounded-full" />
+            <span className="text-xs font-semibold uppercase tracking-widest text-black">Top Contributors</span>
           </div>
           <div className="space-y-3">
             {topContributors.slice(0, 5).map((c, i) => (
@@ -280,7 +281,7 @@ function RightColumn({ latest, featuredStartups, topContributors, ecosystemRepor
                 className="group flex items-center gap-2.5 hover:bg-zinc-50 px-1 -mx-1 py-1 rounded transition-colors"
               >
                 {/* Rank */}
-                <span className="text-[10px] font-black text-zinc-300 w-4 shrink-0 text-center">{i + 1}</span>
+                <span className="text-[10px] font-semibold text-zinc-300 w-4 shrink-0 text-center">{i + 1}</span>
                 {/* Avatar */}
                 {c.photo_url ? (
                   <div className="relative w-7 h-7 rounded-full overflow-hidden shrink-0 border border-zinc-200">
@@ -288,12 +289,12 @@ function RightColumn({ latest, featuredStartups, topContributors, ecosystemRepor
                   </div>
                 ) : (
                   <div className="w-7 h-7 rounded-full bg-zinc-900 flex items-center justify-center shrink-0 border border-zinc-200">
-                    <span className="text-[9px] font-black text-white">{c.display_name.charAt(0).toUpperCase()}</span>
+                    <span className="text-[9px] font-semibold text-white">{c.display_name.charAt(0).toUpperCase()}</span>
                   </div>
                 )}
                 {/* Info */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-bold text-zinc-800 group-hover:text-[#00a855] transition-colors truncate leading-none">
+                  <p className="text-xs font-bold text-zinc-800 group-hover:text-[#131314] transition-colors truncate leading-none">
                     {c.display_name}
                   </p>
                   {c.role && (
@@ -303,7 +304,7 @@ function RightColumn({ latest, featuredStartups, topContributors, ecosystemRepor
                   )}
                 </div>
                 {/* Article count */}
-                <span className="text-[10px] font-bold text-[#00a855] shrink-0">
+                <span className="text-[10px] font-bold text-[#131314] shrink-0">
                   {c.published_count} {c.published_count !== 1 ? 'articles' : 'article'}
                 </span>
               </Link>
@@ -331,7 +332,7 @@ function RecentArticles({ articles }: { articles: Article[] }) {
     <section className="py-8">
       <div className="flex items-center justify-between mb-5">
         <div className="section-label mb-0">Recent News</div>
-        <Link href="/news" className="text-[10px] font-bold text-[#00a855] hover:underline uppercase tracking-wider flex items-center gap-0.5">
+        <Link href="/news" className="text-[10px] font-bold text-[#131314] hover:underline uppercase tracking-wider flex items-center gap-0.5">
           View all <ChevronRight className="h-3 w-3" />
         </Link>
       </div>
@@ -361,7 +362,7 @@ function RecentArticles({ articles }: { articles: Article[] }) {
                 </>
               )}
             </div>
-            <h3 className="text-sm font-bold text-zinc-900 group-hover:text-[#00a855] transition-colors leading-snug line-clamp-2">
+            <h3 className="text-sm font-bold text-zinc-900 group-hover:text-[#131314] transition-colors leading-snug line-clamp-2">
               {article.title}
             </h3>
             <p className="text-xs text-zinc-500 line-clamp-2 leading-relaxed flex-1">{article.excerpt}</p>
@@ -383,7 +384,7 @@ function FounderStoriesStrip({ articles }: { articles: Article[] }) {
     <section className="py-8 border-t border-zinc-200">
       <div className="flex items-center justify-between mb-5">
         <div className="section-label mb-0">Founder Stories</div>
-        <Link href="/founder-stories" className="text-[10px] font-bold text-[#00a855] hover:underline uppercase tracking-wider flex items-center gap-0.5">
+        <Link href="/founder-stories" className="text-[10px] font-bold text-[#131314] hover:underline uppercase tracking-wider flex items-center gap-0.5">
           View all <ChevronRight className="h-3 w-3" />
         </Link>
       </div>
@@ -396,7 +397,7 @@ function FounderStoriesStrip({ articles }: { articles: Article[] }) {
               </div>
             )}
             <ArticleTag article={article} />
-            <h3 className="text-sm font-bold text-zinc-900 group-hover:text-[#00a855] transition-colors leading-snug line-clamp-2">{article.title}</h3>
+            <h3 className="text-sm font-bold text-zinc-900 group-hover:text-[#131314] transition-colors leading-snug line-clamp-2">{article.title}</h3>
             <p className="text-xs text-zinc-500 line-clamp-2 leading-relaxed flex-1">{article.excerpt}</p>
             <p className="text-[10px] text-zinc-400">{formatDate(article.published_at)}</p>
           </Link>
@@ -423,7 +424,7 @@ function ContributorsStrip({ contributors }: { contributors: PublicContributor[]
     <section className="py-8 border-t border-zinc-200">
       <div className="flex items-center justify-between mb-5">
         <div className="section-label mb-0">Community Contributors</div>
-        <Link href="/contribute" className="text-[10px] font-bold text-[#00a855] hover:underline uppercase tracking-wider flex items-center gap-0.5">
+        <Link href="/contribute" className="text-[10px] font-bold text-[#131314] hover:underline uppercase tracking-wider flex items-center gap-0.5">
           Become a contributor <ChevronRight className="h-3 w-3" />
         </Link>
       </div>
@@ -432,27 +433,27 @@ function ContributorsStrip({ contributors }: { contributors: PublicContributor[]
           <Link
             key={c.id}
             href={`/contributors/${c.id}`}
-            className="group flex flex-col items-center text-center gap-2 p-4 rounded-xl border border-zinc-200 bg-white hover:border-[#00a855]/40 hover:shadow-sm transition-all"
+            className="group flex flex-col items-center text-center gap-2 p-4 rounded-xl border border-zinc-200 bg-white hover:border-[#131314]/40 hover:shadow-sm transition-all"
           >
             {c.photo_url ? (
-              <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-zinc-200 group-hover:border-[#00a855]/40 transition-colors">
+              <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-zinc-200 group-hover:border-[#131314]/40 transition-colors">
                 <Image src={c.photo_url} alt={c.display_name} fill className="object-cover" sizes="56px" />
               </div>
             ) : (
-              <div className="w-14 h-14 rounded-full bg-zinc-900 flex items-center justify-center border-2 border-zinc-200 group-hover:border-[#00a855]/40 transition-colors">
-                <span className="text-xl font-black text-white">
+              <div className="w-14 h-14 rounded-full bg-zinc-900 flex items-center justify-center border-2 border-zinc-200 group-hover:border-[#131314]/40 transition-colors">
+                <span className="text-xl font-semibold text-white">
                   {c.display_name.charAt(0).toUpperCase()}
                 </span>
               </div>
             )}
             <div className="min-w-0 w-full">
-              <p className="text-xs font-bold text-zinc-900 group-hover:text-[#00a855] transition-colors truncate">{c.display_name}</p>
+              <p className="text-xs font-bold text-zinc-900 group-hover:text-[#131314] transition-colors truncate">{c.display_name}</p>
               {c.role && (
                 <p className="text-[10px] text-zinc-400 truncate mt-0.5">
                   {ROLE_LABELS[c.role as ContributorRole] ?? c.role}
                 </p>
               )}
-              <p className="text-[10px] font-semibold text-[#00a855] mt-1">
+              <p className="text-[10px] font-semibold text-[#131314] mt-1">
                 {c.published_count} article{c.published_count !== 1 ? 's' : ''}
               </p>
             </div>
@@ -544,7 +545,7 @@ export default async function HomePage() {
     getFeaturedArticles(1),
     getPublishedArticles(18, 'news'),
     getPublishedArticles(4, 'founder-stories'),
-    getFeaturedListings().catch(() => []),
+    SHOW_FEATURED_PARTNERS ? getFeaturedListings().catch(() => []) : Promise.resolve([]),
     getPublishedContributors(),
     getEcosystemContributions(),
     getEcosystemReports(),
@@ -611,7 +612,7 @@ export default async function HomePage() {
                     </div>
                   )}
                   <div>
-                    <h4 className="text-xs font-semibold text-zinc-800 group-hover:text-[#00a855] transition-colors line-clamp-2 leading-snug">{article.title}</h4>
+                    <h4 className="text-xs font-semibold text-zinc-800 group-hover:text-[#131314] transition-colors line-clamp-2 leading-snug">{article.title}</h4>
                     <p className="text-[10px] text-zinc-400 mt-1">{formatDate(article.published_at)}</p>
                   </div>
                 </Link>
@@ -625,7 +626,7 @@ export default async function HomePage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
         {/* Featured Partners — sponsored/partner photo cards */}
-        <FeaturedListings listings={featuredListings} />
+        {SHOW_FEATURED_PARTNERS && <FeaturedListings listings={featuredListings} />}
 
         {/* Ecosystem Directory — shown before news */}
         <EcosystemSection entries={directoryAll} />

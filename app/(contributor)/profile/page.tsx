@@ -21,7 +21,7 @@ export default async function ProfilePage() {
   return (
     <div>
       <div className="mb-7">
-        <h1 className="text-2xl font-black text-zinc-900">Your Profile</h1>
+        <h1 className="text-2xl font-semibold text-zinc-900">Your Profile</h1>
         <p className="text-sm text-zinc-500 mt-1">
           This info will appear on your published articles and contributor page.
         </p>

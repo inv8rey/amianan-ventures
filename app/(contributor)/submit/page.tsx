@@ -48,7 +48,7 @@ export default async function SubmitPage({
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-black text-zinc-900">{title}</h1>
+        <h1 className="text-2xl font-semibold text-zinc-900">{title}</h1>
         <p className="text-sm text-zinc-500 mt-1">{subtitle}</p>
       </div>
       <SubmissionForm contributorId={user.id} editSubmission={editSubmission} />

@@ -37,8 +37,8 @@ export default async function ContributorLayout({ children }: { children: React.
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/amianan.svg" alt="Amianan Ventures" width={32} height={32} className="object-contain" />
             <div className="leading-none">
-              <div className="text-xs font-black tracking-tight text-zinc-900">AMIANAN</div>
-              <div className="text-xs font-black tracking-tight text-zinc-900">VENTURES</div>
+              <div className="text-xs font-semibold tracking-tight text-zinc-900">AMIANAN</div>
+              <div className="text-xs font-semibold tracking-tight text-zinc-900">VENTURES</div>
             </div>
             <div className="hidden sm:block h-7 w-px bg-zinc-200 mx-1" />
             <span className="hidden sm:block text-sm text-zinc-500">Contributor Portal</span>

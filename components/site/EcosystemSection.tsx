@@ -43,7 +43,7 @@ function isNew(createdAt: string) {
 
 function badgeFor(entry: DirectoryEntry): { label: string; className: string } | null {
   if (entry.featured) return { label: 'Featured', className: 'bg-amber-50 text-amber-700 border-amber-200' }
-  if (isNew(entry.created_at)) return { label: 'New', className: 'bg-[#00a855]/10 text-[#00a855] border-[#00a855]/20' }
+  if (isNew(entry.created_at)) return { label: 'New', className: 'bg-[#131314]/10 text-[#131314] border-[#131314]/20' }
   return null
 }
 
@@ -100,10 +100,10 @@ export function EcosystemSection({ entries }: Props) {
       {/* ── Header ── */}
       <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6 mb-7">
         <div className="max-w-xl">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-[#00a855] mb-2">Open Directory</p>
-          <h2 className="text-2xl sm:text-3xl font-black text-zinc-900 leading-tight">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-[#131314] mb-2">Open Directory</p>
+          <h2 className="text-2xl sm:text-3xl font-semibold text-zinc-900 leading-tight">
             Discover Northern Luzon&apos;s<br />
-            <span className="text-[#00cc6a]">Innovation Ecosystem</span>
+            <span className="rounded-md bg-[#befc65] px-1.5 text-[#131314] [box-decoration-break:clone] [-webkit-box-decoration-break:clone]">Innovation Ecosystem</span>
           </h2>
           <p className="text-sm text-zinc-500 mt-2 leading-relaxed">
             An open directory of startups, programs, and organizations across Northern Luzon. Updated by the community.
@@ -144,7 +144,7 @@ export function EcosystemSection({ entries }: Props) {
           {/* Help grow the directory */}
           <Link
             href="/submit-startup"
-            className="group flex items-center gap-3 px-4 h-12 rounded-lg border border-[#00a855]/25 bg-[#00a855]/5 hover:bg-[#00a855]/10 transition-colors shrink-0"
+            className="group flex items-center gap-3 px-4 h-12 rounded-lg border border-[#131314]/25 bg-[#131314]/5 hover:bg-[#131314]/10 transition-colors shrink-0"
           >
             <div className="min-w-0">
               <p className="text-xs font-bold text-zinc-900 whitespace-nowrap">Help grow the directory</p>
@@ -152,7 +152,7 @@ export function EcosystemSection({ entries }: Props) {
                 List your organization and be part of the ecosystem.
               </p>
             </div>
-            <ArrowRight className="h-4 w-4 text-[#00a855] shrink-0 group-hover:translate-x-0.5 transition-transform" />
+            <ArrowRight className="h-4 w-4 text-[#131314] shrink-0 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>
       </div>
@@ -173,7 +173,7 @@ export function EcosystemSection({ entries }: Props) {
               key={loc.value}
               onClick={() => setRegion(region === loc.value ? null : loc.value)}
               className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${
-                region === loc.value ? 'bg-[#00cc6a] text-black' : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200'
+                region === loc.value ? 'bg-[#befc65] text-black' : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200'
               }`}
             >
               {loc.label}
@@ -186,11 +186,11 @@ export function EcosystemSection({ entries }: Props) {
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-7">
         {STAT_CARDS.map(({ type, label, sub, Icon }) => (
           <div key={type} className="flex items-center gap-3 p-4 rounded-xl border border-zinc-200 bg-white">
-            <div className="w-10 h-10 rounded-lg bg-[#00a855]/8 flex items-center justify-center shrink-0">
-              <Icon className="h-5 w-5 text-[#00a855]" />
+            <div className="w-10 h-10 rounded-lg bg-[#131314]/8 flex items-center justify-center shrink-0">
+              <Icon className="h-5 w-5 text-[#131314]" />
             </div>
             <div className="min-w-0">
-              <p className="text-xl font-black text-zinc-900 leading-none">{counts[type]}</p>
+              <p className="text-xl font-semibold text-zinc-900 leading-none">{counts[type]}</p>
               <p className="text-[11px] font-semibold text-zinc-700 mt-1 truncate">{label}</p>
               <p className="text-[10px] text-zinc-400 truncate">{sub}</p>
             </div>
@@ -204,7 +204,7 @@ export function EcosystemSection({ entries }: Props) {
           <button
             onClick={() => setActive('all')}
             className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${
-              active === 'all' ? 'bg-[#00cc6a] text-black' : 'bg-white border border-zinc-200 text-zinc-600 hover:border-zinc-400'
+              active === 'all' ? 'bg-[#befc65] text-black' : 'bg-white border border-zinc-200 text-zinc-600 hover:border-zinc-400'
             }`}
           >
             All
@@ -219,7 +219,7 @@ export function EcosystemSection({ entries }: Props) {
                 key={tab.type}
                 onClick={() => setActive(tab.type)}
                 className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${
-                  isActive ? 'bg-[#00cc6a] text-black' : 'bg-white border border-zinc-200 text-zinc-600 hover:border-zinc-400'
+                  isActive ? 'bg-[#befc65] text-black' : 'bg-white border border-zinc-200 text-zinc-600 hover:border-zinc-400'
                 }`}
               >
                 {tab.label}
@@ -249,11 +249,11 @@ export function EcosystemSection({ entries }: Props) {
             <div className="flex items-center gap-2">
               <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
               <div>
-                <span className="text-sm font-black text-zinc-900">Featured Organizations</span>
+                <span className="text-sm font-semibold text-zinc-900">Featured Organizations</span>
                 <span className="block text-xs text-zinc-400">Highlighted builders and partners making an impact in the region.</span>
               </div>
             </div>
-            <Link href="/ecosystem" className="hidden sm:flex items-center gap-1 text-xs font-bold text-[#00a855] hover:underline shrink-0">
+            <Link href="/ecosystem" className="hidden sm:flex items-center gap-1 text-xs font-bold text-[#131314] hover:underline shrink-0">
               View all featured <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
@@ -269,11 +269,11 @@ export function EcosystemSection({ entries }: Props) {
           <div className="flex items-center gap-2">
             <LayoutGrid className="h-4 w-4 text-zinc-400" />
             <div>
-              <span className="text-sm font-black text-zinc-900">All Organizations</span>
+              <span className="text-sm font-semibold text-zinc-900">All Organizations</span>
               <span className="block text-xs text-zinc-400">Browse the complete directory.</span>
             </div>
           </div>
-          <span className="text-sm font-bold text-[#00a855] shrink-0">
+          <span className="text-sm font-bold text-[#131314] shrink-0">
             {filtered.length} result{filtered.length !== 1 ? 's' : ''}
           </span>
         </div>
@@ -288,7 +288,7 @@ export function EcosystemSection({ entries }: Props) {
               {hasFilters ? 'No results match your filters.' : 'No listings yet.'}
             </p>
             {hasFilters && (
-              <button onClick={() => { setQuery(''); setRegion(null) }} className="text-xs text-[#00a855] font-semibold hover:underline mt-1">
+              <button onClick={() => { setQuery(''); setRegion(null) }} className="text-xs text-[#131314] font-semibold hover:underline mt-1">
                 Clear filters
               </button>
             )}
@@ -320,7 +320,7 @@ function FeaturedCard({ entry }: { entry: DirectoryEntry }) {
           {entry.logo_url ? (
             <Image src={entry.logo_url} alt={entry.name} fill className="object-contain p-1.5" sizes="44px" unoptimized />
           ) : (
-            <span className="text-lg font-black text-zinc-400">{initial}</span>
+            <span className="text-lg font-semibold text-zinc-400">{initial}</span>
           )}
         </div>
         <span className="shrink-0 inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wide px-2 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
@@ -340,10 +340,10 @@ function FeaturedCard({ entry }: { entry: DirectoryEntry }) {
         </span>
       </div>
       <div className="mt-auto pt-3 border-t border-zinc-100 flex items-center justify-between">
-        <span className="text-[11px] font-semibold text-[#00a855] flex items-center gap-1">
+        <span className="text-[11px] font-semibold text-[#131314] flex items-center gap-1">
           <BadgeCheck className="h-3.5 w-3.5" /> Featured on Amianan
         </span>
-        <ChevronRight className="h-3.5 w-3.5 text-zinc-300 group-hover:text-[#00a855] transition-colors" />
+        <ChevronRight className="h-3.5 w-3.5 text-zinc-300 group-hover:text-[#131314] transition-colors" />
       </div>
     </div>
   )
@@ -365,7 +365,7 @@ function OrgCard({ entry }: { entry: DirectoryEntry }) {
           {entry.logo_url ? (
             <Image src={entry.logo_url} alt={entry.name} fill className="object-contain p-1.5" sizes="44px" unoptimized />
           ) : (
-            <span className="text-lg font-black text-zinc-400">{initial}</span>
+            <span className="text-lg font-semibold text-zinc-400">{initial}</span>
           )}
         </div>
         {badge && (
@@ -384,7 +384,7 @@ function OrgCard({ entry }: { entry: DirectoryEntry }) {
         )}
       </div>
       <div className="mt-auto pt-3 border-t border-zinc-100 flex items-center justify-between">
-        <span className="text-xs font-semibold text-zinc-500 group-hover:text-[#00a855] transition-colors">View Profile</span>
+        <span className="text-xs font-semibold text-zinc-500 group-hover:text-[#131314] transition-colors">View Profile</span>
         {entry.website && <ExternalLink className="h-3.5 w-3.5 text-zinc-300 group-hover:text-zinc-600 transition-colors shrink-0" />}
       </div>
     </div>

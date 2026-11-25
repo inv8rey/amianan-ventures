@@ -75,10 +75,10 @@ export function CommunityContributions({ contributions }: { contributions: Commu
       {/* ── Header ── */}
       <div className="flex items-start justify-between gap-6 mb-6">
         <div>
-          <p className="text-xs font-black uppercase tracking-widest text-[#00a855] mb-2.5">
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#131314] mb-2.5">
             From the Ecosystem
           </p>
-          <h2 className="text-3xl sm:text-4xl font-black text-zinc-900 leading-tight tracking-tight mb-2">
+          <h2 className="text-3xl sm:text-4xl font-semibold text-zinc-900 leading-tight tracking-tight mb-2">
             Community Contributions
           </h2>
           <p className="text-sm text-zinc-500 max-w-lg leading-relaxed">
@@ -88,7 +88,7 @@ export function CommunityContributions({ contributions }: { contributions: Commu
         </div>
         <Link
           href="/contribute/signup"
-          className="hidden sm:inline-flex shrink-0 items-center gap-2 px-4 py-2.5 rounded-lg border-2 border-[#00a855] text-[#00a855] text-sm font-bold hover:bg-[#00a855] hover:text-white transition-colors whitespace-nowrap mt-1"
+          className="hidden sm:inline-flex shrink-0 items-center gap-2 px-4 py-2.5 rounded-lg border-2 border-[#131314] text-[#131314] text-sm font-bold hover:bg-[#131314] hover:text-white transition-colors whitespace-nowrap mt-1"
         >
           <Pencil className="h-3.5 w-3.5" />
           Share Your Perspective
@@ -104,7 +104,7 @@ export function CommunityContributions({ contributions }: { contributions: Commu
               onClick={() => handleFilter(key)}
               className={`flex items-center gap-1.5 px-4 py-3 text-xs font-semibold whitespace-nowrap border-b-2 transition-colors ${
                 filter === key
-                  ? 'border-[#00a855] text-[#00a855]'
+                  ? 'border-[#131314] text-[#131314]'
                   : 'border-transparent text-zinc-500 hover:text-zinc-800 hover:border-zinc-300'
               }`}
             >
@@ -115,7 +115,7 @@ export function CommunityContributions({ contributions }: { contributions: Commu
         </div>
         <Link
           href="/contribute"
-          className="hidden sm:flex items-center gap-1 text-[10px] font-bold text-[#00a855] hover:underline uppercase tracking-wider shrink-0 pb-3"
+          className="hidden sm:flex items-center gap-1 text-[10px] font-bold text-[#131314] hover:underline uppercase tracking-wider shrink-0 pb-3"
         >
           View all contributions <ArrowRight className="h-3 w-3" />
         </Link>
@@ -189,7 +189,7 @@ function ContributionCard({ contribution: c }: { contribution: CommunityContribu
         )}
         {/* Category badge */}
         <div className="absolute bottom-3 left-3">
-          <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-[#00a855] text-white text-[10px] font-black uppercase tracking-wider shadow-sm">
+          <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-[#131314] text-white text-[10px] font-semibold uppercase tracking-wider shadow-sm">
             {BADGE_LABEL[c.content_type]}
           </span>
         </div>
@@ -202,7 +202,7 @@ function ContributionCard({ contribution: c }: { contribution: CommunityContribu
             {format(new Date(c.published_at), 'MMMM d, yyyy')}
           </p>
         )}
-        <h3 className="text-sm font-bold text-zinc-900 group-hover:text-[#00a855] transition-colors leading-snug line-clamp-3">
+        <h3 className="text-sm font-bold text-zinc-900 group-hover:text-[#131314] transition-colors leading-snug line-clamp-3">
           {c.headline}
         </h3>
         <p className="text-xs text-zinc-500 leading-relaxed line-clamp-3 flex-1">
@@ -225,7 +225,7 @@ function ContributionCard({ contribution: c }: { contribution: CommunityContribu
               </div>
             ) : (
               <div className="w-8 h-8 rounded-full bg-zinc-900 flex items-center justify-center shrink-0">
-                <span className="text-[11px] font-black text-white">
+                <span className="text-[11px] font-semibold text-white">
                   {c.contributor.display_name.charAt(0).toUpperCase()}
                 </span>
               </div>

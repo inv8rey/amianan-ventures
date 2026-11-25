@@ -70,7 +70,7 @@ export default async function SubmissionDetailPage({
           <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 block mb-1.5">
             {CONTENT_TYPE_LABELS[submission.content_type]}
           </span>
-          <h1 className="text-xl font-black text-zinc-900 leading-snug">{submission.headline}</h1>
+          <h1 className="text-xl font-semibold text-zinc-900 leading-snug">{submission.headline}</h1>
           <p className="text-xs text-zinc-400 mt-1.5">
             Submitted {format(new Date(submission.submitted_at), 'MMMM d, yyyy')}
           </p>
@@ -104,16 +104,16 @@ export default async function SubmissionDetailPage({
 
       {/* Published link */}
       {status === 'published' && submission.published_url && (
-        <div className="bg-[#00a855]/5 border border-[#00a855]/20 rounded-xl p-4 mb-6">
+        <div className="bg-[#131314]/5 border border-[#131314]/20 rounded-xl p-4 mb-6">
           <div className="flex items-center gap-2 mb-2">
-            <CheckCircle2 className="h-4 w-4 text-[#00a855]" />
-            <p className="text-sm font-bold text-[#00a855]">Your article is live!</p>
+            <CheckCircle2 className="h-4 w-4 text-[#131314]" />
+            <p className="text-sm font-bold text-[#131314]">Your article is live!</p>
           </div>
           <a
             href={submission.published_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#00a855] hover:underline"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#131314] hover:underline"
           >
             <ExternalLink className="h-3.5 w-3.5" />
             Read your article on {SITE_HOST}
@@ -154,20 +154,20 @@ export default async function SubmissionDetailPage({
                 <div key={s} className="flex items-center flex-1">
                   <div className="flex flex-col items-center">
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold transition-colors ${
-                      done ? 'bg-[#00a855] text-white' :
+                      done ? 'bg-[#131314] text-white' :
                       active ? 'bg-black text-white' :
                       'bg-zinc-200 text-zinc-400'
                     }`}>
                       {done ? '✓' : i + 1}
                     </div>
                     <span className={`text-[9px] font-semibold mt-1 text-center ${
-                      active ? 'text-zinc-900' : upcoming ? 'text-zinc-400' : 'text-[#00a855]'
+                      active ? 'text-zinc-900' : upcoming ? 'text-zinc-400' : 'text-[#131314]'
                     }`}>
                       {STATUS_LABELS[s]}
                     </span>
                   </div>
                   {i < STATUS_ORDER.length - 1 && (
-                    <div className={`flex-1 h-px mb-5 ${done ? 'bg-[#00a855]' : 'bg-zinc-200'}`} />
+                    <div className={`flex-1 h-px mb-5 ${done ? 'bg-[#131314]' : 'bg-zinc-200'}`} />
                   )}
                 </div>
               )
@@ -209,7 +209,7 @@ export default async function SubmissionDetailPage({
               href={submission.gdocs_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-sm text-[#00a855] hover:underline"
+              className="inline-flex items-center gap-1 text-sm text-[#131314] hover:underline"
             >
               <ExternalLink className="h-3.5 w-3.5" />
               Open Google Doc

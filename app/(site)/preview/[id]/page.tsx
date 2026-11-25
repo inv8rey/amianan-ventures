@@ -70,7 +70,7 @@ export default async function PreviewPage({
           </div>
           <Link
             href={`/admin/articles/${article.id}`}
-            className="text-[11px] font-bold text-[#00cc6a] hover:underline whitespace-nowrap"
+            className="text-[11px] font-bold text-[#befc65] hover:underline whitespace-nowrap"
           >
             ← Back to Admin
           </Link>
@@ -87,7 +87,7 @@ export default async function PreviewPage({
             </Link>
 
             <div className="flex items-center gap-2 mb-3">
-              <span className={`text-[10px] font-black uppercase tracking-wider ${article.category === 'founder-stories' ? 'text-[#d97706]' : 'text-[#00cc6a]'}`}>
+              <span className={`text-[10px] font-semibold uppercase tracking-wider ${article.category === 'founder-stories' ? 'text-[#d97706]' : 'text-[#befc65]'}`}>
                 {article.category === 'founder-stories' ? 'Founder Story' : 'News'}
               </span>
             </div>
@@ -163,7 +163,7 @@ export default async function PreviewPage({
         </div>
         <Link
           href={`/admin/contributions/${sub.id}`}
-          className="text-[11px] font-bold text-[#00cc6a] hover:underline whitespace-nowrap"
+          className="text-[11px] font-bold text-[#befc65] hover:underline whitespace-nowrap"
         >
           ← Back to Admin
         </Link>
@@ -180,12 +180,12 @@ export default async function PreviewPage({
           </Link>
 
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-[10px] font-black uppercase tracking-wider text-[#00cc6a]">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-[#befc65]">
               {(CONTENT_TYPE_LABELS as Record<string, string>)[sub.content_type] ?? sub.content_type}
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black leading-tight mb-4 text-zinc-900">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold leading-tight mb-4 text-zinc-900">
             {sub.headline}
           </h1>
 

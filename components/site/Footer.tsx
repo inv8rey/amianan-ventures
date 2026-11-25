@@ -10,7 +10,6 @@ const EXPLORE_LINKS = [
   { href: '/founder-stories', label: 'Founder Stories' },
   { href: '/ecosystem', label: 'Ecosystem Directory' },
   { href: '/events', label: 'Events' },
-  { href: '/about', label: 'About Us' },
 ]
 
 const PARTICIPATE_LINKS = [
@@ -50,14 +49,14 @@ function LinkColumn({
   return (
     <div>
       <div className="flex items-center gap-2 mb-4">
-        <Icon className="h-4 w-4 text-[#00cc6a]" />
-        <h4 className="text-[10px] font-black text-white uppercase tracking-widest">{title}</h4>
+        <Icon className="h-4 w-4 text-[#befc65]" />
+        <h4 className="text-[10px] font-semibold text-white uppercase tracking-widest">{title}</h4>
       </div>
       <ul className="space-y-2.5">
         {links.map((link) => {
-          const className = 'flex items-center gap-1 text-sm text-zinc-400 hover:text-[#00cc6a] transition-colors group'
+          const className = 'flex items-center gap-1 text-sm text-zinc-400 hover:text-[#befc65] transition-colors group'
           const chevron = (
-            <span className="text-[#00cc6a] opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all">›</span>
+            <span className="text-[#befc65] opacity-0 -ml-3 group-hover:opacity-100 group-hover:ml-0 transition-all">›</span>
           )
           return (
             <li key={link.href}>
@@ -82,7 +81,7 @@ function LinkColumn({
 
 export function Footer() {
   return (
-    <footer className="bg-[#042212] text-white mt-0">
+    <footer className="bg-[#131314] text-white mt-0">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
 
         {/* Top CTA card — newsletter + share your story */}
@@ -90,11 +89,11 @@ export function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:divide-x md:divide-white/10">
             {/* Newsletter */}
             <div className="md:pr-10">
-              <div className="w-12 h-12 rounded-full bg-[#00cc6a]/10 flex items-center justify-center mb-5">
-                <Mail className="h-5 w-5 text-[#00cc6a]" />
+              <div className="w-12 h-12 rounded-full bg-[#befc65]/10 flex items-center justify-center mb-5">
+                <Mail className="h-5 w-5 text-[#befc65]" />
               </div>
-              <p className="text-xs font-black uppercase tracking-widest text-[#00cc6a] mb-2">Stay in the Loop</p>
-              <h3 className="text-2xl font-black text-white leading-tight mb-3 max-w-sm">
+              <p className="text-xs font-semibold uppercase tracking-widest text-[#befc65] mb-2">Stay in the Loop</p>
+              <h3 className="text-2xl font-semibold text-white leading-tight mb-3 max-w-sm">
                 Stories, opportunities, and updates from Northern Luzon.
               </h3>
               <p className="text-sm text-zinc-400 leading-relaxed mb-6 max-w-sm">
@@ -102,17 +101,17 @@ export function Footer() {
               </p>
               <NewsletterSignup source="footer" />
               <p className="flex items-center gap-1.5 text-xs text-zinc-500 mt-3">
-                <ShieldCheck className="h-3.5 w-3.5 text-[#00cc6a]" /> No spam. Unsubscribe anytime.
+                <ShieldCheck className="h-3.5 w-3.5 text-[#befc65]" /> No spam. Unsubscribe anytime.
               </p>
             </div>
 
             {/* Share your story */}
             <div className="md:pl-10">
-              <div className="w-12 h-12 rounded-full bg-[#00cc6a]/10 flex items-center justify-center mb-5">
-                <PenLine className="h-5 w-5 text-[#00cc6a]" />
+              <div className="w-12 h-12 rounded-full bg-[#befc65]/10 flex items-center justify-center mb-5">
+                <PenLine className="h-5 w-5 text-[#befc65]" />
               </div>
-              <p className="text-xs font-black uppercase tracking-widest text-[#00cc6a] mb-2">Share Your Story</p>
-              <h3 className="text-2xl font-black text-white leading-tight mb-3 max-w-sm">
+              <p className="text-xs font-semibold uppercase tracking-widest text-[#befc65] mb-2">Share Your Story</p>
+              <h3 className="text-2xl font-semibold text-white leading-tight mb-3 max-w-sm">
                 Help inspire and inform the ecosystem.
               </h3>
               <p className="text-sm text-zinc-400 leading-relaxed mb-6 max-w-sm">
@@ -133,17 +132,12 @@ export function Footer() {
 
           {/* Brand */}
           <div>
-            <Link href="/" className="flex items-center gap-2.5 mb-5 group">
+            <Link href="/" className="inline-flex flex-col gap-2 mb-5" aria-label="Amianan Ventures News home">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/amianan.svg" alt="Amianan Ventures" width={36} height={36} className="object-contain" />
-              <div>
-                <div className="text-sm font-black tracking-tight text-white leading-none">
-                  AMIANAN <span className="text-[#00cc6a]">VENTURES</span>
-                </div>
-                <div className="text-[9px] text-zinc-500 uppercase tracking-widest mt-0.5">
-                  Northern Luzon · Est. 2025
-                </div>
-              </div>
+              <img src="/amianan-logo-light.svg" alt="Amianan Ventures" width={129} height={48} className="h-12 w-auto" />
+              <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-zinc-500">
+                News · Northern Luzon
+              </span>
             </Link>
             <p className="text-sm text-zinc-400 leading-relaxed max-w-xs mb-5">
               An innovation platform connecting startups, founders, universities, and ecosystem partners across Northern Luzon. Open, mapped, community-updated.
@@ -156,7 +150,7 @@ export function Footer() {
                   target={link.external ? '_blank' : undefined}
                   rel={link.external ? 'noopener noreferrer' : undefined}
                   aria-label={link.label}
-                  className="w-9 h-9 rounded-lg border border-white/15 flex items-center justify-center text-zinc-400 hover:text-[#00cc6a] hover:border-[#00cc6a]/40 transition-colors"
+                  className="w-9 h-9 rounded-lg border border-white/15 flex items-center justify-center text-zinc-400 hover:text-[#befc65] hover:border-[#befc65]/40 transition-colors"
                 >
                   <link.icon className="h-4 w-4" />
                 </a>
@@ -173,7 +167,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="flex items-center gap-2 text-xs text-zinc-500 text-center sm:text-left">
-            <MapPin className="h-3.5 w-3.5 text-[#00cc6a] shrink-0" />
+            <MapPin className="h-3.5 w-3.5 text-[#befc65] shrink-0" />
             Proudly representing the Cordillera, Cagayan Valley, Ilocos Region, and Pangasinan.
           </p>
           <div className="flex items-center gap-4 flex-wrap justify-center">

@@ -22,7 +22,7 @@ export function ContributorNavLink({
       href={href}
       className={`flex items-center gap-1.5 pb-1 text-sm font-semibold border-b-2 transition-colors ${
         active
-          ? 'text-zinc-900 border-[#00cc6a]'
+          ? 'text-zinc-900 border-[#befc65]'
           : 'text-zinc-500 border-transparent hover:text-zinc-900'
       }`}
     >

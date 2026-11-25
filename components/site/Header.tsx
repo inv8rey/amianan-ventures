@@ -7,35 +7,10 @@ import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { MAIN_SITE_URL } from '@/lib/site'
 
-// Renders /public/amianan.svg; falls back to styled "AV" text if file not present
-function LogoIcon() {
-  const [err, setErr] = useState(false)
-  if (err) {
-    return (
-      <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-[#00cc6a]">
-        <span className="text-black font-black text-xs leading-none">AV</span>
-      </div>
-    )
-  }
-  return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src="/amianan.svg"
-      alt="Amianan Ventures"
-      width={32}
-      height={32}
-      className="object-contain"
-      onError={() => setErr(true)}
-    />
-  )
-}
-
 const navLinks = [
   { href: '/news', label: 'News' },
   { href: '/founder-stories', label: 'Founder Stories' },
   { href: '/ecosystem', label: 'Ecosystem' },
-  { href: '/resources', label: 'Resources' },
-  { href: '/about', label: 'About' },
 ]
 
 export function Header() {
@@ -45,17 +20,24 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full">
       {/* ── Top bar ── */}
-      <div className="bg-[#042212] text-white">
+      <div className="bg-[#131314] text-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-14 items-center justify-between gap-4">
 
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2.5 shrink-0">
-              <LogoIcon />
-              <span className="text-sm font-bold tracking-tight text-white">
-                AMIANAN <span className="text-[#00cc6a]">VENTURES</span>
-              </span>
-            </Link>
+            <div className="flex items-center gap-3 shrink-0">
+              <a href={MAIN_SITE_URL} aria-label="Amianan Ventures main site">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/amianan-logo-light.svg" alt="Amianan Ventures" width={97} height={36} className="h-9 w-auto" />
+              </a>
+              <Link
+                href="/"
+                aria-label="Amianan Ventures News home"
+                className="rounded-full bg-[#befc65] px-2.5 py-0.5 font-mono text-[10px] font-medium uppercase tracking-[0.08em] text-[#131314] hover:bg-[#d0ff8a] transition-colors"
+              >
+                News
+              </Link>
+            </div>
 
             {/* Desktop nav */}
             <nav className="hidden md:flex items-center gap-0.5">
@@ -64,9 +46,9 @@ export function Header() {
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    'px-3 py-2 text-xs font-semibold transition-colors rounded tracking-wide',
+                    'px-3 py-2 text-xs font-semibold transition-colors rounded tracking-wide whitespace-nowrap',
                     pathname === link.href || pathname.startsWith(link.href + '/')
-                      ? 'text-[#00cc6a]'
+                      ? 'text-[#befc65]'
                       : 'text-white/70 hover:text-white'
                   )}
                 >
@@ -75,7 +57,7 @@ export function Header() {
               ))}
               <a
                 href={MAIN_SITE_URL}
-                className="px-3 py-2 text-xs font-semibold transition-colors rounded tracking-wide text-white/70 hover:text-white"
+                className="px-3 py-2 text-xs font-semibold transition-colors rounded tracking-wide whitespace-nowrap text-white/70 hover:text-white"
               >
                 Work With Us
               </a>
@@ -85,13 +67,13 @@ export function Header() {
             <div className="flex items-center gap-2">
               <Link
                 href="/contribute"
-                className="hidden sm:inline-flex items-center px-3.5 py-1.5 rounded text-xs font-bold bg-[#00cc6a] text-black hover:bg-[#00b85e] transition-colors uppercase tracking-wider whitespace-nowrap"
+                className="hidden sm:inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold bg-[#befc65] text-black hover:bg-[#d0ff8a] transition-colors uppercase tracking-wider whitespace-nowrap"
               >
                 Become a Contributor
               </Link>
               <Link
                 href="#newsletter"
-                className="hidden lg:inline-flex items-center px-3.5 py-1.5 rounded text-xs font-bold border border-white/30 text-white hover:bg-white/10 hover:border-white/60 transition-colors uppercase tracking-wider whitespace-nowrap"
+                className="hidden lg:inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold border border-white/30 text-white hover:bg-white/10 hover:border-white/60 transition-colors uppercase tracking-wider whitespace-nowrap"
               >
                 Subscribe
               </Link>
@@ -108,7 +90,7 @@ export function Header() {
       </div>
 
       {/* ── Secondary nav: regions ── */}
-      <div className="bg-[#00cc6a] hidden md:block">
+      <div className="bg-[#befc65] hidden md:block">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-0.5 overflow-x-auto">
             {[
@@ -131,7 +113,7 @@ export function Header() {
 
       {/* Mobile nav */}
       {open && (
-        <div className="md:hidden bg-[#042212] border-t border-white/10">
+        <div className="md:hidden bg-[#131314] border-t border-white/10">
           <nav className="mx-auto max-w-7xl px-4 py-3 flex flex-col gap-1">
             {navLinks.map((link) => (
               <Link
@@ -141,7 +123,7 @@ export function Header() {
                 className={cn(
                   'px-3 py-2.5 text-sm font-medium rounded transition-colors',
                   pathname === link.href
-                    ? 'text-[#00cc6a]'
+                    ? 'text-[#befc65]'
                     : 'text-white/70 hover:text-white'
                 )}
               >
@@ -158,7 +140,7 @@ export function Header() {
               <Link
                 href="/contribute"
                 onClick={() => setOpen(false)}
-                className="flex-1 py-2 rounded text-xs font-bold bg-[#00cc6a] text-black hover:bg-[#00b85e] transition-colors uppercase tracking-wider text-center"
+                className="flex-1 py-2 rounded text-xs font-bold bg-[#befc65] text-black hover:bg-[#d0ff8a] transition-colors uppercase tracking-wider text-center"
               >
                 Become a Contributor
               </Link>

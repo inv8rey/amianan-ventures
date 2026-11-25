@@ -81,7 +81,7 @@ const categoryLabel: Record<string, string> = {
 
 const categoryColor: Record<string, string> = {
   'news':            'text-blue-600 bg-blue-500/10',
-  'founder-stories': 'text-[#00a855] bg-[#00a855]/10',
+  'founder-stories': 'text-[#131314] bg-[#131314]/10',
   'events':          'text-orange-600 bg-orange-500/10',
 }
 
@@ -110,14 +110,14 @@ export default async function ContributePage() {
             {/* Left: text */}
             <div>
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs font-bold uppercase tracking-wider mb-7">
-                <PenLine className="h-3.5 w-3.5 text-[#00cc6a]" />
+                <PenLine className="h-3.5 w-3.5 text-[#befc65]" />
                 Contributor Portal
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-[3.25rem] font-black text-white leading-[1.08] mb-5">
+              <h1 className="text-4xl sm:text-5xl lg:text-[3.25rem] font-semibold text-white leading-[1.08] mb-5">
                 The Home for Startup<br />
                 Stories and Innovation<br />
-                <span className="text-[#00cc6a]">in Northern Luzon.</span>
+                <span className="rounded-md bg-[#befc65] px-1.5 text-[#131314] [box-decoration-break:clone] [-webkit-box-decoration-break:clone]">in Northern Luzon.</span>
               </h1>
 
               <p className="text-base text-white/70 max-w-md leading-relaxed mb-8">
@@ -128,7 +128,7 @@ export default async function ContributePage() {
               <div className="flex items-center gap-3 flex-wrap mb-10">
                 <Link
                   href="/contribute/signup"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[#042212] text-white font-bold text-sm hover:bg-black transition-colors border border-white/10"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[#131314] text-white font-bold text-sm hover:bg-black transition-colors border border-white/10"
                 >
                   Start Contributing <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -143,8 +143,8 @@ export default async function ContributePage() {
               <div className="grid grid-cols-4 gap-3">
                 {stats.map((s) => (
                   <div key={s.label} className="flex flex-col items-start gap-1.5 p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/15">
-                    <s.icon className="h-4 w-4 text-[#00cc6a]" />
-                    <span className="text-xl font-black text-white leading-none">{s.value}</span>
+                    <s.icon className="h-4 w-4 text-[#befc65]" />
+                    <span className="text-xl font-semibold text-white leading-none">{s.value}</span>
                     <span className="text-[10px] text-white/60 leading-tight">{s.label}</span>
                   </div>
                 ))}
@@ -188,7 +188,7 @@ export default async function ContributePage() {
                   >
                     <div className="shrink-0 w-16 h-16 rounded-xl bg-gradient-to-br from-zinc-200 to-zinc-300" />
                     <div className="flex-1">
-                      <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full mb-1.5 inline-block text-[#00a855] bg-[#00a855]/10">
+                      <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full mb-1.5 inline-block text-[#131314] bg-[#131314]/10">
                         {label}
                       </span>
                       <div className="h-2.5 bg-zinc-100 rounded w-4/5 mb-1.5" />
@@ -200,7 +200,7 @@ export default async function ContributePage() {
               <div className="flex flex-wrap gap-2 mt-2 justify-end">
                 {['Cordillera', 'Cagayan Valley', 'Ilocos Region', 'Pangasinan'].map((r) => (
                   <span key={r} className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 text-[11px] font-semibold text-white">
-                    <MapPin className="h-2.5 w-2.5 text-[#00cc6a]" /> {r}
+                    <MapPin className="h-2.5 w-2.5 text-[#befc65]" /> {r}
                   </span>
                 ))}
               </div>
@@ -212,13 +212,13 @@ export default async function ContributePage() {
 
       {/* ── What you can submit ───────────────────────────────── */}
       <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-        <p className="text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">What you can submit</p>
-        <h2 className="text-2xl font-black text-zinc-900 mb-8">Five types of content we publish</h2>
+        <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-2">What you can submit</p>
+        <h2 className="text-2xl font-semibold text-zinc-900 mb-8">Five types of content we publish</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {contentTypes.map((type) => (
-            <div key={type.label} className="flex gap-3 p-5 rounded-xl border border-zinc-100 bg-zinc-50 hover:border-[#00a855]/30 hover:bg-[#00a855]/5 transition-colors group">
-              <div className="w-8 h-8 rounded-lg bg-[#00a855]/10 flex items-center justify-center shrink-0 group-hover:bg-[#00a855]/20 transition-colors">
-                <type.icon className="h-4 w-4 text-[#00a855]" />
+            <div key={type.label} className="flex gap-3 p-5 rounded-xl border border-zinc-100 bg-zinc-50 hover:border-[#131314]/30 hover:bg-[#131314]/5 transition-colors group">
+              <div className="w-8 h-8 rounded-lg bg-[#131314]/10 flex items-center justify-center shrink-0 group-hover:bg-[#131314]/20 transition-colors">
+                <type.icon className="h-4 w-4 text-[#131314]" />
               </div>
               <div>
                 <p className="text-sm font-bold text-zinc-900 mb-0.5">{type.label}</p>
@@ -232,17 +232,17 @@ export default async function ContributePage() {
       {/* ── Why contribute ────────────────────────────────────── */}
       <section className="bg-zinc-50 border-y border-zinc-100">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-          <p className="text-xs font-black uppercase tracking-widest text-zinc-400 mb-2">Why it matters</p>
-          <h2 className="text-2xl font-black text-zinc-900 mb-3">What you get when you contribute</h2>
+          <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-2">Why it matters</p>
+          <h2 className="text-2xl font-semibold text-zinc-900 mb-3">What you get when you contribute</h2>
           <p className="text-sm text-zinc-500 mb-10 max-w-xl leading-relaxed">
             Contributing to Amianan Ventures is more than publishing an article. It is a way to build
             your presence, grow your network, and leave a mark on the regional innovation story.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {values.map((v) => (
-              <div key={v.title} className="bg-white rounded-2xl border border-zinc-100 p-5 hover:border-[#00a855]/20 hover:shadow-sm transition-all group">
-                <div className="w-10 h-10 rounded-xl bg-[#00a855]/8 flex items-center justify-center mb-4 group-hover:bg-[#00a855]/15 transition-colors">
-                  <v.icon className="h-5 w-5 text-[#00a855]" />
+              <div key={v.title} className="bg-white rounded-2xl border border-zinc-100 p-5 hover:border-[#131314]/20 hover:shadow-sm transition-all group">
+                <div className="w-10 h-10 rounded-xl bg-[#131314]/8 flex items-center justify-center mb-4 group-hover:bg-[#131314]/15 transition-colors">
+                  <v.icon className="h-5 w-5 text-[#131314]" />
                 </div>
                 <p className="text-sm font-bold text-zinc-900 mb-1.5">{v.title}</p>
                 <p className="text-xs text-zinc-500 leading-relaxed">{v.desc}</p>
@@ -253,14 +253,14 @@ export default async function ContributePage() {
       </section>
 
       {/* ── How it works ──────────────────────────────────────── */}
-      <section className="bg-[#042212] relative overflow-hidden">
+      <section className="bg-[#131314] relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -right-32 top-1/2 -translate-y-1/2 w-96 h-96 rounded-full border border-white/5" />
           <div className="absolute -left-16 bottom-0 w-64 h-64 rounded-full border border-white/5" />
         </div>
         <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-          <p className="text-xs font-black uppercase tracking-widest text-[#00cc6a] mb-2">Simple process</p>
-          <h2 className="text-2xl font-black text-white mb-12">How it works</h2>
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#befc65] mb-2">Simple process</p>
+          <h2 className="text-2xl font-semibold text-white mb-12">How it works</h2>
 
           {/* Steps */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -276,8 +276,8 @@ export default async function ContributePage() {
 
                 {/* Step number row */}
                 <div className="flex items-center gap-3 mb-5">
-                  <div className="w-9 h-9 rounded-full border border-[#00cc6a]/40 bg-[#00cc6a]/10 flex items-center justify-center shrink-0">
-                    <span className="text-xs font-black text-[#00cc6a]">{s.step}</span>
+                  <div className="w-9 h-9 rounded-full border border-[#befc65]/40 bg-[#befc65]/10 flex items-center justify-center shrink-0">
+                    <span className="text-xs font-semibold text-[#befc65]">{s.step}</span>
                   </div>
                   <div className="flex-1 h-px bg-white/10 lg:hidden" />
                 </div>
@@ -297,10 +297,10 @@ export default async function ContributePage() {
 
       {/* ── Bottom CTA ────────────────────────────────────────── */}
       <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00cc6a]/10 text-[#00a855] text-xs font-semibold uppercase tracking-wider mb-5">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#befc65]/10 text-[#131314] text-xs font-semibold uppercase tracking-wider mb-5">
           <PenLine className="h-3.5 w-3.5" /> Free to join
         </div>
-        <h2 className="text-3xl sm:text-4xl font-black text-zinc-900 mb-4 leading-tight">
+        <h2 className="text-3xl sm:text-4xl font-semibold text-zinc-900 mb-4 leading-tight">
           Ready to share your story?
         </h2>
         <p className="text-sm text-zinc-500 mb-8 max-w-md mx-auto leading-relaxed">
@@ -315,7 +315,7 @@ export default async function ContributePage() {
         </Link>
         <p className="text-xs text-zinc-400 mt-4">
           Already have an account?{' '}
-          <Link href="/contribute/login" className="text-[#00a855] hover:underline">
+          <Link href="/contribute/login" className="text-[#131314] hover:underline">
             Sign in
           </Link>
         </p>

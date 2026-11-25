@@ -37,7 +37,7 @@ export default function ForgotPasswordPage() {
       <div className="w-full max-w-sm">
         <div className="flex items-center justify-center gap-2 mb-8">
           <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-            <KeyRound className="h-4 w-4 text-[#00cc6a]" />
+            <KeyRound className="h-4 w-4 text-[#befc65]" />
           </div>
           <span className="text-sm font-bold text-zinc-900">Contributor Portal</span>
         </div>
@@ -45,17 +45,17 @@ export default function ForgotPasswordPage() {
         <div className="bg-white rounded-2xl border border-zinc-200 p-8">
           {sent ? (
             <div className="text-center">
-              <div className="w-12 h-12 rounded-full bg-[#00a855]/10 flex items-center justify-center mx-auto mb-4">
-                <MailCheck className="h-5 w-5 text-[#00a855]" />
+              <div className="w-12 h-12 rounded-full bg-[#131314]/10 flex items-center justify-center mx-auto mb-4">
+                <MailCheck className="h-5 w-5 text-[#131314]" />
               </div>
-              <h1 className="text-lg font-black text-zinc-900 mb-1.5">Check your email</h1>
+              <h1 className="text-lg font-semibold text-zinc-900 mb-1.5">Check your email</h1>
               <p className="text-sm text-zinc-500 leading-relaxed">
                 If an account exists for <span className="font-semibold text-zinc-700">{email}</span>, we&apos;ve sent a link to reset your password.
               </p>
             </div>
           ) : (
             <>
-              <h1 className="text-xl font-black text-zinc-900 mb-1">Forgot password?</h1>
+              <h1 className="text-xl font-semibold text-zinc-900 mb-1">Forgot password?</h1>
               <p className="text-sm text-zinc-500 mb-6">Enter your email and we&apos;ll send you a reset link.</p>
 
               <form onSubmit={handleSubmit} className="space-y-4">

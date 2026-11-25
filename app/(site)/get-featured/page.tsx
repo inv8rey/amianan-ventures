@@ -138,13 +138,13 @@ export default async function GetFeaturedPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left: copy */}
             <div>
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-widest text-[#00a855] mb-5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#00a855]" />
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-[#131314] mb-5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#131314]" />
                 Partner With Amianan Ventures
               </span>
-              <h1 className="text-4xl sm:text-5xl lg:text-[3.4rem] font-black text-zinc-900 leading-[1.08] mb-5">
+              <h1 className="text-4xl sm:text-5xl lg:text-[3.4rem] font-semibold text-zinc-900 leading-[1.08] mb-5">
                 Reach Northern Luzon&apos;s<br />
-                <span className="text-[#00a855]">Innovation Community</span>
+                <span className="text-[#131314]">Innovation Community</span>
               </h1>
               <p className="text-base sm:text-lg text-zinc-500 leading-relaxed max-w-lg mb-8">
                 Promote your organization, share your story, and connect with founders, startups, innovators, businesses, universities, and ecosystem stakeholders across Northern Luzon.
@@ -152,7 +152,7 @@ export default async function GetFeaturedPage() {
               <div className="flex items-center gap-3 flex-wrap mb-10">
                 <Link
                   href="/get-featured/apply"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-lg bg-[#042212] text-white font-bold text-sm hover:bg-[#06331c] transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-lg bg-[#131314] text-white font-bold text-sm hover:bg-[#0c0c0d] transition-colors"
                 >
                   Get Featured <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -168,7 +168,7 @@ export default async function GetFeaturedPage() {
               <div className="flex items-center gap-8 flex-wrap">
                 {heroStats.map((s) => (
                   <div key={s.label}>
-                    {s.value && <p className="text-2xl font-black text-zinc-900 leading-none mb-1">{s.value}</p>}
+                    {s.value && <p className="text-2xl font-semibold text-zinc-900 leading-none mb-1">{s.value}</p>}
                     <p className={`font-bold text-zinc-500 ${s.value ? 'text-xs' : 'text-sm text-zinc-700'}`}>{s.label}</p>
                   </div>
                 ))}
@@ -186,15 +186,15 @@ export default async function GetFeaturedPage() {
                   className="object-cover object-center"
                   sizes="(max-width: 1024px) 100vw, 50vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#042212]/40 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#131314]/40 via-transparent to-transparent" />
               </div>
               {/* Floating credibility chip */}
               <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-xl border border-zinc-100 px-5 py-4 flex items-center gap-3 max-w-[220px]">
-                <div className="w-10 h-10 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
-                  <Star className="h-4 w-4 text-[#00a855]" />
+                <div className="w-10 h-10 rounded-full bg-[#131314]/10 flex items-center justify-center shrink-0">
+                  <Star className="h-4 w-4 text-[#131314]" />
                 </div>
                 <div>
-                  <p className="text-xs font-black text-zinc-900 leading-tight">Built for credibility</p>
+                  <p className="text-xs font-semibold text-zinc-900 leading-tight">Built for credibility</p>
                   <p className="text-[11px] text-zinc-400">Not a marketplace.</p>
                 </div>
               </div>
@@ -203,7 +203,7 @@ export default async function GetFeaturedPage() {
 
           {/* Trust card */}
           <div className="mt-16 rounded-2xl bg-zinc-50 border border-zinc-200 p-6 sm:p-7 flex items-center gap-4">
-            <ShieldCheck className="h-6 w-6 text-[#00a855] shrink-0" />
+            <ShieldCheck className="h-6 w-6 text-[#131314] shrink-0" />
             <p className="text-sm sm:text-base text-zinc-600 leading-relaxed">
               Helping organizations, founders, and ecosystem builders share their stories, build credibility, and increase visibility across Northern Luzon.
             </p>
@@ -214,7 +214,7 @@ export default async function GetFeaturedPage() {
       {/* ════════════════════ CHOOSE YOUR PATH ════════════════════ */}
       <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
         <div className="text-center mb-14">
-          <h2 className="text-3xl sm:text-4xl font-black text-zinc-900 leading-tight mb-4">
+          <h2 className="text-3xl sm:text-4xl font-semibold text-zinc-900 leading-tight mb-4">
             Choose The Option That Fits You
           </h2>
           <p className="text-sm sm:text-base text-zinc-500 max-w-lg mx-auto leading-relaxed">
@@ -227,15 +227,15 @@ export default async function GetFeaturedPage() {
           {/* CARD 1 — Startups */}
           <div className="rounded-2xl border border-zinc-200 bg-white overflow-hidden flex flex-col">
             <div className="p-7 sm:p-8 flex-1 flex flex-col">
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#00a855] mb-3">For Founders & Startups</span>
-              <h3 className="text-2xl font-black text-zinc-900 mb-2">Startup Spotlight Package</h3>
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-[#131314] mb-3">For Founders & Startups</span>
+              <h3 className="text-2xl font-semibold text-zinc-900 mb-2">Startup Spotlight Package</h3>
               <p className="text-sm text-zinc-500 leading-relaxed mb-6">
                 Share your story and build your reputation through a professionally published feature.
               </p>
 
               <div className="flex items-baseline gap-2.5 mb-6">
-                <p className="text-4xl font-black text-zinc-900">₱{PACKAGES['founding-rate'].amount_php}</p>
-                <span className="text-[10px] font-black uppercase tracking-widest text-[#00a855] bg-[#00a855]/10 px-2.5 py-1 rounded-full">
+                <p className="text-4xl font-semibold text-zinc-900">₱{PACKAGES['founding-rate'].amount_php}</p>
+                <span className="text-[10px] font-semibold uppercase tracking-widest text-[#131314] bg-[#131314]/10 px-2.5 py-1 rounded-full">
                   Founding Rate
                 </span>
               </div>
@@ -243,7 +243,7 @@ export default async function GetFeaturedPage() {
               <div className="space-y-2.5 mb-8">
                 {startupIncludes.map((item) => (
                   <div key={item} className="flex items-center gap-2.5">
-                    <Check className="h-4 w-4 text-[#00a855] shrink-0" />
+                    <Check className="h-4 w-4 text-[#131314] shrink-0" />
                     <span className="text-sm text-zinc-700">{item}</span>
                   </div>
                 ))}
@@ -251,7 +251,7 @@ export default async function GetFeaturedPage() {
 
               <Link
                 href="/get-featured/apply?package=founding-rate"
-                className="mt-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-[#042212] text-white font-bold text-sm hover:bg-[#06331c] transition-colors"
+                className="mt-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-[#131314] text-white font-bold text-sm hover:bg-[#0c0c0d] transition-colors"
               >
                 Share Your Story <ArrowRight className="h-4 w-4" />
               </Link>
@@ -259,20 +259,20 @@ export default async function GetFeaturedPage() {
           </div>
 
           {/* CARD 2 — Organizations */}
-          <div className="rounded-2xl border-2 border-[#042212] bg-white overflow-hidden flex flex-col relative">
-            <span className="absolute top-5 right-5 text-[10px] font-black uppercase tracking-widest text-white bg-[#042212] px-2.5 py-1 rounded-full">
+          <div className="rounded-2xl border-2 border-[#131314] bg-white overflow-hidden flex flex-col relative">
+            <span className="absolute top-5 right-5 text-[10px] font-semibold uppercase tracking-widest text-white bg-[#131314] px-2.5 py-1 rounded-full">
               For Organizations
             </span>
             <div className="p-7 sm:p-8 flex-1 flex flex-col">
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#00a855] mb-3">For Organizations & Programs</span>
-              <h3 className="text-2xl font-black text-zinc-900 mb-2">Ecosystem Visibility Package</h3>
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-[#131314] mb-3">For Organizations & Programs</span>
+              <h3 className="text-2xl font-semibold text-zinc-900 mb-2">Ecosystem Visibility Package</h3>
               <p className="text-sm text-zinc-500 leading-relaxed mb-6">
                 Promote your organization and connect with Northern Luzon&apos;s innovation community.
               </p>
 
               <div className="flex items-baseline gap-2.5 mb-6">
-                <p className="text-4xl font-black text-zinc-900">₱{PACKAGES['ecosystem-visibility'].amount_php}</p>
-                <span className="text-[10px] font-black uppercase tracking-widest text-[#00a855] bg-[#00a855]/10 px-2.5 py-1 rounded-full">
+                <p className="text-4xl font-semibold text-zinc-900">₱{PACKAGES['ecosystem-visibility'].amount_php}</p>
+                <span className="text-[10px] font-semibold uppercase tracking-widest text-[#131314] bg-[#131314]/10 px-2.5 py-1 rounded-full">
                   Founding Rate
                 </span>
               </div>
@@ -280,7 +280,7 @@ export default async function GetFeaturedPage() {
               <div className="space-y-2.5 mb-8">
                 {partnerIncludes.map((item) => (
                   <div key={item} className="flex items-center gap-2.5">
-                    <Check className="h-4 w-4 text-[#00a855] shrink-0" />
+                    <Check className="h-4 w-4 text-[#131314] shrink-0" />
                     <span className="text-sm text-zinc-700">{item}</span>
                   </div>
                 ))}
@@ -288,7 +288,7 @@ export default async function GetFeaturedPage() {
 
               <Link
                 href="/get-featured/apply?package=ecosystem-visibility"
-                className="mt-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-[#00a855] text-black font-bold text-sm hover:bg-[#00b85e] transition-colors"
+                className="mt-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-[#131314] text-black font-bold text-sm hover:bg-[#d0ff8a] transition-colors"
               >
                 Become An Ecosystem Partner <ArrowRight className="h-4 w-4" />
               </Link>
@@ -300,16 +300,16 @@ export default async function GetFeaturedPage() {
       {/* ════════════════════ WHAT YOU RECEIVE ════════════════════ */}
       <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
         <div className="text-center mb-14">
-          <h2 className="text-3xl sm:text-4xl font-black text-zinc-900 leading-tight">See What You&apos;ll Receive</h2>
+          <h2 className="text-3xl sm:text-4xl font-semibold text-zinc-900 leading-tight">See What You&apos;ll Receive</h2>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {receiveCards.map((card) => (
             <div key={card.title} className="rounded-2xl border border-zinc-200 bg-white p-6">
-              <div className="w-10 h-10 rounded-full bg-[#00a855]/10 flex items-center justify-center mb-4">
-                <card.icon className="h-4.5 w-4.5 text-[#00a855]" />
+              <div className="w-10 h-10 rounded-full bg-[#131314]/10 flex items-center justify-center mb-4">
+                <card.icon className="h-4.5 w-4.5 text-[#131314]" />
               </div>
-              <p className="text-sm font-black text-zinc-900 mb-1.5">{card.title}</p>
+              <p className="text-sm font-semibold text-zinc-900 mb-1.5">{card.title}</p>
               <p className="text-xs text-zinc-500 leading-relaxed mb-4">{card.desc}</p>
 
               {/* Mini mockup preview, varies per card */}
@@ -323,11 +323,11 @@ export default async function GetFeaturedPage() {
               {card.title === 'Homepage Feature' && (
                 <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
                   <div className="flex items-center gap-1 mb-2">
-                    <div className="w-2 h-2 rounded-sm bg-[#042212]" />
+                    <div className="w-2 h-2 rounded-sm bg-[#131314]" />
                     <div className="h-1.5 bg-zinc-300 rounded w-10" />
                   </div>
                   <div className="grid grid-cols-3 gap-1">
-                    <div className="aspect-square rounded bg-gradient-to-br from-[#00a855]/30 to-[#00a855]/10 ring-2 ring-[#00a855]" />
+                    <div className="aspect-square rounded bg-gradient-to-br from-[#131314]/30 to-[#131314]/10 ring-2 ring-[#131314]" />
                     <div className="aspect-square rounded bg-zinc-200" />
                     <div className="aspect-square rounded bg-zinc-200" />
                   </div>
@@ -337,15 +337,15 @@ export default async function GetFeaturedPage() {
                 <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 space-y-1.5">
                   <div className="h-1.5 bg-zinc-200 rounded w-full" />
                   <div className="h-1.5 bg-zinc-200 rounded w-5/6" />
-                  <div className="h-8 rounded bg-gradient-to-br from-[#0a3a22] to-[#042212] flex items-center justify-center">
-                    <span className="text-[6px] font-black text-white uppercase">Your Brand Here</span>
+                  <div className="h-8 rounded bg-gradient-to-br from-[#232325] to-[#131314] flex items-center justify-center">
+                    <span className="text-[6px] font-semibold text-white uppercase">Your Brand Here</span>
                   </div>
                   <div className="h-1.5 bg-zinc-200 rounded w-3/4" />
                 </div>
               )}
               {card.title === 'Founder Quote Card' && (
-                <div className="rounded-lg bg-[#042212] p-4">
-                  <Quote className="h-4 w-4 text-[#00cc6a] mb-2" />
+                <div className="rounded-lg bg-[#131314] p-4">
+                  <Quote className="h-4 w-4 text-[#befc65] mb-2" />
                   <div className="h-1.5 bg-white/30 rounded w-full mb-1" />
                   <div className="h-1.5 bg-white/30 rounded w-3/4 mb-2.5" />
                   <div className="h-1.5 bg-white/50 rounded w-1/3" />
@@ -356,7 +356,7 @@ export default async function GetFeaturedPage() {
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-zinc-300 to-zinc-400 shrink-0" />
                   <div className="flex-1">
                     <div className="h-1.5 bg-zinc-300 rounded w-3/4 mb-1" />
-                    <span className="inline-block text-[6px] font-black uppercase px-1 py-0.5 rounded bg-[#00a855]/15 text-[#00a855]">Featured</span>
+                    <span className="inline-block text-[6px] font-semibold uppercase px-1 py-0.5 rounded bg-[#131314]/15 text-[#131314]">Featured</span>
                   </div>
                 </div>
               )}
@@ -380,14 +380,14 @@ export default async function GetFeaturedPage() {
       </section>
 
       {/* ════════════════════ WHY PARTNER ════════════════════ */}
-      <section className="bg-[#042212] relative overflow-hidden">
+      <section className="bg-[#131314] relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -right-32 top-1/4 w-96 h-96 rounded-full border border-white/5" />
           <div className="absolute -left-20 bottom-0 w-72 h-72 rounded-full border border-white/5" />
         </div>
         <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
           <div className="text-center mb-14">
-            <h2 className="text-3xl sm:text-4xl font-black text-white leading-tight">
+            <h2 className="text-3xl sm:text-4xl font-semibold text-white leading-tight">
               Why Organizations Choose Amianan Ventures
             </h2>
           </div>
@@ -395,10 +395,10 @@ export default async function GetFeaturedPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {whyCards.map((card) => (
               <div key={card.title} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-                <div className="w-10 h-10 rounded-full bg-[#00a855]/15 flex items-center justify-center mb-4">
-                  <card.icon className="h-4.5 w-4.5 text-[#00cc6a]" />
+                <div className="w-10 h-10 rounded-full bg-[#131314]/15 flex items-center justify-center mb-4">
+                  <card.icon className="h-4.5 w-4.5 text-[#befc65]" />
                 </div>
-                <p className="text-sm font-black text-white mb-1.5">{card.title}</p>
+                <p className="text-sm font-semibold text-white mb-1.5">{card.title}</p>
                 <p className="text-xs text-white/50 leading-relaxed">{card.desc}</p>
               </div>
             ))}
@@ -410,20 +410,20 @@ export default async function GetFeaturedPage() {
       {spotlightExamples.length > 0 && (
         <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
           <div className="flex items-center gap-2 mb-8">
-            <span className="w-1 h-4 bg-[#00cc6a] rounded-full shrink-0" />
-            <span className="text-xs font-black uppercase tracking-widest text-zinc-800">Stories From Founders Like You</span>
+            <span className="w-1 h-4 bg-[#befc65] rounded-full shrink-0" />
+            <span className="text-xs font-semibold uppercase tracking-widest text-zinc-800">Stories From Founders Like You</span>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {spotlightExamples.map((ex) => (
               <Link key={ex.name} href={`/founder-stories/${ex.slug}`} className="group flex flex-col gap-3">
-                <div className="relative aspect-square rounded-xl bg-zinc-50 border border-zinc-200 overflow-hidden flex items-center justify-center group-hover:border-[#00a855]/40 transition-colors">
+                <div className="relative aspect-square rounded-xl bg-zinc-50 border border-zinc-200 overflow-hidden flex items-center justify-center group-hover:border-[#131314]/40 transition-colors">
                   {ex.logo_url ? (
                     <Image src={ex.logo_url} alt={ex.name} fill className="object-contain p-4" sizes="160px" unoptimized />
                   ) : (
-                    <span className="text-2xl font-black text-zinc-300">{ex.name.charAt(0)}</span>
+                    <span className="text-2xl font-semibold text-zinc-300">{ex.name.charAt(0)}</span>
                   )}
                 </div>
-                <p className="text-sm font-bold text-zinc-900 leading-snug line-clamp-2 group-hover:text-[#00a855] transition-colors">{ex.name}</p>
+                <p className="text-sm font-bold text-zinc-900 leading-snug line-clamp-2 group-hover:text-[#131314] transition-colors">{ex.name}</p>
               </Link>
             ))}
           </div>
@@ -434,20 +434,20 @@ export default async function GetFeaturedPage() {
       <section className="bg-zinc-50 border-t border-zinc-200">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-black text-zinc-900 leading-tight">Frequently Asked Questions</h2>
+            <h2 className="text-3xl sm:text-4xl font-semibold text-zinc-900 leading-tight">Frequently Asked Questions</h2>
           </div>
           <FaqAccordion items={faqs} />
         </div>
       </section>
 
       {/* ════════════════════ FINAL CTA ════════════════════ */}
-      <section className="bg-[#042212] relative overflow-hidden">
+      <section className="bg-[#131314] relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -right-24 top-1/2 -translate-y-1/2 w-96 h-96 rounded-full border border-white/5" />
           <div className="absolute -left-16 bottom-0 w-64 h-64 rounded-full border border-white/5" />
         </div>
         <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-4 max-w-2xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white leading-tight mb-4 max-w-2xl mx-auto">
             Ready To Share Your Story Or Promote Your Organization?
           </h2>
           <p className="text-sm sm:text-base text-white/50 max-w-xl mx-auto leading-relaxed mb-12">
@@ -457,21 +457,21 @@ export default async function GetFeaturedPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto text-left">
             <Link
               href="/get-featured/apply?package=founding-rate"
-              className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 hover:border-[#00a855]/40 transition-colors"
+              className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 hover:border-[#131314]/40 transition-colors"
             >
-              <p className="text-xs font-black uppercase tracking-widest text-[#00cc6a] mb-2">Startups &amp; Founders</p>
-              <p className="text-base font-black text-white mb-4">Startup Spotlight Package</p>
-              <span className="inline-flex items-center gap-2 text-sm font-bold text-white group-hover:text-[#00cc6a] transition-colors">
+              <p className="text-xs font-semibold uppercase tracking-widest text-[#befc65] mb-2">Startups &amp; Founders</p>
+              <p className="text-base font-semibold text-white mb-4">Startup Spotlight Package</p>
+              <span className="inline-flex items-center gap-2 text-sm font-bold text-white group-hover:text-[#befc65] transition-colors">
                 Share Your Story <ArrowRight className="h-4 w-4" />
               </span>
             </Link>
             <Link
               href="/get-featured/apply?package=ecosystem-visibility"
-              className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 hover:border-[#00a855]/40 transition-colors"
+              className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 hover:border-[#131314]/40 transition-colors"
             >
-              <p className="text-xs font-black uppercase tracking-widest text-[#00cc6a] mb-2">Organizations &amp; Programs</p>
-              <p className="text-base font-black text-white mb-4">Ecosystem Visibility Package</p>
-              <span className="inline-flex items-center gap-2 text-sm font-bold text-white group-hover:text-[#00cc6a] transition-colors">
+              <p className="text-xs font-semibold uppercase tracking-widest text-[#befc65] mb-2">Organizations &amp; Programs</p>
+              <p className="text-base font-semibold text-white mb-4">Ecosystem Visibility Package</p>
+              <span className="inline-flex items-center gap-2 text-sm font-bold text-white group-hover:text-[#befc65] transition-colors">
                 Become An Ecosystem Partner <ArrowRight className="h-4 w-4" />
               </span>
             </Link>

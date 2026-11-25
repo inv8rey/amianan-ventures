@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
         destination: '/share-your-story',
         permanent: true,
       },
+      // About and Resources moved to the main studio site
+      { source: '/about', destination: 'https://amiananventures.org/about/', permanent: true },
+      { source: '/resources', destination: 'https://amiananventures.org/resources/', permanent: true },
     ]
   },
   images: {

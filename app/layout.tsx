@@ -1,15 +1,14 @@
 import type { Metadata } from 'next'
-import { Plus_Jakarta_Sans, Geist_Mono, DM_Serif_Display } from 'next/font/google'
+import { Geist, Geist_Mono } from 'next/font/google'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 import { SITE_URL } from '@/lib/site'
 
-// Body / UI font — geometric grotesque
-const jakartaSans = Plus_Jakarta_Sans({
+// Body / UI font — Geist, shared with amiananventures.org
+const geistSans = Geist({
   variable: '--font-sans',
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
 })
 
 const geistMono = Geist_Mono({
@@ -17,12 +16,11 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 })
 
-// Display font — editorial serif for large headlines only
-const dmSerifDisplay = DM_Serif_Display({
+// Display headlines use Geist too, at a medium weight
+const geistDisplay = Geist({
   variable: '--font-display',
   subsets: ['latin'],
-  weight: '400',
-  style: ['normal', 'italic'],
+  weight: ['500', '600'],
 })
 
 export const metadata: Metadata = {
@@ -61,7 +59,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${jakartaSans.variable} ${geistMono.variable} ${dmSerifDisplay.variable} antialiased min-h-screen`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${geistDisplay.variable} antialiased min-h-screen`}>
         {children}
         <Toaster />
       </body>

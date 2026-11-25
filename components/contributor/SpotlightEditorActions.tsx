@@ -315,7 +315,7 @@ export function SpotlightEditorActions({ application }: Props) {
                 if (!publishUrl.trim()) setPublishUrl(generatePublishedUrl(application.business_name))
                 setMode('publish')
               }}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-md bg-[#00a855] text-white text-xs font-bold hover:bg-[#008f49] transition-colors"
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-md bg-[#131314] text-white text-xs font-bold hover:bg-[#008f49] transition-colors"
             >
               <Globe className="h-3.5 w-3.5" />
               Mark as Published
@@ -334,7 +334,7 @@ export function SpotlightEditorActions({ application }: Props) {
                 <button
                   onClick={() => updateStatus('published', { publishedUrl: publishUrl })}
                   disabled={saving || !publishUrl.trim()}
-                  className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-md bg-[#00a855] text-white text-xs font-bold hover:bg-[#008f49] disabled:opacity-50 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-md bg-[#131314] text-white text-xs font-bold hover:bg-[#008f49] disabled:opacity-50 transition-colors"
                 >
                   {saving && <Loader2 className="h-3 w-3 animate-spin" />}
                   Confirm Publish

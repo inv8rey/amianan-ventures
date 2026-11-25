@@ -17,6 +17,7 @@ import {
   type ContentType, type ContributorSubmission, type SubmissionStatus,
 } from '@/types/contributor'
 import { STATUS_LABELS as SPOTLIGHT_STATUS_LABELS, type SpotlightApplication } from '@/types/spotlight'
+import { MAIN_SITE_URL } from '@/lib/site'
 
 export interface CommunityStoryPreview {
   id: string
@@ -34,7 +35,7 @@ export interface DashboardStats {
 }
 
 const CONTENT_TYPE_BADGE_BG: Record<ContentType, string> = {
-  founder_story: 'bg-[#00a855]',
+  founder_story: 'bg-[#131314]',
   opinion_essay: 'bg-blue-500',
   ecosystem_spotlight: 'bg-purple-500',
   program_recap: 'bg-amber-500',
@@ -48,7 +49,7 @@ const STATUS_BADGE_BG: Record<SubmissionStatus, string> = {
   revision_requested: 'bg-orange-500',
   approved: 'bg-emerald-500',
   rejected: 'bg-red-500',
-  published: 'bg-[#00a855]',
+  published: 'bg-[#131314]',
 }
 
 interface ContributorDashboardProps {
@@ -82,12 +83,12 @@ export function ContributorDashboard({
     <div>
       {isNewUser ? (
         <>
-          <h1 className="text-2xl font-black text-zinc-900">Welcome to Amianan Ventures, {firstName}! 👋</h1>
+          <h1 className="text-2xl font-semibold text-zinc-900">Welcome to Amianan Ventures, {firstName}! 👋</h1>
           <p className="text-sm text-zinc-500 mt-1 mb-6">We&apos;re excited to have you join the Northern Luzon innovation community.</p>
         </>
       ) : (
         <>
-          <h1 className="text-2xl font-black text-zinc-900">{getGreeting()}, {firstName}! 👋</h1>
+          <h1 className="text-2xl font-semibold text-zinc-900">{getGreeting()}, {firstName}! 👋</h1>
           <p className="text-sm text-zinc-500 mt-1 mb-6">Welcome back to your Amianan Ventures dashboard.</p>
         </>
       )}
@@ -133,7 +134,7 @@ export function ContributorDashboard({
           {hasOwnStories && (
             <div id="stories">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-black text-zinc-900">All My Stories</h2>
+                <h2 className="text-lg font-semibold text-zinc-900">All My Stories</h2>
                 <Link
                   href="/submit"
                   className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-black text-white text-sm font-semibold hover:bg-zinc-800 transition-colors"
@@ -163,14 +164,14 @@ export function ContributorDashboard({
           <GettingStartedCard profileComplete={profileComplete} hasSubmission={hasOwnStories} hasFeatureApp={!!spotlight} />
 
           <div className="rounded-2xl border border-zinc-200 bg-white p-5">
-            <p className="text-sm font-black text-zinc-900 mb-4">{isNewUser ? 'New to Amianan Ventures?' : 'Resources & Help'}</p>
+            <p className="text-sm font-semibold text-zinc-900 mb-4">{isNewUser ? 'New to Amianan Ventures?' : 'Resources & Help'}</p>
             <div className="space-y-3.5">
-              <HelpLink icon={<Info className="h-3.5 w-3.5 text-zinc-400" />} title="What we do" desc="Learn about our mission and community" href="/about" />
+              <HelpLink icon={<Info className="h-3.5 w-3.5 text-zinc-400" />} title="What we do" desc="Learn about our mission and community" href={`${MAIN_SITE_URL}/about/`} />
               <HelpLink icon={<Users className="h-3.5 w-3.5 text-zinc-400" />} title="How features work" desc="Understand our packages and process" href="/get-featured" />
               <HelpLink icon={<BookOpen className="h-3.5 w-3.5 text-zinc-400" />} title="Content guidelines" desc="Tips for creating great stories" href="/share-your-story" />
               <HelpLink icon={<HelpCircle className="h-3.5 w-3.5 text-zinc-400" />} title="Help & support" desc="We're here to help you" href="/contact" />
             </div>
-            <Link href="/contact" className="inline-flex items-center gap-1 text-xs font-bold text-[#00a855] hover:underline mt-4">
+            <Link href="/contact" className="inline-flex items-center gap-1 text-xs font-bold text-[#131314] hover:underline mt-4">
               Visit Help Center <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
@@ -186,11 +187,11 @@ export function ContributorDashboard({
 function HeroCard({ spotlight, hasSubmittedSpotlight }: { spotlight: SpotlightApplication | null; hasSubmittedSpotlight: boolean }) {
   if (spotlight && spotlight.status === 'published') {
     return (
-      <div className="relative rounded-2xl overflow-hidden bg-[#042212]">
+      <div className="relative rounded-2xl overflow-hidden bg-[#131314]">
         <div className="relative z-10 p-7 sm:p-9 flex flex-col sm:flex-row sm:items-center gap-6 justify-between">
           <div>
-            <p className="text-xs font-black uppercase tracking-widest text-[#00cc6a] mb-3">You&apos;re Featured!</p>
-            <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight mb-2">Your story is live.</h2>
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#befc65] mb-3">You&apos;re Featured!</p>
+            <h2 className="text-2xl sm:text-3xl font-semibold text-white leading-tight mb-2">Your story is live.</h2>
             <p className="text-sm text-zinc-300 leading-relaxed max-w-sm">
               {spotlight.business_name} is now featured on Amianan Ventures. Thanks for sharing your story with the ecosystem.
             </p>
@@ -201,7 +202,7 @@ function HeroCard({ spotlight, hasSubmittedSpotlight }: { spotlight: SpotlightAp
                 href={spotlight.published_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-white text-[#042212] px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-zinc-100 transition-colors"
+                className="inline-flex items-center gap-2 bg-white text-[#131314] px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-zinc-100 transition-colors"
               >
                 View Your Feature <ExternalLink className="h-3.5 w-3.5" />
               </a>
@@ -214,7 +215,7 @@ function HeroCard({ spotlight, hasSubmittedSpotlight }: { spotlight: SpotlightAp
 
   if (spotlight) {
     return (
-      <div className="relative rounded-2xl overflow-hidden bg-[#042212]">
+      <div className="relative rounded-2xl overflow-hidden bg-[#131314]">
         <div className="absolute inset-0">
           <Image
             src="/get-featured-hero.png"
@@ -223,13 +224,13 @@ function HeroCard({ spotlight, hasSubmittedSpotlight }: { spotlight: SpotlightAp
             className="object-cover object-center"
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#042212] via-[#042212]/85 to-[#042212]/10" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#131314] via-[#131314]/85 to-[#131314]/10" />
         </div>
         <div className="relative z-10 p-7 sm:p-9 max-w-lg">
-          <p className="text-xs font-black uppercase tracking-widest text-[#00cc6a] mb-3">
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#befc65] mb-3">
             {hasSubmittedSpotlight ? SPOTLIGHT_STATUS_LABELS[spotlight.status] : 'Continue Your Application'}
           </p>
-          <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight mb-3">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-white leading-tight mb-3">
             You started a feature.<br />Let&apos;s finish it.
           </h2>
           <p className="text-sm text-zinc-300 leading-relaxed mb-6 max-w-sm">
@@ -237,7 +238,7 @@ function HeroCard({ spotlight, hasSubmittedSpotlight }: { spotlight: SpotlightAp
           </p>
           <Link
             href="/spotlight"
-            className="inline-flex items-center gap-2 bg-white text-[#042212] px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-zinc-100 transition-colors"
+            className="inline-flex items-center gap-2 bg-white text-[#131314] px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-zinc-100 transition-colors"
           >
             Continue Application <ArrowRight className="h-4 w-4" />
           </Link>
@@ -250,8 +251,8 @@ function HeroCard({ spotlight, hasSubmittedSpotlight }: { spotlight: SpotlightAp
     <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-[#eef8f1] to-white border border-zinc-200">
       <div className="relative z-10 grid grid-cols-1 sm:grid-cols-[1fr_220px] gap-6 p-7 sm:p-9">
         <div>
-          <p className="text-xs font-black uppercase tracking-widest text-[#00a855] mb-3">Let&apos;s get you started</p>
-          <h2 className="text-2xl sm:text-3xl font-black text-zinc-900 leading-tight mb-3">
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#131314] mb-3">Let&apos;s get you started</p>
+          <h2 className="text-2xl sm:text-3xl font-semibold text-zinc-900 leading-tight mb-3">
             Share your story.<br />Inspire the ecosystem.
           </h2>
           <p className="text-sm text-zinc-500 leading-relaxed mb-6 max-w-md">
@@ -260,7 +261,7 @@ function HeroCard({ spotlight, hasSubmittedSpotlight }: { spotlight: SpotlightAp
           <div className="flex items-center gap-3 flex-wrap">
             <Link
               href="/feature-packages"
-              className="inline-flex items-center gap-2 bg-[#042212] text-white px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-[#06331c] transition-colors"
+              className="inline-flex items-center gap-2 bg-[#131314] text-white px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-[#0c0c0d] transition-colors"
             >
               Apply for a Feature <ArrowRight className="h-4 w-4" />
             </Link>
@@ -282,12 +283,12 @@ function HeroCard({ spotlight, hasSubmittedSpotlight }: { spotlight: SpotlightAp
 function WaysToGetInvolvedCard({ spotlight }: { spotlight: SpotlightApplication | null }) {
   return (
     <div className="rounded-2xl border border-zinc-200 bg-white p-6">
-      <p className="text-sm font-black text-zinc-900">Ways to Get Involved</p>
+      <p className="text-sm font-semibold text-zinc-900">Ways to Get Involved</p>
       <p className="text-xs text-zinc-400 mt-0.5 mb-5">Choose what best fits you and start your journey with us.</p>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <InvolvementCard
-          icon={<PenLine className="h-4 w-4 text-[#00a855]" />}
-          iconBg="bg-[#00a855]/10"
+          icon={<PenLine className="h-4 w-4 text-[#131314]" />}
+          iconBg="bg-[#131314]/10"
           title="Share a Perspective"
           desc="Share your insights, experiences, lessons, or ideas with the Northern Luzon innovation community."
           cta="Create an article"
@@ -325,7 +326,7 @@ function InvolvementCard({
       <p className="text-sm font-bold text-zinc-900 mb-1">{title}</p>
       <p className="text-xs text-zinc-500 leading-relaxed mb-3">{desc}</p>
       <div className="flex items-center gap-3 flex-wrap">
-        <Link href={href} className="inline-flex items-center gap-1 text-xs font-bold text-[#00a855] hover:underline">
+        <Link href={href} className="inline-flex items-center gap-1 text-xs font-bold text-[#131314] hover:underline">
           {cta} <ArrowRight className="h-3 w-3" />
         </Link>
         {secondaryCta && secondaryHref && (
@@ -347,10 +348,10 @@ function StoriesPreviewCard({
       <div className="rounded-2xl border border-zinc-200 bg-white p-6">
         <div className="flex items-center justify-between mb-5">
           <div>
-            <p className="text-sm font-black text-zinc-900">My Stories</p>
+            <p className="text-sm font-semibold text-zinc-900">My Stories</p>
             <p className="text-xs text-zinc-400 mt-0.5">Your latest articles and their status.</p>
           </div>
-          <Link href="#stories" className="text-xs font-bold text-[#00a855] hover:underline flex items-center gap-1 shrink-0">
+          <Link href="#stories" className="text-xs font-bold text-[#131314] hover:underline flex items-center gap-1 shrink-0">
             View all stories <ArrowRight className="h-3 w-3" />
           </Link>
         </div>
@@ -377,12 +378,12 @@ function StoriesPreviewCard({
                       <ImageIcon className="h-6 w-6 text-zinc-300" />
                     </div>
                   )}
-                  <span className={`absolute top-3 left-3 text-[9px] font-black uppercase tracking-widest text-white px-2 py-1 rounded ${STATUS_BADGE_BG[sub.status]}`}>
+                  <span className={`absolute top-3 left-3 text-[9px] font-semibold uppercase tracking-widest text-white px-2 py-1 rounded ${STATUS_BADGE_BG[sub.status]}`}>
                     {STATUS_LABELS[sub.status]}
                   </span>
                 </div>
                 <p className="text-xs font-bold text-zinc-400 uppercase tracking-wide mb-1">{format(new Date(sub.created_at), 'MMM d, yyyy')}</p>
-                <p className="text-sm font-bold text-zinc-900 leading-snug line-clamp-2 group-hover:text-[#00a855] transition-colors">{sub.headline}</p>
+                <p className="text-sm font-bold text-zinc-900 leading-snug line-clamp-2 group-hover:text-[#131314] transition-colors">{sub.headline}</p>
               </Link>
             )
           })}
@@ -397,10 +398,10 @@ function StoriesPreviewCard({
     <div className="rounded-2xl border border-zinc-200 bg-white p-6">
       <div className="flex items-center justify-between mb-5">
         <div>
-          <p className="text-sm font-black text-zinc-900">Recent Stories from the Community</p>
+          <p className="text-sm font-semibold text-zinc-900">Recent Stories from the Community</p>
           <p className="text-xs text-zinc-400 mt-0.5">Get inspired by stories from founders and organizations across Northern Luzon.</p>
         </div>
-        <Link href="/founder-stories" className="text-xs font-bold text-[#00a855] hover:underline flex items-center gap-1 shrink-0">
+        <Link href="/founder-stories" className="text-xs font-bold text-[#131314] hover:underline flex items-center gap-1 shrink-0">
           View all stories <ArrowRight className="h-3 w-3" />
         </Link>
       </div>
@@ -415,12 +416,12 @@ function StoriesPreviewCard({
                   <FileText className="h-6 w-6 text-zinc-300" />
                 </div>
               )}
-              <span className={`absolute top-3 left-3 text-[9px] font-black uppercase tracking-widest text-white px-2 py-1 rounded ${CONTENT_TYPE_BADGE_BG[story.content_type]}`}>
+              <span className={`absolute top-3 left-3 text-[9px] font-semibold uppercase tracking-widest text-white px-2 py-1 rounded ${CONTENT_TYPE_BADGE_BG[story.content_type]}`}>
                 {CONTENT_TYPE_LABELS[story.content_type]}
               </span>
             </div>
             <p className="text-xs font-bold text-zinc-400 uppercase tracking-wide mb-1">{CONTENT_TYPE_LABELS[story.content_type]}</p>
-            <p className="text-sm font-bold text-zinc-900 leading-snug line-clamp-2 group-hover:text-[#00a855] transition-colors">{story.headline}</p>
+            <p className="text-sm font-bold text-zinc-900 leading-snug line-clamp-2 group-hover:text-[#131314] transition-colors">{story.headline}</p>
           </Link>
         ))}
       </div>
@@ -446,7 +447,7 @@ function NeedHelpCard() {
           href="https://www.facebook.com/amiananventures"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-[#00a855] transition-colors"
+          className="flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-[#131314] transition-colors"
         >
           <div className="w-8 h-8 rounded-full bg-[#1877F2]/10 flex items-center justify-center shrink-0">
             <MessageCircle className="h-4 w-4 text-[#1877F2]" />
@@ -458,7 +459,7 @@ function NeedHelpCard() {
         </a>
         <a
           href="mailto:amiananventures@gmail.com"
-          className="flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-[#00a855] transition-colors"
+          className="flex items-center gap-2.5 text-sm font-semibold text-zinc-700 hover:text-[#131314] transition-colors"
         >
           <div className="w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center shrink-0">
             <Mail className="h-4 w-4 text-zinc-500" />
@@ -479,7 +480,7 @@ function HelpLink({ icon, title, desc, href }: { icon: React.ReactNode; title: s
     <Link href={href} className="flex items-start gap-2.5 group">
       <div className="mt-0.5 shrink-0">{icon}</div>
       <div>
-        <p className="text-sm font-bold text-zinc-800 group-hover:text-[#00a855] transition-colors">{title}</p>
+        <p className="text-sm font-bold text-zinc-800 group-hover:text-[#131314] transition-colors">{title}</p>
         <p className="text-xs text-zinc-400">{desc}</p>
       </div>
     </Link>
@@ -504,17 +505,17 @@ function GettingStartedCard({
 
   return (
     <div className="rounded-2xl border border-zinc-200 bg-white p-5">
-      <p className="text-sm font-black text-zinc-900 mb-4">Getting Started</p>
+      <p className="text-sm font-semibold text-zinc-900 mb-4">Getting Started</p>
       <div className="flex items-center gap-4 mb-5">
         <div className="relative w-14 h-14 shrink-0">
           <svg viewBox="0 0 56 56" className="w-14 h-14 -rotate-90">
             <circle cx="28" cy="28" r="24" fill="none" stroke="#e4e4e7" strokeWidth="6" />
             <circle
-              cx="28" cy="28" r="24" fill="none" stroke="#00a855" strokeWidth="6"
+              cx="28" cy="28" r="24" fill="none" stroke="#131314" strokeWidth="6"
               strokeDasharray={`${(pct / 100) * 150.8} 150.8`} strokeLinecap="round"
             />
           </svg>
-          <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-zinc-900">{pct}%</span>
+          <span className="absolute inset-0 flex items-center justify-center text-xs font-semibold text-zinc-900">{pct}%</span>
         </div>
         <div>
           <p className="text-sm font-bold text-zinc-900">{message}</p>
@@ -524,17 +525,17 @@ function GettingStartedCard({
       <div className="space-y-3.5">
         {steps.map((s) => (
           <Link key={s.title} href={s.href} className="flex items-start gap-2.5 group">
-            <div className={`mt-0.5 shrink-0 ${s.done ? 'text-[#00a855]' : 'text-zinc-400'}`}>
+            <div className={`mt-0.5 shrink-0 ${s.done ? 'text-[#131314]' : 'text-zinc-400'}`}>
               {s.done ? <CheckCircle2 className="h-3.5 w-3.5" /> : <s.icon className="h-3.5 w-3.5" />}
             </div>
             <div>
-              <p className="text-sm font-bold text-zinc-800 group-hover:text-[#00a855] transition-colors">{s.title}</p>
+              <p className="text-sm font-bold text-zinc-800 group-hover:text-[#131314] transition-colors">{s.title}</p>
               <p className="text-xs text-zinc-400">{s.desc}</p>
             </div>
           </Link>
         ))}
       </div>
-      <Link href="/profile" className="inline-flex items-center gap-1 text-xs font-bold text-[#00a855] hover:underline mt-4">
+      <Link href="/profile" className="inline-flex items-center gap-1 text-xs font-bold text-[#131314] hover:underline mt-4">
         View all steps <ArrowRight className="h-3 w-3" />
       </Link>
     </div>
@@ -558,23 +559,23 @@ function NewsletterCard({ email }: { email: string }) {
   }
 
   return (
-    <div className="rounded-2xl border border-[#00a855]/20 bg-[#00a855]/5 p-5">
-      <div className="w-9 h-9 rounded-lg bg-[#00a855]/15 flex items-center justify-center mb-4">
-        <Mail className="h-4 w-4 text-[#00a855]" />
+    <div className="rounded-2xl border border-[#131314]/20 bg-[#131314]/5 p-5">
+      <div className="w-9 h-9 rounded-lg bg-[#131314]/15 flex items-center justify-center mb-4">
+        <Mail className="h-4 w-4 text-[#131314]" />
       </div>
-      <p className="text-sm font-black text-zinc-900 mb-1">Stay in the loop</p>
+      <p className="text-sm font-semibold text-zinc-900 mb-1">Stay in the loop</p>
       <p className="text-xs text-zinc-500 leading-relaxed mb-4">
         Get the latest stories, opportunities, and ecosystem updates straight to your inbox.
       </p>
       {state === 'success' ? (
-        <p className="flex items-center gap-1.5 text-xs font-bold text-[#00a855]">
+        <p className="flex items-center gap-1.5 text-xs font-bold text-[#131314]">
           <CheckCircle2 className="h-3.5 w-3.5" /> You&apos;re subscribed!
         </p>
       ) : (
         <button
           onClick={handleSubscribe}
           disabled={state === 'loading'}
-          className="inline-flex items-center justify-center gap-2 bg-[#0a3a22] text-white px-4 py-2.5 rounded-lg font-bold text-sm hover:bg-[#042212] disabled:opacity-60 transition-colors w-full"
+          className="inline-flex items-center justify-center gap-2 bg-[#232325] text-white px-4 py-2.5 rounded-lg font-bold text-sm hover:bg-[#131314] disabled:opacity-60 transition-colors w-full"
         >
           {state === 'loading' ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Subscribe Now'}
         </button>
@@ -589,13 +590,13 @@ function WelcomeIllustration() {
     <div className="relative hidden sm:block rounded-xl overflow-hidden bg-gradient-to-b from-[#dcf0e3] to-[#cbe9d6] min-h-[180px]">
       <svg viewBox="0 0 220 180" className="absolute inset-0 w-full h-full">
         <path d="M0 140 L30 90 L55 115 L85 65 L115 110 L145 80 L175 120 L220 140 L220 180 L0 180 Z" fill="#aedcbd" />
-        <rect x="20" y="100" width="10" height="40" fill="#9ccfae" />
-        <rect x="170" y="95" width="12" height="45" fill="#9ccfae" />
-        <rect x="190" y="110" width="9" height="30" fill="#9ccfae" />
+        <rect x="20" y="100" width="10" height="40" fill="#a3a3a6" />
+        <rect x="170" y="95" width="12" height="45" fill="#a3a3a6" />
+        <rect x="190" y="110" width="9" height="30" fill="#a3a3a6" />
         {/* people */}
         <g>
           <circle cx="80" cy="120" r="11" fill="#3d2b1f" />
-          <rect x="69" y="131" width="22" height="38" rx="8" fill="#0a3a22" />
+          <rect x="69" y="131" width="22" height="38" rx="8" fill="#232325" />
         </g>
         <g>
           <circle cx="110" cy="115" r="11" fill="#4a2f1d" />
@@ -603,7 +604,7 @@ function WelcomeIllustration() {
         </g>
         <g>
           <circle cx="140" cy="122" r="11" fill="#2b1a10" />
-          <rect x="129" y="133" width="22" height="36" rx="8" fill="#0a3a22" />
+          <rect x="129" y="133" width="22" height="36" rx="8" fill="#232325" />
         </g>
       </svg>
     </div>
@@ -614,7 +615,7 @@ function WelcomeIllustration() {
 type StatColor = 'zinc' | 'green' | 'amber' | 'orange'
 const statColorMap: Record<StatColor, { bg: string; icon: string; value: string }> = {
   zinc:   { bg: 'bg-zinc-50',   icon: 'text-zinc-400',   value: 'text-zinc-900' },
-  green:  { bg: 'bg-[#00a855]/8', icon: 'text-[#00a855]', value: 'text-zinc-900' },
+  green:  { bg: 'bg-[#131314]/8', icon: 'text-[#131314]', value: 'text-zinc-900' },
   amber:  { bg: 'bg-amber-50',  icon: 'text-amber-500',  value: 'text-zinc-900' },
   orange: { bg: 'bg-orange-50', icon: 'text-orange-500', value: 'text-zinc-900' },
 }
@@ -627,7 +628,7 @@ function StatCard({
     <div className={`rounded-xl border border-zinc-200 p-4 ${c.bg} flex flex-col gap-2`}>
       <div className={c.icon}>{icon}</div>
       <div>
-        <p className={`text-2xl font-black ${c.value}`}>{value}</p>
+        <p className={`text-2xl font-semibold ${c.value}`}>{value}</p>
         <p className="text-xs text-zinc-500 font-medium">{label}</p>
       </div>
     </div>

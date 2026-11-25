@@ -14,6 +14,7 @@ import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 import { RESOURCE_CATEGORIES, RESOURCE_FORMATS } from '@/types/resources'
 import type { FounderResource, FounderResourceFormData } from '@/types/resources'
+import { MAIN_SITE_URL } from '@/lib/site'
 
 interface ResourceFormProps {
   resource?: FounderResource
@@ -272,7 +273,7 @@ export function ResourceForm({ resource }: ResourceFormProps) {
 
           {!isNew && form.status === 'published' && (
             <a
-              href="/resources"
+              href={`${MAIN_SITE_URL}/resources/`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-xs text-primary hover:underline"

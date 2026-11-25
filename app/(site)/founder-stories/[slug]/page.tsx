@@ -96,7 +96,7 @@ export default async function FounderStoryPage({ params }: { params: Promise<{ s
             </Link>
 
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-[10px] font-black text-[#d97706] uppercase tracking-wider">Founder Story</span>
+              <span className="text-[10px] font-semibold text-[#d97706] uppercase tracking-wider">Founder Story</span>
               {article.location && (
                 <>
                   <span className="text-zinc-300">·</span>
@@ -160,11 +160,11 @@ export default async function FounderStoryPage({ params }: { params: Promise<{ s
                         )}
                         <div className="min-w-0">
                           {a.location && (
-                            <span className="text-[9px] font-bold text-[#00cc6a] uppercase tracking-wider block mb-0.5">
+                            <span className="text-[9px] font-bold text-[#befc65] uppercase tracking-wider block mb-0.5">
                               {locationLabel[a.location]}
                             </span>
                           )}
-                          <h4 className="text-xs font-semibold text-zinc-800 group-hover:text-[#00a855] transition-colors line-clamp-2 leading-snug">
+                          <h4 className="text-xs font-semibold text-zinc-800 group-hover:text-[#131314] transition-colors line-clamp-2 leading-snug">
                             {a.title}
                           </h4>
                           <p className="text-[10px] text-zinc-400 mt-0.5">
@@ -179,9 +179,9 @@ export default async function FounderStoryPage({ params }: { params: Promise<{ s
                 )}
               </div>
 
-              <div className="rounded border-2 border-[#042212] overflow-hidden">
+              <div className="rounded border-2 border-[#131314] overflow-hidden">
                 <div className="bg-[#d97706] px-3 py-2">
-                  <p className="text-[10px] font-black text-black uppercase tracking-wider">Share Your Journey</p>
+                  <p className="text-[10px] font-semibold text-black uppercase tracking-wider">Share Your Journey</p>
                 </div>
                 <div className="p-3 bg-white">
                   <p className="text-xs text-zinc-500 mb-3 leading-relaxed">Are you a founder in Northern Luzon? We&apos;d love to tell your story.</p>

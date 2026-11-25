@@ -19,7 +19,7 @@ const TYPE_COLORS: Record<ContentType, string> = {
   founder_story:       'text-amber-700 bg-amber-50 border-amber-200',
   opinion_essay:       'text-violet-700 bg-violet-50 border-violet-200',
   program_recap:       'text-blue-700 bg-blue-50 border-blue-200',
-  ecosystem_spotlight: 'text-[#00a855] bg-[#00a855]/8 border-[#00a855]/20',
+  ecosystem_spotlight: 'text-[#131314] bg-[#131314]/8 border-[#131314]/20',
   field_notes:         'text-teal-700 bg-teal-50 border-teal-200',
 }
 
@@ -178,7 +178,7 @@ export default async function ContributionPage({
                 {CONTENT_TYPE_LABELS[contentType]}
               </span>
 
-              <h1 className="text-3xl sm:text-4xl font-black text-zinc-900 leading-tight tracking-tight mb-4">
+              <h1 className="text-3xl sm:text-4xl font-semibold text-zinc-900 leading-tight tracking-tight mb-4">
                 {contribution.headline}
               </h1>
 
@@ -233,7 +233,7 @@ export default async function ContributionPage({
                   </div>
                 ) : (
                   <div className="w-14 h-14 rounded-full bg-zinc-900 flex items-center justify-center shrink-0 border-2 border-zinc-200">
-                    <span className="text-xl font-black text-white">{profile.display_name.charAt(0).toUpperCase()}</span>
+                    <span className="text-xl font-semibold text-white">{profile.display_name.charAt(0).toUpperCase()}</span>
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
@@ -268,7 +268,7 @@ export default async function ContributionPage({
                     )}
                     {profile.id && (
                       <Link href={`/contributors/${profile.id}`}
-                        className="text-[10px] font-semibold text-[#00a855] hover:underline transition-colors">
+                        className="text-[10px] font-semibold text-[#131314] hover:underline transition-colors">
                         View profile →
                       </Link>
                     )}
@@ -310,7 +310,7 @@ export default async function ContributionPage({
             <div className="mt-16 pt-8 border-t border-zinc-100">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-widest text-zinc-400 mb-1">Community Contributions</p>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-1">Community Contributions</p>
                   <p className="text-sm font-bold text-zinc-900">Have a story to share?</p>
                   <p className="text-xs text-zinc-500 mt-0.5">Founders, researchers, and builders — submit your perspective.</p>
                 </div>
@@ -362,7 +362,7 @@ export default async function ContributionPage({
                             <span className={`text-[9px] font-bold uppercase tracking-wider block mb-0.5 ${(TYPE_COLORS[sType] ?? '').split(' ')[0]}`}>
                               {CONTENT_TYPE_LABELS[sType]}
                             </span>
-                            <h4 className="text-xs font-semibold text-zinc-800 group-hover:text-[#00a855] transition-colors line-clamp-2 leading-snug">
+                            <h4 className="text-xs font-semibold text-zinc-800 group-hover:text-[#131314] transition-colors line-clamp-2 leading-snug">
                               {s.headline}
                             </h4>
                             <p className="text-[10px] text-zinc-400 mt-0.5">
@@ -386,8 +386,8 @@ export default async function ContributionPage({
 
               {/* Become a Contributor mini CTA */}
               <div className="rounded border-2 border-black overflow-hidden">
-                <div className="bg-[#00cc6a] px-3 py-2">
-                  <p className="text-[10px] font-black text-black uppercase tracking-wider">Have a perspective?</p>
+                <div className="bg-[#befc65] px-3 py-2">
+                  <p className="text-[10px] font-semibold text-black uppercase tracking-wider">Have a perspective?</p>
                 </div>
                 <div className="p-3 bg-white">
                   <p className="text-xs text-zinc-500 mb-3 leading-relaxed">

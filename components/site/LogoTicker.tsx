@@ -13,7 +13,7 @@ function LogoItem({ entry }: { entry: DirectoryEntry }) {
         {entry.logo_url ? (
           <Image src={entry.logo_url} alt={entry.name} fill className="object-contain p-0.5" sizes="28px" />
         ) : (
-          <span className="text-xs font-black text-zinc-500">{initial}</span>
+          <span className="text-xs font-semibold text-zinc-500">{initial}</span>
         )}
       </div>
       <span className="text-xs font-semibold text-zinc-600 whitespace-nowrap">{entry.name}</span>
@@ -32,7 +32,7 @@ export function LogoTicker({ entries }: Props) {
       <div className="flex items-center">
         {/* Label */}
         <div className="shrink-0 flex items-center gap-2 pl-4 pr-5 py-3 border-r border-zinc-200 bg-black">
-          <span className="text-[10px] font-black uppercase tracking-widest text-[#00cc6a] whitespace-nowrap">
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-[#befc65] whitespace-nowrap">
             Ecosystem
           </span>
         </div>

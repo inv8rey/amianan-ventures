@@ -169,7 +169,7 @@ function TrackSelector({ onSelect }: { onSelect: (track: Track) => void }) {
     <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-14">
       <div className="mb-10">
         <p className="text-[10px] font-bold uppercase tracking-widest text-[#d97706] mb-2">Share Your Story</p>
-        <h1 className="text-4xl font-black text-zinc-900 mb-3 leading-tight">Which story fits you best?</h1>
+        <h1 className="text-4xl font-semibold text-zinc-900 mb-3 leading-tight">Which story fits you best?</h1>
         <p className="text-zinc-500 leading-relaxed max-w-lg">
           Northern Luzon&apos;s innovation ecosystem is built by founders and by the people supporting them. Pick whichever path matches your story.
         </p>
@@ -184,7 +184,7 @@ function TrackSelector({ onSelect }: { onSelect: (track: Track) => void }) {
           <div className="w-11 h-11 rounded-full bg-amber-50 flex items-center justify-center mb-4 group-hover:bg-amber-100 transition-colors">
             <Rocket className="h-5 w-5 text-[#d97706]" />
           </div>
-          <p className="text-base font-black text-zinc-900 mb-1.5">Founder / Startup Story</p>
+          <p className="text-base font-semibold text-zinc-900 mb-1.5">Founder / Startup Story</p>
           <p className="text-sm text-zinc-500 leading-relaxed">
             You&apos;re building a startup or company. Share how it started, what it does, and where it&apos;s going.
           </p>
@@ -198,7 +198,7 @@ function TrackSelector({ onSelect }: { onSelect: (track: Track) => void }) {
           <div className="w-11 h-11 rounded-full bg-amber-50 flex items-center justify-center mb-4 group-hover:bg-amber-100 transition-colors">
             <Lightbulb className="h-5 w-5 text-[#d97706]" />
           </div>
-          <p className="text-base font-black text-zinc-900 mb-1.5">Innovation Story</p>
+          <p className="text-base font-semibold text-zinc-900 mb-1.5">Innovation Story</p>
           <p className="text-sm text-zinc-500 leading-relaxed">
             You&apos;re not a founder, but you work in innovation, business support, or the startup ecosystem. Share your perspective.
           </p>
@@ -293,7 +293,7 @@ export default function FounderStoryPage() {
     return (
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-20 text-center">
         <CheckCircle2 className="h-14 w-14 text-[#d97706] mx-auto mb-5" />
-        <h1 className="text-3xl font-black text-zinc-900 mb-3">Story Received!</h1>
+        <h1 className="text-3xl font-semibold text-zinc-900 mb-3">Story Received!</h1>
         <p className="text-zinc-500 leading-relaxed max-w-md mx-auto mb-6">
           Thank you, <strong>{info.name}</strong>! We&apos;ll review your submission and reach out at <strong>{info.email}</strong> within a week.
         </p>
@@ -319,13 +319,13 @@ export default function FounderStoryPage() {
           <ArrowLeft className="h-3.5 w-3.5" /> Change story type
         </button>
         <p className="text-[10px] font-bold uppercase tracking-widest text-[#d97706] mb-2">{copy.eyebrow}</p>
-        <h1 className="text-4xl font-black text-zinc-900 mb-3 leading-tight">{copy.title}</h1>
+        <h1 className="text-4xl font-semibold text-zinc-900 mb-3 leading-tight">{copy.title}</h1>
         <p className="text-zinc-500 leading-relaxed max-w-lg">{copy.subtitle}</p>
       </div>
 
       {/* What to expect */}
       <div className="rounded-xl bg-amber-50 border border-amber-100 p-5 mb-10">
-        <p className="text-xs font-black uppercase tracking-widest text-amber-600 mb-3">What happens next</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-amber-600 mb-3">What happens next</p>
         <ol className="space-y-1.5 text-sm text-zinc-600 list-decimal list-inside">
           <li>Submit the form below</li>
           <li>Our team reviews it within a week and contacts you</li>
@@ -338,7 +338,7 @@ export default function FounderStoryPage() {
 
         {/* ── Section 1: About You ── */}
         <section>
-          <h2 className="text-xs font-black uppercase tracking-widest text-zinc-400 border-b border-zinc-200 pb-2 mb-5">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-400 border-b border-zinc-200 pb-2 mb-5">
             About You
           </h2>
           <div className="space-y-4">
@@ -379,7 +379,7 @@ export default function FounderStoryPage() {
 
         {/* ── Section 2: Story Questions ── */}
         <section>
-          <h2 className="text-xs font-black uppercase tracking-widest text-zinc-400 border-b border-zinc-200 pb-2 mb-5">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-400 border-b border-zinc-200 pb-2 mb-5">
             Your Story
           </h2>
           <p className="text-xs text-zinc-400 mb-5">Answer as many as you can. Required questions are marked with an asterisk.</p>
@@ -404,7 +404,7 @@ export default function FounderStoryPage() {
 
         {/* ── Section 3: Assets ── */}
         <section>
-          <h2 className="text-xs font-black uppercase tracking-widest text-zinc-400 border-b border-zinc-200 pb-2 mb-5">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-400 border-b border-zinc-200 pb-2 mb-5">
             Photos &amp; Assets
           </h2>
           <div className="space-y-5">

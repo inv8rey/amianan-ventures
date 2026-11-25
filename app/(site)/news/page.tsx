@@ -62,8 +62,8 @@ export default async function NewsPage({
       {/* Header */}
       <div className="mb-7">
         <div className="flex items-center gap-3 mb-1.5">
-          <div className="w-1 h-6 bg-[#00cc6a] rounded-full" />
-          <h1 className="text-3xl font-black text-zinc-900">{headline}</h1>
+          <div className="w-1 h-6 bg-[#befc65] rounded-full" />
+          <h1 className="text-3xl font-semibold text-zinc-900">{headline}</h1>
         </div>
         <p className="text-sm text-zinc-500 ml-4 max-w-xl">{subtext}</p>
       </div>

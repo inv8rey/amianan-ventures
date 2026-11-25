@@ -64,18 +64,18 @@ export default function ContributorLoginPage() {
   }
 
   return (
-    <div className="bg-[#042212] flex flex-col">
+    <div className="bg-[#131314] flex flex-col">
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-2">
 
         {/* ── Left: marketing panel ── */}
         <div className="relative overflow-hidden px-6 sm:px-10 lg:px-16 py-14 lg:py-20 min-h-[420px] lg:min-h-0 flex flex-col">
           <div className="relative z-10 flex-1 flex flex-col justify-center max-w-md">
             <span className="inline-flex items-center gap-2 self-start px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 text-white text-[11px] font-bold uppercase tracking-wider mb-8">
-              <Users className="h-3.5 w-3.5 text-[#00cc6a]" /> Contributor Portal
+              <Users className="h-3.5 w-3.5 text-[#befc65]" /> Contributor Portal
             </span>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-5">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white leading-tight mb-5">
               Welcome back! Let&apos;s keep building{' '}
-              <span className="text-[#00cc6a]">Northern Luzon</span> together.
+              <span className="text-[#befc65]">Northern Luzon</span> together.
             </h1>
             <p className="text-zinc-300 leading-relaxed mb-10 max-w-sm">
               Sign in to continue sharing ideas, stories, and opportunities that drive innovation and impact across our region.
@@ -83,8 +83,8 @@ export default function ContributorLoginPage() {
             <div className="grid grid-cols-2 gap-x-6 gap-y-6">
               {FEATURES.map((f) => (
                 <div key={f.title}>
-                  <div className="w-9 h-9 rounded-full bg-[#00cc6a]/10 flex items-center justify-center mb-2.5">
-                    <f.icon className="h-4 w-4 text-[#00cc6a]" />
+                  <div className="w-9 h-9 rounded-full bg-[#befc65]/10 flex items-center justify-center mb-2.5">
+                    <f.icon className="h-4 w-4 text-[#befc65]" />
                   </div>
                   <p className="text-sm font-bold text-white mb-0.5">{f.title}</p>
                   <p className="text-xs text-zinc-400 leading-relaxed">{f.desc}</p>
@@ -99,11 +99,11 @@ export default function ContributorLoginPage() {
         <div className="flex items-center justify-center px-4 sm:px-8 py-12 lg:py-20">
           <div className="w-full max-w-md bg-white rounded-2xl p-8 sm:p-11 shadow-2xl">
             <div className="flex items-start gap-4 pb-6 mb-6 border-b border-zinc-100">
-              <div className="w-12 h-12 rounded-xl bg-[#00a855]/10 flex items-center justify-center shrink-0">
-                <PenLine className="h-5 w-5 text-[#00a855]" />
+              <div className="w-12 h-12 rounded-xl bg-[#131314]/10 flex items-center justify-center shrink-0">
+                <PenLine className="h-5 w-5 text-[#131314]" />
               </div>
               <div>
-                <h2 className="text-2xl font-black text-zinc-900 leading-tight">Welcome back</h2>
+                <h2 className="text-2xl font-semibold text-zinc-900 leading-tight">Welcome back</h2>
                 <p className="text-sm text-zinc-500 mt-0.5">Sign in to your contributor account</p>
               </div>
             </div>
@@ -156,11 +156,11 @@ export default function ContributorLoginPage() {
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="h-4 w-4 rounded border-zinc-300 text-[#00a855] focus:ring-[#00a855]"
+                    className="h-4 w-4 rounded border-zinc-300 text-[#131314] focus:ring-[#131314]"
                   />
                   Remember me
                 </label>
-                <Link href="/contribute/forgot-password" className="text-sm font-semibold text-[#00a855] hover:underline">
+                <Link href="/contribute/forgot-password" className="text-sm font-semibold text-[#131314] hover:underline">
                   Forgot password?
                 </Link>
               </div>
@@ -168,7 +168,7 @@ export default function ContributorLoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 rounded-lg bg-[#042212] text-white text-sm font-bold hover:bg-[#06331c] disabled:opacity-60 transition-colors flex items-center justify-center gap-2 mt-2"
+                className="w-full py-3 rounded-lg bg-[#131314] text-white text-sm font-bold hover:bg-[#0c0c0d] disabled:opacity-60 transition-colors flex items-center justify-center gap-2 mt-2"
               >
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogIn className="h-4 w-4" />}
                 Sign In
@@ -177,7 +177,7 @@ export default function ContributorLoginPage() {
 
             <p className="text-center text-sm text-zinc-500 mt-6">
               Don&apos;t have an account?{' '}
-              <Link href="/contribute/signup" className="text-[#00a855] font-semibold hover:underline">
+              <Link href="/contribute/signup" className="text-[#131314] font-semibold hover:underline">
                 Sign up
               </Link>
             </p>
@@ -194,7 +194,7 @@ export default function ContributorLoginPage() {
         <div className="max-w-3xl mx-auto flex flex-wrap items-center justify-center gap-x-10 gap-y-3 px-4">
           {TRUST_BADGES.map((b) => (
             <div key={b.label} className="flex items-center gap-2 text-zinc-400 text-xs font-semibold">
-              <b.icon className="h-4 w-4 text-[#00cc6a]" />
+              <b.icon className="h-4 w-4 text-[#befc65]" />
               {b.label}
             </div>
           ))}

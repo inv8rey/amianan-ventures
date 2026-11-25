@@ -4,13 +4,13 @@ import { ArrowRight, FileText } from 'lucide-react'
 export function SubmitStoryBanner({ className = 'mt-12' }: { className?: string }) {
   return (
     <div className={`${className} rounded-xl border-2 border-black overflow-hidden`}>
-      <div className="bg-[#00cc6a] px-6 py-3 flex items-center gap-2">
+      <div className="bg-[#befc65] px-6 py-3 flex items-center gap-2">
         <FileText className="h-4 w-4 text-black" />
-        <span className="text-sm font-black text-black uppercase tracking-wider">Share Your Story</span>
+        <span className="text-sm font-semibold text-black uppercase tracking-wider">Share Your Story</span>
       </div>
       <div className="bg-white p-6 flex flex-col sm:flex-row items-start sm:items-center gap-5 justify-between">
         <div>
-          <h3 className="text-lg font-black text-zinc-900 mb-1 leading-tight">
+          <h3 className="text-lg font-semibold text-zinc-900 mb-1 leading-tight">
             Are you a founder, innovator, or community builder in Northern Luzon?
           </h3>
           <p className="text-sm text-zinc-500 leading-relaxed max-w-xl">

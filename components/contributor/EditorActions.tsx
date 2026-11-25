@@ -205,7 +205,7 @@ export function EditorActions({ submission }: EditorActionsProps) {
           <button
             onClick={() => updateStatus('published')}
             disabled={saving || isPending}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-[#00a855] text-white text-xs font-bold hover:bg-[#008f49] disabled:opacity-50 transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-[#131314] text-white text-xs font-bold hover:bg-[#008f49] disabled:opacity-50 transition-colors"
           >
             {(saving || isPending) ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Globe className="h-3.5 w-3.5" />}
             {isScheduledFuture ? 'Publish Now Instead' : 'Publish Now'}

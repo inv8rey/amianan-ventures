@@ -77,7 +77,7 @@ export function ContributionLinksCard({
             href={previewUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 truncate text-[11px] text-primary hover:underline font-mono"
+            className="flex-1 truncate text-[11px] text-[#131314] hover:underline font-mono"
           >
             {previewUrl}
           </a>

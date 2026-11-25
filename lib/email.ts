@@ -1,4 +1,5 @@
 import { Resend } from 'resend'
+import { SITE_URL, SITE_HOST } from '@/lib/site'
 
 // Lazy-init so the module can be imported at build time without a key set.
 function getResend() {
@@ -7,7 +8,6 @@ function getResend() {
 
 const FROM = process.env.CONTRIBUTOR_FROM_EMAIL ?? 'onboarding@resend.dev'
 const EDITOR_EMAIL = process.env.EDITOR_EMAIL ?? ''
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://amiananventures.org'
 
 function baseHtml(content: string) {
   return `
@@ -26,7 +26,7 @@ function baseHtml(content: string) {
     <div style="padding:16px 28px;border-top:1px solid #f3f4f6;background:#f9fafb">
       <p style="margin:0;font-size:11px;color:#9ca3af">
         Amianan Innovation Ventures · Baguio City, Philippines ·
-        <a href="${SITE_URL}" style="color:#00a855;text-decoration:none">amiananventures.org</a>
+        <a href="${SITE_URL}" style="color:#00a855;text-decoration:none">${SITE_HOST}</a>
       </p>
     </div>
   </div>
@@ -127,7 +127,7 @@ export async function sendApproved(
       ${h1('Your article is approved! 🎉')}
       ${pill('Approved', '#10b981')}
       <div style="margin-top:16px">
-        ${p(`Congratulations! Our editor has approved your submission <strong>"${headline}"</strong>. We'll schedule it for publication on <a href="${SITE_URL}" style="color:#00a855">amiananventures.org</a> and notify you when it goes live.`)}
+        ${p(`Congratulations! Our editor has approved your submission <strong>"${headline}"</strong>. We'll schedule it for publication on <a href="${SITE_URL}" style="color:#00a855">${SITE_HOST}</a> and notify you when it goes live.`)}
         ${p('Thank you for contributing to the Northern Luzon innovation ecosystem.')}
         ${btn(`${SITE_URL}/dashboard`, 'View My Dashboard')}
       </div>

@@ -36,7 +36,7 @@ export function NewsletterSignup({ source = 'homepage' }: { source?: string }) {
 
   if (state === 'success') {
     return (
-      <div className="flex items-center gap-3 text-[#00cc6a]">
+      <div className="flex items-center gap-3 text-[#befc65]">
         <CheckCircle2 className="h-5 w-5 shrink-0" />
         <span className="text-sm font-semibold">You&apos;re in! We&apos;ll keep you updated.</span>
       </div>
@@ -51,12 +51,12 @@ export function NewsletterSignup({ source = 'homepage' }: { source?: string }) {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="your@email.com"
-        className="flex-1 rounded px-4 py-2.5 bg-white/10 border border-white/20 text-white placeholder:text-zinc-500 text-sm focus:outline-none focus:border-[#00cc6a] transition-colors"
+        className="flex-1 rounded px-4 py-2.5 bg-white/10 border border-white/20 text-white placeholder:text-zinc-500 text-sm focus:outline-none focus:border-[#befc65] transition-colors"
       />
       <button
         type="submit"
         disabled={state === 'loading'}
-        className="inline-flex items-center justify-center gap-2 bg-[#00cc6a] text-black px-5 py-2.5 rounded font-bold text-sm hover:bg-[#00b85e] transition-colors disabled:opacity-60 whitespace-nowrap uppercase tracking-wide"
+        className="inline-flex items-center justify-center gap-2 bg-[#befc65] text-black px-5 py-2.5 rounded font-bold text-sm hover:bg-[#d0ff8a] transition-colors disabled:opacity-60 whitespace-nowrap uppercase tracking-wide"
       >
         {state === 'loading' ? (
           <Loader2 className="h-4 w-4 animate-spin" />

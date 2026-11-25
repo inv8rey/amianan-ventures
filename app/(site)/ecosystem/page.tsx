@@ -107,10 +107,10 @@ export default async function EcosystemPage() {
       <div className="bg-black text-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
           <div className="max-w-2xl">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-[#00cc6a] mb-3">Open Directory</p>
-            <h1 className="text-4xl sm:text-5xl font-black leading-tight mb-4 text-white">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-[#befc65] mb-3">Open Directory</p>
+            <h1 className="text-4xl sm:text-5xl font-semibold leading-tight mb-4 text-white">
               Discover the<br />
-              <span className="text-[#00cc6a]">Northern Luzon</span>{' '}
+              <span className="text-[#befc65]">Northern Luzon</span>{' '}
               <span className="text-white">Ecosystem</span>
             </h1>
             <p className="text-zinc-400 text-base leading-relaxed mb-7 max-w-lg">
@@ -121,12 +121,12 @@ export default async function EcosystemPage() {
                 href="https://airtable.com/appYUrRsmwImGgG3C/pagsOvlAtunXtZ5Og/form"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-[#00cc6a] text-black px-5 py-2.5 rounded font-bold text-sm hover:bg-[#00b85e] transition-colors uppercase tracking-wide"
+                className="inline-flex items-center gap-2 bg-[#befc65] text-black px-5 py-2.5 rounded font-bold text-sm hover:bg-[#d0ff8a] transition-colors uppercase tracking-wide"
               >
                 Submit a listing <ArrowRight className="h-4 w-4" />
               </a>
               <div className="flex items-center gap-2 text-sm text-zinc-400">
-                <span className="text-2xl font-black text-white">{totalCount}</span>
+                <span className="text-2xl font-semibold text-white">{totalCount}</span>
                 organizations listed
               </div>
             </div>
@@ -143,7 +143,7 @@ export default async function EcosystemPage() {
                 key={dt.type}
                 className="p-4 rounded-lg border border-zinc-200 hover:border-black transition-colors"
               >
-                <p className="text-2xl font-black text-zinc-900 mb-0.5">{counts[dt.type]}</p>
+                <p className="text-2xl font-semibold text-zinc-900 mb-0.5">{counts[dt.type]}</p>
                 <p className="text-xs font-bold text-zinc-800">{dt.label}</p>
                 <p className="text-[10px] text-zinc-400 mt-1 leading-snug">{dt.description}</p>
               </div>
@@ -158,7 +158,7 @@ export default async function EcosystemPage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
             <div className="flex items-center gap-2 mb-6">
               <Star className="h-4 w-4 text-amber-400 fill-amber-400" />
-              <span className="text-xs font-black uppercase tracking-widest text-zinc-500">Featured Organizations</span>
+              <span className="text-xs font-semibold uppercase tracking-widest text-zinc-500">Featured Organizations</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {featuredEntries.map((entry) => (
@@ -180,15 +180,15 @@ export default async function EcosystemPage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
             <div className="flex items-center justify-between mb-8">
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#00a855] mb-1">People</p>
-                <h2 className="text-2xl font-black text-zinc-900">Meet the voices behind the stories</h2>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#131314] mb-1">People</p>
+                <h2 className="text-2xl font-semibold text-zinc-900">Meet the voices behind the stories</h2>
                 <p className="text-sm text-zinc-500 mt-1">
                   Founders, researchers, and ecosystem builders contributing to Amianan Ventures
                 </p>
               </div>
               <Link
                 href="/contribute"
-                className="hidden sm:inline-flex items-center gap-1 text-xs font-bold text-[#00a855] hover:underline uppercase tracking-wider shrink-0"
+                className="hidden sm:inline-flex items-center gap-1 text-xs font-bold text-[#131314] hover:underline uppercase tracking-wider shrink-0"
               >
                 Become a contributor <ChevronRight className="h-3 w-3" />
               </Link>
@@ -199,21 +199,21 @@ export default async function EcosystemPage() {
                 <Link
                   key={c.id}
                   href={`/contributors/${c.id}`}
-                  className="group flex flex-col items-center text-center gap-3 p-5 rounded-xl border border-zinc-200 bg-white hover:border-[#00a855]/40 hover:shadow-sm transition-all"
+                  className="group flex flex-col items-center text-center gap-3 p-5 rounded-xl border border-zinc-200 bg-white hover:border-[#131314]/40 hover:shadow-sm transition-all"
                 >
                   {c.photo_url ? (
-                    <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-zinc-200 group-hover:border-[#00a855]/40 transition-colors shrink-0">
+                    <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-zinc-200 group-hover:border-[#131314]/40 transition-colors shrink-0">
                       <Image src={c.photo_url} alt={c.display_name} fill className="object-cover" sizes="64px" />
                     </div>
                   ) : (
-                    <div className="w-16 h-16 rounded-full bg-zinc-900 flex items-center justify-center border-2 border-zinc-200 group-hover:border-[#00a855]/40 transition-colors shrink-0">
-                      <span className="text-2xl font-black text-white">
+                    <div className="w-16 h-16 rounded-full bg-zinc-900 flex items-center justify-center border-2 border-zinc-200 group-hover:border-[#131314]/40 transition-colors shrink-0">
+                      <span className="text-2xl font-semibold text-white">
                         {c.display_name.charAt(0).toUpperCase()}
                       </span>
                     </div>
                   )}
                   <div className="min-w-0 w-full">
-                    <p className="text-sm font-bold text-zinc-900 group-hover:text-[#00a855] transition-colors truncate">
+                    <p className="text-sm font-bold text-zinc-900 group-hover:text-[#131314] transition-colors truncate">
                       {c.display_name}
                     </p>
                     {c.role && (
@@ -224,7 +224,7 @@ export default async function EcosystemPage() {
                     {c.organization && (
                       <p className="text-[10px] text-zinc-400 truncate">{c.organization}</p>
                     )}
-                    <p className="text-[10px] font-semibold text-[#00a855] mt-1.5">
+                    <p className="text-[10px] font-semibold text-[#131314] mt-1.5">
                       {c.published_count} article{c.published_count !== 1 ? 's' : ''}
                     </p>
                   </div>
@@ -235,7 +235,7 @@ export default async function EcosystemPage() {
             <div className="mt-6 sm:hidden text-center">
               <Link
                 href="/contribute"
-                className="inline-flex items-center gap-1 text-xs font-bold text-[#00a855] hover:underline uppercase tracking-wider"
+                className="inline-flex items-center gap-1 text-xs font-bold text-[#131314] hover:underline uppercase tracking-wider"
               >
                 Become a contributor <ChevronRight className="h-3 w-3" />
               </Link>
@@ -245,17 +245,17 @@ export default async function EcosystemPage() {
       )}
 
       {/* ── Submit CTA ── */}
-      <div className="bg-[#042212] border-t border-white/10">
+      <div className="bg-[#131314] border-t border-white/10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div>
-            <h2 className="text-lg font-black text-white mb-1">Know a startup or organization we should list?</h2>
+            <h2 className="text-lg font-semibold text-white mb-1">Know a startup or organization we should list?</h2>
             <p className="text-sm text-zinc-400">Help us build the most complete Northern Luzon innovation directory.</p>
           </div>
           <a
             href="https://airtable.com/appYUrRsmwImGgG3C/pagsOvlAtunXtZ5Og/form"
             target="_blank"
             rel="noopener noreferrer"
-            className="shrink-0 inline-flex items-center gap-2 bg-[#00cc6a] text-black px-6 py-3 rounded font-bold text-sm hover:bg-[#00b85e] transition-colors uppercase tracking-wide"
+            className="shrink-0 inline-flex items-center gap-2 bg-[#befc65] text-black px-6 py-3 rounded font-bold text-sm hover:bg-[#d0ff8a] transition-colors uppercase tracking-wide"
           >
             Submit a listing <ArrowRight className="h-4 w-4" />
           </a>
@@ -275,14 +275,14 @@ function FeaturedCard({ entry, typeLabel }: { entry: DirectoryEntry; typeLabel: 
         {entry.logo_url ? (
           <Image src={entry.logo_url} alt={entry.name} fill className="object-contain p-1.5" sizes="56px" />
         ) : (
-          <span className="text-2xl font-black text-zinc-400">{initial}</span>
+          <span className="text-2xl font-semibold text-zinc-400">{initial}</span>
         )}
       </div>
 
       {/* Info */}
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5 flex-wrap mb-1">
-          <span className="text-[9px] font-bold uppercase tracking-widest text-[#00a855]">{typeLabel}</span>
+          <span className="text-[9px] font-bold uppercase tracking-widest text-[#131314]">{typeLabel}</span>
           {entry.sector && (
             <>
               <span className="text-zinc-300">·</span>
@@ -290,10 +290,10 @@ function FeaturedCard({ entry, typeLabel }: { entry: DirectoryEntry; typeLabel: 
             </>
           )}
         </div>
-        <h3 className="text-sm font-black text-zinc-900 group-hover:text-black leading-snug mb-1">{entry.name}</h3>
+        <h3 className="text-sm font-semibold text-zinc-900 group-hover:text-black leading-snug mb-1">{entry.name}</h3>
         {entry.city && (
           <p className="text-[10px] text-zinc-400 flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00cc6a] inline-block shrink-0" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#befc65] inline-block shrink-0" />
             {entry.city}
           </p>
         )}

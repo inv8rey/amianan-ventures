@@ -10,3 +10,6 @@ const pointsAtMainSite = !!envUrl && /^https?:\/\/(www\.)?amiananventures\.org$/
 
 export const SITE_URL = envUrl && !pointsAtMainSite ? envUrl : NEWS_SITE_URL
 export const SITE_HOST = SITE_URL.replace(/^https?:\/\//, '')
+
+// Featured Partners section on the news homepage. Hidden for now; set to true to bring it back.
+export const SHOW_FEATURED_PARTNERS = false

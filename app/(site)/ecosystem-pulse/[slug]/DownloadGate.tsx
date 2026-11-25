@@ -33,9 +33,9 @@ export function DownloadGate({ reportId, reportTitle }: { reportId: string; repo
 
   if (status === 'done') {
     return (
-      <div className="rounded-2xl border-2 border-[#00cc6a] bg-[#00cc6a]/5 p-8 text-center">
-        <CheckCircle className="h-10 w-10 text-[#00a855] mx-auto mb-3" />
-        <h3 className="text-lg font-black text-zinc-900 mb-1">Check your inbox</h3>
+      <div className="rounded-2xl border-2 border-[#befc65] bg-[#befc65]/5 p-8 text-center">
+        <CheckCircle className="h-10 w-10 text-[#131314] mx-auto mb-3" />
+        <h3 className="text-lg font-semibold text-zinc-900 mb-1">Check your inbox</h3>
         <p className="text-sm text-zinc-500 leading-relaxed">
           We've sent the download link for <strong>{reportTitle}</strong> to <strong>{email}</strong>.
           <br />If it doesn't arrive within a few minutes, check your spam folder.
@@ -48,7 +48,7 @@ export function DownloadGate({ reportId, reportTitle }: { reportId: string; repo
     <div className="rounded-2xl border-2 border-zinc-900 bg-white overflow-hidden shadow-lg">
       {/* Card header band */}
       <div className="bg-zinc-900 px-6 py-4">
-        <h3 className="text-sm font-black text-white uppercase tracking-wider">Get the full report</h3>
+        <h3 className="text-sm font-semibold text-white uppercase tracking-wider">Get the full report</h3>
         <p className="text-[11px] text-white/50 mt-0.5">Free · Instant email delivery</p>
       </div>
 

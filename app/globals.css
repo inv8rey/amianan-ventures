@@ -34,31 +34,31 @@
 
 /* ─── Amianan Ventures — Regional innovation media for Northern Luzon ─── */
 :root {
-  --background: #ffffff;
-  --foreground: #0a0a0a;
+  --background: #f3f3f4;
+  --foreground: #131314;
   --card: #ffffff;
-  --card-foreground: #0a0a0a;
+  --card-foreground: #131314;
   --popover: #ffffff;
-  --popover-foreground: #0a0a0a;
-  --primary: #00cc6a;          /* Techstars green */
-  --primary-foreground: #000000;
+  --popover-foreground: #131314;
+  --primary: #befc65;          /* Voltage lime (matches amiananventures.org) */
+  --primary-foreground: #131314;
   --secondary: #f4f4f5;
   --secondary-foreground: #0a0a0a;
   --muted: #f4f4f5;
-  --muted-foreground: #71717a;
+  --muted-foreground: #66646d;
   --accent: #f4f4f5;
   --accent-foreground: #0a0a0a;
   --destructive: #ef4444;
-  --border: #e4e4e7;
-  --input: #e4e4e7;
-  --ring: #00cc6a;
-  --radius: 0.375rem;
+  --border: #e0dfdf;
+  --input: #e0dfdf;
+  --ring: #131314;
+  --radius: 0.75rem;
 
   /* Site tokens */
   --av-black: #000000;
-  --av-header: #042212;       /* Dark forest pine — header & footer bg */
-  --av-green: #00cc6a;        /* Primary green — news, featured, CTAs */
-  --av-green-dark: #00a855;   /* Green hover */
+  --av-header: #131314;       /* Carbon — header & footer bg */
+  --av-green: #befc65;        /* Voltage lime — CTAs and highlights */
+  --av-green-dark: #131314;   /* Ink */
   --av-amber: #d97706;        /* Warm amber — Founder Stories accent */
   --av-amber-dark: #b45309;   /* Amber hover */
   --av-gray-50: #fafafa;
@@ -82,13 +82,16 @@
 /* ─── Typography ─── */
 @layer base {
   h1, h2, h3, h4, h5, h6 {
-    @apply font-bold tracking-tight text-foreground;
+    @apply font-semibold text-foreground;
+    letter-spacing: -0.025em;
   }
 }
 
 /* ─── Display / editorial serif ─── */
 .font-display {
-  font-family: var(--font-display), Georgia, 'Times New Roman', serif;
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.035em;
 }
 
 /* ─── Article prose ─── */
@@ -101,14 +104,14 @@
   font-weight: 700;
   margin-top: 2.5rem;
   margin-bottom: 1rem;
-  color: #0a0a0a;
+  color: #131314;
 }
 .prose-article h3 {
   font-size: 1.25rem;
   font-weight: 600;
   margin-top: 2rem;
   margin-bottom: 0.75rem;
-  color: #0a0a0a;
+  color: #131314;
 }
 .prose-article p {
   margin-bottom: 1.25rem;

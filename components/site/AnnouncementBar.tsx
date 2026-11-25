@@ -7,8 +7,8 @@ import type { Announcement } from '@/app/admin/settings/actions'
 export type { Announcement }
 
 const COLOR_STYLES: Record<string, string> = {
-  green:  'bg-[#00cc6a] text-black',
-  dark:   'bg-[#042212] text-white',
+  green:  'bg-[#befc65] text-black',
+  dark:   'bg-[#131314] text-white',
   amber:  'bg-amber-400 text-black',
   black:  'bg-black text-white',
   white:  'bg-white text-zinc-900 border-b border-zinc-200',

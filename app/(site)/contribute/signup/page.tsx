@@ -122,18 +122,18 @@ export default function ContributorSignupPage() {
   }
 
   return (
-    <div className="bg-[#042212] flex flex-col">
+    <div className="bg-[#131314] flex flex-col">
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-2">
 
         {/* ── Left: marketing panel ── */}
         <div className="relative overflow-hidden px-6 sm:px-10 lg:px-16 py-14 lg:py-20 min-h-[420px] lg:min-h-0 flex flex-col">
           <div className="relative z-10 flex-1 flex flex-col justify-center max-w-md">
             <span className="inline-flex items-center gap-2 self-start px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 text-white text-[11px] font-bold uppercase tracking-wider mb-8">
-              <Users className="h-3.5 w-3.5 text-[#00cc6a]" /> Contributor Portal
+              <Users className="h-3.5 w-3.5 text-[#befc65]" /> Contributor Portal
             </span>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-5">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white leading-tight mb-5">
               Join a community building the future of{' '}
-              <span className="text-[#00cc6a]">Northern Luzon.</span>
+              <span className="text-[#befc65]">Northern Luzon.</span>
             </h1>
             <p className="text-zinc-300 leading-relaxed mb-8 max-w-sm">
               Create your account to share stories, discover opportunities, and connect with founders, innovators, and ecosystem partners.
@@ -141,8 +141,8 @@ export default function ContributorSignupPage() {
             <div className="divide-y divide-white/10">
               {FEATURES.map((f) => (
                 <div key={f.label} className="flex items-center gap-3 py-3.5">
-                  <div className="w-9 h-9 rounded-full bg-[#00cc6a]/10 flex items-center justify-center shrink-0">
-                    <f.icon className="h-4 w-4 text-[#00cc6a]" />
+                  <div className="w-9 h-9 rounded-full bg-[#befc65]/10 flex items-center justify-center shrink-0">
+                    <f.icon className="h-4 w-4 text-[#befc65]" />
                   </div>
                   <span className="text-sm font-semibold text-white">{f.label}</span>
                 </div>
@@ -156,11 +156,11 @@ export default function ContributorSignupPage() {
         <div className="flex items-center justify-center px-4 sm:px-8 py-12 lg:py-20">
           <div className="w-full max-w-xl bg-white rounded-2xl p-7 sm:p-10 shadow-2xl">
             <div className="flex items-start gap-3.5 pb-5 mb-5 border-b border-zinc-100">
-              <div className="w-11 h-11 rounded-xl bg-[#00a855]/10 flex items-center justify-center shrink-0">
-                <PenLine className="h-5 w-5 text-[#00a855]" />
+              <div className="w-11 h-11 rounded-xl bg-[#131314]/10 flex items-center justify-center shrink-0">
+                <PenLine className="h-5 w-5 text-[#131314]" />
               </div>
               <div>
-                <h2 className="text-xl font-black text-zinc-900 leading-tight">Create your account</h2>
+                <h2 className="text-xl font-semibold text-zinc-900 leading-tight">Create your account</h2>
                 <p className="text-sm text-zinc-500 mt-0.5">Join the Amianan Innovation Ventures contributor community.</p>
               </div>
             </div>
@@ -288,9 +288,9 @@ export default function ContributorSignupPage() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 rounded-xl bg-[#00a855]/8 border border-[#00a855]/15 p-3.5">
-                <div className="w-8 h-8 rounded-full bg-[#00a855]/15 flex items-center justify-center shrink-0">
-                  <ShieldCheck className="h-4 w-4 text-[#00a855]" />
+              <div className="flex items-start gap-3 rounded-xl bg-[#131314]/8 border border-[#131314]/15 p-3.5">
+                <div className="w-8 h-8 rounded-full bg-[#131314]/15 flex items-center justify-center shrink-0">
+                  <ShieldCheck className="h-4 w-4 text-[#131314]" />
                 </div>
                 <div>
                   <p className="text-xs font-bold text-zinc-900">Your privacy matters.</p>
@@ -303,7 +303,7 @@ export default function ContributorSignupPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 rounded-lg bg-[#042212] text-white text-sm font-bold hover:bg-[#06331c] disabled:opacity-60 transition-colors flex items-center justify-center gap-2 mt-2"
+                className="w-full py-3 rounded-lg bg-[#131314] text-white text-sm font-bold hover:bg-[#0c0c0d] disabled:opacity-60 transition-colors flex items-center justify-center gap-2 mt-2"
               >
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <UserPlus className="h-4 w-4" />}
                 Create Account
@@ -312,7 +312,7 @@ export default function ContributorSignupPage() {
 
             <p className="text-center text-sm text-zinc-500 mt-5">
               Already have an account?{' '}
-              <Link href="/contribute/login" className="text-[#00a855] font-semibold hover:underline">
+              <Link href="/contribute/login" className="text-[#131314] font-semibold hover:underline">
                 Sign in
               </Link>
             </p>
@@ -325,7 +325,7 @@ export default function ContributorSignupPage() {
         <div className="max-w-3xl mx-auto flex flex-wrap items-center justify-center gap-x-10 gap-y-3 px-4">
           {TRUST_BADGES.map((b) => (
             <div key={b.label} className="flex items-center gap-2 text-zinc-400 text-xs font-semibold">
-              <b.icon className="h-4 w-4 text-[#00cc6a]" />
+              <b.icon className="h-4 w-4 text-[#befc65]" />
               {b.label}
             </div>
           ))}

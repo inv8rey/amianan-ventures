@@ -37,14 +37,14 @@ export function FeaturedArticle({ article }: { article: Article }) {
       {/* Content overlay */}
       <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-8 lg:p-10">
         <div className="flex items-center gap-2 mb-3">
-          <span className="bg-[#00cc6a] text-black text-[10px] font-black px-2.5 py-1 rounded-sm uppercase tracking-wider">
+          <span className="bg-[#befc65] text-black text-[10px] font-semibold px-2.5 py-1 rounded-sm uppercase tracking-wider">
             Featured
           </span>
           <span className="text-[10px] font-semibold text-white/60 uppercase tracking-wider">
             {categoryLabel[article.category]}
           </span>
         </div>
-        <h2 className="text-xl sm:text-2xl lg:text-4xl font-black text-white leading-tight mb-3 max-w-3xl group-hover:text-[#00cc6a] transition-colors">
+        <h2 className="text-xl sm:text-2xl lg:text-4xl font-semibold text-white leading-tight mb-3 max-w-3xl group-hover:text-[#befc65] transition-colors">
           {article.title}
         </h2>
         <p className="text-sm text-white/60 line-clamp-2 max-w-2xl mb-4 hidden sm:block leading-relaxed">

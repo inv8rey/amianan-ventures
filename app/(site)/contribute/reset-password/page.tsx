@@ -57,7 +57,7 @@ export default function ResetPasswordPage() {
       <div className="w-full max-w-sm">
         <div className="flex items-center justify-center gap-2 mb-8">
           <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-            <KeyRound className="h-4 w-4 text-[#00cc6a]" />
+            <KeyRound className="h-4 w-4 text-[#befc65]" />
           </div>
           <span className="text-sm font-bold text-zinc-900">Contributor Portal</span>
         </div>
@@ -69,10 +69,10 @@ export default function ResetPasswordPage() {
             </div>
           ) : done ? (
             <div className="text-center">
-              <div className="w-12 h-12 rounded-full bg-[#00a855]/10 flex items-center justify-center mx-auto mb-4">
-                <KeyRound className="h-5 w-5 text-[#00a855]" />
+              <div className="w-12 h-12 rounded-full bg-[#131314]/10 flex items-center justify-center mx-auto mb-4">
+                <KeyRound className="h-5 w-5 text-[#131314]" />
               </div>
-              <h1 className="text-lg font-black text-zinc-900 mb-1.5">Password updated</h1>
+              <h1 className="text-lg font-semibold text-zinc-900 mb-1.5">Password updated</h1>
               <p className="text-sm text-zinc-500 leading-relaxed mb-5">
                 Your password has been reset successfully.
               </p>
@@ -88,7 +88,7 @@ export default function ResetPasswordPage() {
               <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center mx-auto mb-4">
                 <ShieldAlert className="h-5 w-5 text-amber-500" />
               </div>
-              <h1 className="text-lg font-black text-zinc-900 mb-1.5">Link expired or invalid</h1>
+              <h1 className="text-lg font-semibold text-zinc-900 mb-1.5">Link expired or invalid</h1>
               <p className="text-sm text-zinc-500 leading-relaxed mb-5">
                 This password reset link is no longer valid. Request a new one to continue.
               </p>
@@ -101,7 +101,7 @@ export default function ResetPasswordPage() {
             </div>
           ) : (
             <>
-              <h1 className="text-xl font-black text-zinc-900 mb-1">Set a new password</h1>
+              <h1 className="text-xl font-semibold text-zinc-900 mb-1">Set a new password</h1>
               <p className="text-sm text-zinc-500 mb-6">Choose a new password for your account.</p>
 
               <form onSubmit={handleSubmit} className="space-y-4">

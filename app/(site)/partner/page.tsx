@@ -56,8 +56,8 @@ export default function PartnerPage() {
   if (state === 'success') {
     return (
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-20 text-center">
-        <CheckCircle2 className="h-14 w-14 text-[#00cc6a] mx-auto mb-5" />
-        <h1 className="text-3xl font-black text-zinc-900 mb-3">Inquiry Received!</h1>
+        <CheckCircle2 className="h-14 w-14 text-[#befc65] mx-auto mb-5" />
+        <h1 className="text-3xl font-semibold text-zinc-900 mb-3">Inquiry Received!</h1>
         <p className="text-zinc-500 leading-relaxed max-w-md mx-auto">
           Thanks for reaching out about a partnership. We&apos;ll get back to you at <strong>{form.email}</strong> within 2–3 business days.
         </p>
@@ -68,8 +68,8 @@ export default function PartnerPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-14">
       <div className="mb-10">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-[#00a855] mb-2">Partnerships</p>
-        <h1 className="text-4xl font-black text-zinc-900 mb-3 leading-tight">Partner With Us</h1>
+        <p className="text-[10px] font-bold uppercase tracking-widest text-[#131314] mb-2">Partnerships</p>
+        <h1 className="text-4xl font-semibold text-zinc-900 mb-3 leading-tight">Partner With Us</h1>
         <p className="text-zinc-500 leading-relaxed max-w-lg">
           Amianan Ventures reaches founders, innovators, investors, and ecosystem builders across Northern Luzon. Partner with us to amplify your programs, initiatives, or organization to the right audience.
         </p>
@@ -77,11 +77,11 @@ export default function PartnerPage() {
 
       {/* Partnership types callout */}
       <div className="rounded-xl bg-zinc-50 border border-zinc-200 p-5 mb-8">
-        <p className="text-xs font-black uppercase tracking-widest text-zinc-400 mb-3">What we offer</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-3">What we offer</p>
         <ul className="space-y-1.5 text-sm text-zinc-600">
           {PARTNERSHIP_TYPES.slice(0, -1).map((t) => (
             <li key={t} className="flex items-start gap-2">
-              <span className="mt-1 w-1.5 h-1.5 rounded-full bg-[#00cc6a] shrink-0" />
+              <span className="mt-1 w-1.5 h-1.5 rounded-full bg-[#befc65] shrink-0" />
               {t}
             </li>
           ))}
@@ -90,7 +90,7 @@ export default function PartnerPage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <fieldset className="space-y-4">
-          <legend className="text-xs font-black uppercase tracking-widest text-zinc-400 mb-3">Organization</legend>
+          <legend className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-3">Organization</legend>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -101,7 +101,7 @@ export default function PartnerPage() {
                 value={form.org_name}
                 onChange={(e) => set('org_name', e.target.value)}
                 placeholder="Your organization"
-                className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#00cc6a]/40 focus:border-[#00cc6a] transition-colors"
+                className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#131314]/40 focus:border-[#befc65] transition-colors"
               />
             </div>
             <div>
@@ -111,7 +111,7 @@ export default function PartnerPage() {
                 value={form.website}
                 onChange={(e) => set('website', e.target.value)}
                 placeholder="https://…"
-                className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#00cc6a]/40 focus:border-[#00cc6a] transition-colors"
+                className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#131314]/40 focus:border-[#befc65] transition-colors"
               />
             </div>
           </div>
@@ -122,7 +122,7 @@ export default function PartnerPage() {
               required
               value={form.partnership_type}
               onChange={(e) => set('partnership_type', e.target.value)}
-              className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#00cc6a]/40 focus:border-[#00cc6a] transition-colors bg-white"
+              className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#131314]/40 focus:border-[#befc65] transition-colors bg-white"
             >
               <option value="">Select type of partnership…</option>
               {PARTNERSHIP_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
@@ -137,13 +137,13 @@ export default function PartnerPage() {
               value={form.message}
               onChange={(e) => set('message', e.target.value)}
               placeholder="Describe what you have in mind — your goals, audience, and how you'd like to collaborate…"
-              className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#00cc6a]/40 focus:border-[#00cc6a] transition-colors resize-none"
+              className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#131314]/40 focus:border-[#befc65] transition-colors resize-none"
             />
           </div>
         </fieldset>
 
         <fieldset className="space-y-4">
-          <legend className="text-xs font-black uppercase tracking-widest text-zinc-400 mb-3">Your Contact</legend>
+          <legend className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-3">Your Contact</legend>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -154,7 +154,7 @@ export default function PartnerPage() {
                 value={form.contact_name}
                 onChange={(e) => set('contact_name', e.target.value)}
                 placeholder="Full name"
-                className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#00cc6a]/40 focus:border-[#00cc6a] transition-colors"
+                className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#131314]/40 focus:border-[#befc65] transition-colors"
               />
             </div>
             <div>
@@ -165,7 +165,7 @@ export default function PartnerPage() {
                 value={form.email}
                 onChange={(e) => set('email', e.target.value)}
                 placeholder="you@org.com"
-                className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#00cc6a]/40 focus:border-[#00cc6a] transition-colors"
+                className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#131314]/40 focus:border-[#befc65] transition-colors"
               />
             </div>
           </div>
@@ -178,7 +178,7 @@ export default function PartnerPage() {
         <button
           type="submit"
           disabled={state === 'loading'}
-          className="inline-flex items-center gap-2 bg-[#00cc6a] text-black px-7 py-3 rounded font-bold text-sm hover:bg-[#00b85e] transition-colors disabled:opacity-60 uppercase tracking-wide"
+          className="inline-flex items-center gap-2 bg-[#befc65] text-black px-7 py-3 rounded font-bold text-sm hover:bg-[#d0ff8a] transition-colors disabled:opacity-60 uppercase tracking-wide"
         >
           {state === 'loading' ? (
             <Loader2 className="h-4 w-4 animate-spin" />

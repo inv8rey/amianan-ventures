@@ -69,7 +69,7 @@ export function CommentSection({ articleType, articleId }: Props) {
       {/* Section header */}
       <div className="flex items-center gap-2 mb-8">
         <MessageCircle className="h-4 w-4 text-zinc-400" />
-        <h2 className="text-sm font-black uppercase tracking-widest text-zinc-400">
+        <h2 className="text-sm font-semibold uppercase tracking-widest text-zinc-400">
           {loading ? 'Comments' : `${comments.length} Comment${comments.length !== 1 ? 's' : ''}`}
         </h2>
       </div>
@@ -118,12 +118,12 @@ export function CommentSection({ articleType, articleId }: Props) {
       <div ref={formRef} className="rounded-2xl border border-zinc-200 bg-zinc-50 p-6">
         <div className="flex items-center gap-2 mb-5">
           <User className="h-3.5 w-3.5 text-zinc-400" />
-          <h3 className="text-xs font-black uppercase tracking-widest text-zinc-400">Leave a Comment</h3>
+          <h3 className="text-xs font-semibold uppercase tracking-widest text-zinc-400">Leave a Comment</h3>
         </div>
 
         {submitted ? (
           <div className="flex items-start gap-3 py-4">
-            <CheckCircle2 className="h-5 w-5 text-[#00a855] shrink-0 mt-0.5" />
+            <CheckCircle2 className="h-5 w-5 text-[#131314] shrink-0 mt-0.5" />
             <div>
               <p className="text-sm font-bold text-zinc-900">Comment posted!</p>
               <p className="text-xs text-zinc-500 mt-0.5">
@@ -131,7 +131,7 @@ export function CommentSection({ articleType, articleId }: Props) {
               </p>
               <button
                 onClick={() => setSubmitted(false)}
-                className="text-xs text-[#00a855] font-semibold mt-3 hover:underline"
+                className="text-xs text-[#131314] font-semibold mt-3 hover:underline"
               >
                 Leave another comment
               </button>
@@ -151,7 +151,7 @@ export function CommentSection({ articleType, articleId }: Props) {
                   placeholder="Your name"
                   required
                   maxLength={100}
-                  className="w-full px-3 py-2.5 text-sm rounded-lg border border-zinc-200 bg-white text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#00a855]/30 focus:border-[#00a855] transition-colors"
+                  className="w-full px-3 py-2.5 text-sm rounded-lg border border-zinc-200 bg-white text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#131314]/30 focus:border-[#131314] transition-colors"
                 />
               </div>
               <div>
@@ -165,7 +165,7 @@ export function CommentSection({ articleType, articleId }: Props) {
                   onChange={e => setEmail(e.target.value)}
                   placeholder="you@example.com"
                   required
-                  className="w-full px-3 py-2.5 text-sm rounded-lg border border-zinc-200 bg-white text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#00a855]/30 focus:border-[#00a855] transition-colors"
+                  className="w-full px-3 py-2.5 text-sm rounded-lg border border-zinc-200 bg-white text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#131314]/30 focus:border-[#131314] transition-colors"
                 />
               </div>
             </div>
@@ -181,7 +181,7 @@ export function CommentSection({ articleType, articleId }: Props) {
                 required
                 rows={4}
                 maxLength={1000}
-                className="w-full px-3 py-2.5 text-sm rounded-lg border border-zinc-200 bg-white text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#00a855]/30 focus:border-[#00a855] transition-colors resize-none"
+                className="w-full px-3 py-2.5 text-sm rounded-lg border border-zinc-200 bg-white text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#131314]/30 focus:border-[#131314] transition-colors resize-none"
               />
               <p className="text-[11px] text-zinc-400 mt-1 text-right">
                 {content.length}/1000

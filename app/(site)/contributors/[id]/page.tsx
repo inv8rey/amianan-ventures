@@ -124,21 +124,21 @@ export default async function PublicContributorProfilePage({ params }: Props) {
             </div>
           ) : (
             <div className="w-24 h-24 rounded-full bg-zinc-900 flex items-center justify-center shrink-0 border-4 border-white shadow-sm">
-              <span className="text-3xl font-black text-white">
+              <span className="text-3xl font-semibold text-white">
                 {profile.display_name.charAt(0).toUpperCase()}
               </span>
             </div>
           )}
 
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl sm:text-3xl font-black text-zinc-900 leading-tight">{profile.display_name}</h1>
+            <h1 className="text-2xl sm:text-3xl font-semibold text-zinc-900 leading-tight">{profile.display_name}</h1>
             {profile.full_name && profile.full_name !== profile.display_name && (
               <p className="text-sm text-zinc-500 mt-0.5">{profile.full_name}</p>
             )}
 
             <div className="flex flex-wrap items-center gap-2.5 mt-3">
               {profile.role && (
-                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#00a855] bg-[#00a855]/10 px-3 py-1.5 rounded-full">
+                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#131314] bg-[#131314]/10 px-3 py-1.5 rounded-full">
                   <Briefcase className="h-3.5 w-3.5" />
                   {ROLE_LABELS[profile.role as ContributorRole]}
                 </span>
@@ -202,8 +202,8 @@ export default async function PublicContributorProfilePage({ params }: Props) {
         {/* Articles */}
         <div>
           <div className="flex items-center gap-2 mb-5">
-            <span className="w-1 h-4 bg-[#00cc6a] rounded-full" />
-            <h2 className="text-xs font-black uppercase tracking-widest text-black">
+            <span className="w-1 h-4 bg-[#befc65] rounded-full" />
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-black">
               Articles by {firstName} ({publishedSubmissions.length})
             </h2>
           </div>
@@ -225,7 +225,7 @@ export default async function PublicContributorProfilePage({ params }: Props) {
                     </div>
                   )}
                   <div className="flex-1 min-w-0 flex flex-col">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#00a855] mb-1 block">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#131314] mb-1 block">
                       {CONTENT_TYPE_LABELS[sub.content_type as ContentType]}
                     </span>
                     <h3 className="text-base font-bold text-zinc-900 leading-snug mb-1.5">{sub.headline}</h3>
@@ -248,7 +248,7 @@ export default async function PublicContributorProfilePage({ params }: Props) {
                           href={sub.published_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="shrink-0 inline-flex items-center gap-1 text-xs font-bold text-[#00a855] hover:underline"
+                          className="shrink-0 inline-flex items-center gap-1 text-xs font-bold text-[#131314] hover:underline"
                         >
                           Read article <ArrowRight className="h-3 w-3" />
                         </a>
@@ -265,7 +265,7 @@ export default async function PublicContributorProfilePage({ params }: Props) {
         <div className="space-y-5">
           {featuredListing && (
             <div className="rounded-xl border border-zinc-200 bg-white overflow-hidden">
-              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 px-4 pt-4 mb-2">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 px-4 pt-4 mb-2">
                 Featured Contribution
               </p>
               <a
@@ -289,7 +289,7 @@ export default async function PublicContributorProfilePage({ params }: Props) {
                   <div className="absolute inset-0 bg-gradient-to-br from-zinc-800 to-zinc-900" />
                 )}
                 <div className="relative p-3">
-                  <p className="text-sm font-black text-white mb-0.5">{featuredListing.title}</p>
+                  <p className="text-sm font-semibold text-white mb-0.5">{featuredListing.title}</p>
                   {featuredListing.tagline && (
                     <p className="text-[11px] text-white/70 leading-relaxed line-clamp-2">{featuredListing.tagline}</p>
                   )}
@@ -316,7 +316,7 @@ export default async function PublicContributorProfilePage({ params }: Props) {
 
           {focusAreas.length > 0 && (
             <div className="rounded-xl border border-zinc-200 bg-white p-4">
-              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-3">Areas of Focus</p>
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 mb-3">Areas of Focus</p>
               <div className="flex flex-wrap gap-2">
                 {focusAreas.map((area) => (
                   <span key={area} className="text-xs font-semibold text-zinc-600 bg-zinc-100 px-2.5 py-1 rounded-full">
@@ -329,7 +329,7 @@ export default async function PublicContributorProfilePage({ params }: Props) {
 
           {(profile.linkedin_url || profile.facebook_url || profile.website_url) && (
             <div className="rounded-xl border border-zinc-200 bg-white p-4">
-              <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-3">Connect</p>
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 mb-3">Connect</p>
               <div className="space-y-2.5">
                 {profile.linkedin_url && (
                   <a

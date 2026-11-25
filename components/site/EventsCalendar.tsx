@@ -139,7 +139,7 @@ export function EventsCalendar({ events }: Props) {
         {view === 'calendar' && (
           <button
             onClick={goToday}
-            className="text-xs font-semibold text-[#00a855] hover:underline"
+            className="text-xs font-semibold text-[#131314] hover:underline"
           >
             Today
           </button>
@@ -213,12 +213,12 @@ export function EventsCalendar({ events }: Props) {
                   className={`relative bg-white min-h-[60px] sm:min-h-[72px] p-1.5 sm:p-2 flex flex-col transition-colors
                     ${!isCurrentMonth ? 'bg-zinc-50/60' : ''}
                     ${dayEvents.length > 0 ? 'cursor-pointer hover:bg-emerald-50' : 'cursor-default'}
-                    ${isSelected ? 'bg-emerald-50 ring-2 ring-inset ring-[#00cc6a]' : ''}
+                    ${isSelected ? 'bg-emerald-50 ring-2 ring-inset ring-[#131314]' : ''}
                   `}
                 >
                   {/* Day number */}
                   <span className={`text-xs font-semibold w-6 h-6 flex items-center justify-center rounded-full
-                    ${isToday ? 'bg-[#00cc6a] text-white' : isCurrentMonth ? 'text-zinc-700' : 'text-zinc-300'}
+                    ${isToday ? 'bg-[#befc65] text-white' : isCurrentMonth ? 'text-zinc-700' : 'text-zinc-300'}
                   `}>
                     {day}
                   </span>
@@ -241,7 +241,7 @@ export function EventsCalendar({ events }: Props) {
                       })}
                       {/* Mobile: just dots */}
                       <div className="flex sm:hidden gap-0.5 mt-0.5 justify-center">
-                        {hasFuture && <span className="w-1.5 h-1.5 rounded-full bg-[#00cc6a]" />}
+                        {hasFuture && <span className="w-1.5 h-1.5 rounded-full bg-[#befc65]" />}
                         {hasPast && <span className="w-1.5 h-1.5 rounded-full bg-zinc-300" />}
                       </div>
                       {dayEvents.length > 2 && (
@@ -285,7 +285,7 @@ export function EventsCalendar({ events }: Props) {
                         <div className="flex items-start justify-between gap-2 mb-1">
                           <Link
                             href={`/events/${e.slug}`}
-                            className="text-sm font-bold text-zinc-900 hover:text-[#00a855] transition-colors line-clamp-2 leading-snug"
+                            className="text-sm font-bold text-zinc-900 hover:text-[#131314] transition-colors line-clamp-2 leading-snug"
                           >
                             {e.title}
                           </Link>
@@ -295,18 +295,18 @@ export function EventsCalendar({ events }: Props) {
                         </div>
                         <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-zinc-500 mt-2">
                           <span className="flex items-center gap-1">
-                            <Clock className="h-3 w-3 text-[#00cc6a]" />
+                            <Clock className="h-3 w-3 text-[#befc65]" />
                             {phTimeStr(e.date)}{e.end_date ? ` – ${phTimeStr(e.end_date)}` : ''}
                           </span>
                           <span className="flex items-center gap-1">
-                            <MapPin className="h-3 w-3 text-[#00cc6a]" />
+                            <MapPin className="h-3 w-3 text-[#befc65]" />
                             {e.location}
                           </span>
                         </div>
                         <div className="flex gap-3 mt-2.5">
                           <Link
                             href={`/events/${e.slug}`}
-                            className="text-xs font-semibold text-[#00a855] hover:underline flex items-center gap-0.5"
+                            className="text-xs font-semibold text-[#131314] hover:underline flex items-center gap-0.5"
                           >
                             View details <ExternalLink className="h-3 w-3" />
                           </Link>
@@ -332,13 +332,13 @@ export function EventsCalendar({ events }: Props) {
           {/* Legend */}
           <div className="flex items-center gap-5 text-[11px] text-zinc-400 pt-1">
             <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-full bg-[#00cc6a] inline-block" /> Upcoming event
+              <span className="w-3 h-3 rounded-full bg-[#befc65] inline-block" /> Upcoming event
             </span>
             <span className="flex items-center gap-1.5">
               <span className="w-3 h-3 rounded-full bg-zinc-200 inline-block" /> Past event
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-6 h-5 rounded-full bg-[#00cc6a] inline-flex items-center justify-center text-white text-[9px] font-bold">1</span> Today
+              <span className="w-6 h-5 rounded-full bg-[#befc65] inline-flex items-center justify-center text-white text-[9px] font-bold">1</span> Today
             </span>
           </div>
         </div>
@@ -414,17 +414,17 @@ function EventListRow({ event: e, isPast }: { event: Event; isPast: boolean }) {
 
       {/* Info */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-bold text-zinc-900 group-hover:text-[#00a855] transition-colors line-clamp-1 mb-1">
+        <p className="text-sm font-bold text-zinc-900 group-hover:text-[#131314] transition-colors line-clamp-1 mb-1">
           {e.title}
         </p>
         <p className="text-xs text-zinc-500 line-clamp-1 mb-2">{e.description}</p>
         <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-zinc-400">
           <span className="flex items-center gap-1">
-            <Clock className="h-3 w-3 text-[#00cc6a]" />
+            <Clock className="h-3 w-3 text-[#befc65]" />
             {phDateStr(e.date)} · {phTimeStr(e.date)}
           </span>
           <span className="flex items-center gap-1">
-            <MapPin className="h-3 w-3 text-[#00cc6a]" />
+            <MapPin className="h-3 w-3 text-[#befc65]" />
             {e.location}
           </span>
         </div>

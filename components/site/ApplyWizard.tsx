@@ -118,8 +118,8 @@ export function ApplyWizard({ packageId = 'founding-rate' }: { packageId?: Packa
               <ArrowLeft className="h-3.5 w-3.5" /> Back
             </Link>
 
-            <p className="text-xs font-black uppercase tracking-widest text-[#00a855] mb-4">{PACKAGES[packageId].name} · ₱{PACKAGES[packageId].amount_php}</p>
-            <h1 className="text-4xl sm:text-5xl font-black text-zinc-900 leading-[1.05] mb-5">
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#131314] mb-4">{PACKAGES[packageId].name} · ₱{PACKAGES[packageId].amount_php}</p>
+            <h1 className="text-4xl sm:text-5xl font-semibold text-zinc-900 leading-[1.05] mb-5">
               {copy.heading}
             </h1>
             <p className="text-base text-zinc-500 leading-relaxed mb-8">
@@ -129,8 +129,8 @@ export function ApplyWizard({ packageId = 'founding-rate' }: { packageId?: Packa
             <div className="space-y-3 mb-10">
               {copy.benefits.map((b) => (
                 <div key={b} className="flex items-center gap-3">
-                  <div className="w-5 h-5 rounded-full bg-[#00a855]/10 flex items-center justify-center shrink-0">
-                    <Check className="h-3 w-3 text-[#00a855]" />
+                  <div className="w-5 h-5 rounded-full bg-[#131314]/10 flex items-center justify-center shrink-0">
+                    <Check className="h-3 w-3 text-[#131314]" />
                   </div>
                   <span className="text-sm font-semibold text-zinc-700">{b}</span>
                 </div>
@@ -149,7 +149,7 @@ export function ApplyWizard({ packageId = 'founding-rate' }: { packageId?: Packa
               <button
                 type="submit"
                 disabled={loading}
-                className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-[#0a3a22] text-white font-bold text-base hover:bg-[#042212] disabled:opacity-60 transition-colors w-full"
+                className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-[#232325] text-white font-bold text-base hover:bg-[#131314] disabled:opacity-60 transition-colors w-full"
               >
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Create Account & Start <ArrowRight className="h-4 w-4" /></>}
               </button>
@@ -157,7 +157,7 @@ export function ApplyWizard({ packageId = 'founding-rate' }: { packageId?: Packa
 
             <p className="text-center text-xs text-zinc-400 mt-5">
               Already have an account?{' '}
-              <Link href="/contribute/login" className="text-[#00a855] font-bold hover:underline">Log in</Link>
+              <Link href="/contribute/login" className="text-[#131314] font-bold hover:underline">Log in</Link>
             </p>
           </div>
         </div>
@@ -191,7 +191,7 @@ function Field({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-xl border border-zinc-300 px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#00cc6a]/40 focus:border-[#00cc6a] transition-colors"
+        className="w-full rounded-xl border border-zinc-300 px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#131314]/40 focus:border-[#befc65] transition-colors"
       />
     </div>
   )

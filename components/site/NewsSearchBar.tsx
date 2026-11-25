@@ -82,7 +82,7 @@ export function NewsSearchBar({ articles, activeLocation }: NewsSearchBarProps) 
               <p className="text-sm text-zinc-400 mt-1">Try a different keyword.</p>
               <button
                 onClick={() => setQuery('')}
-                className="mt-4 inline-block text-sm font-semibold text-[#00a855] hover:underline"
+                className="mt-4 inline-block text-sm font-semibold text-[#131314] hover:underline"
               >
                 ← Clear search
               </button>
@@ -98,7 +98,7 @@ export function NewsSearchBar({ articles, activeLocation }: NewsSearchBarProps) 
               {activeLocation && (
                 <Link
                   href="/news"
-                  className="mt-4 inline-block text-sm font-semibold text-[#00a855] hover:underline"
+                  className="mt-4 inline-block text-sm font-semibold text-[#131314] hover:underline"
                 >
                   ← View all regions
                 </Link>

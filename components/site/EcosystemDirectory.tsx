@@ -30,12 +30,12 @@ function DirectoryCard({ entry }: { entry: DirectoryEntry }) {
         {entry.logo_url ? (
           <Image src={entry.logo_url} alt={entry.name} fill className="object-contain p-1" sizes="48px" />
         ) : (
-          <span className="text-xl font-black text-zinc-400">{initial}</span>
+          <span className="text-xl font-semibold text-zinc-400">{initial}</span>
         )}
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
-          <span className="text-[9px] font-bold uppercase tracking-widest text-[#00a855]">
+          <span className="text-[9px] font-bold uppercase tracking-widest text-[#131314]">
             {TYPE_LABELS[entry.type]}
           </span>
           {entry.sector && (
@@ -48,7 +48,7 @@ function DirectoryCard({ entry }: { entry: DirectoryEntry }) {
         <h3 className="text-sm font-bold text-zinc-900 group-hover:text-black leading-snug">{entry.name}</h3>
         {entry.city && (
           <p className="text-[10px] text-zinc-400 mt-0.5 flex items-center gap-1">
-            <span className="w-1 h-1 rounded-full bg-[#00cc6a] inline-block shrink-0" />
+            <span className="w-1 h-1 rounded-full bg-[#befc65] inline-block shrink-0" />
             {entry.city}
           </p>
         )}
@@ -177,7 +177,7 @@ export function EcosystemDirectory({ entriesByType, counts }: Props) {
               onClick={() => setLocation(location === loc.value ? null : loc.value)}
               className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${
                 location === loc.value
-                  ? 'bg-[#00cc6a] text-black'
+                  ? 'bg-[#befc65] text-black'
                   : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200'
               }`}
             >
@@ -188,7 +188,7 @@ export function EcosystemDirectory({ entriesByType, counts }: Props) {
             onClick={() => setLocation(location === 'national' ? null : 'national')}
             className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${
               location === 'national'
-                ? 'bg-[#00cc6a] text-black'
+                ? 'bg-[#befc65] text-black'
                 : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200'
             }`}
           >
@@ -233,7 +233,7 @@ export function EcosystemDirectory({ entriesByType, counts }: Props) {
               <p className="text-base font-semibold text-zinc-400">No results found.</p>
               <button
                 onClick={clearFilters}
-                className="text-sm text-[#00a855] font-semibold hover:underline mt-1"
+                className="text-sm text-[#131314] font-semibold hover:underline mt-1"
               >
                 Clear filters →
               </button>

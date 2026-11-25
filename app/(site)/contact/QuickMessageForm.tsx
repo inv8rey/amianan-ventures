@@ -37,8 +37,8 @@ export function QuickMessageForm() {
   if (state === 'success') {
     return (
       <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-8 text-center">
-        <CheckCircle2 className="h-10 w-10 text-[#00cc6a] mx-auto mb-3" />
-        <p className="font-black text-zinc-900 mb-1">Message Sent!</p>
+        <CheckCircle2 className="h-10 w-10 text-[#befc65] mx-auto mb-3" />
+        <p className="font-semibold text-zinc-900 mb-1">Message Sent!</p>
         <p className="text-sm text-zinc-500">
           We&apos;ll get back to you at <strong>{form.email}</strong> within 2–3 business days.
         </p>
@@ -57,7 +57,7 @@ export function QuickMessageForm() {
             value={form.name}
             onChange={(e) => set('name', e.target.value)}
             placeholder="Your full name"
-            className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#00cc6a]/40 focus:border-[#00cc6a] transition-colors"
+            className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#131314]/40 focus:border-[#befc65] transition-colors"
           />
         </div>
         <div>
@@ -68,7 +68,7 @@ export function QuickMessageForm() {
             value={form.email}
             onChange={(e) => set('email', e.target.value)}
             placeholder="you@example.com"
-            className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#00cc6a]/40 focus:border-[#00cc6a] transition-colors"
+            className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#131314]/40 focus:border-[#befc65] transition-colors"
           />
         </div>
       </div>
@@ -81,7 +81,7 @@ export function QuickMessageForm() {
           value={form.message}
           onChange={(e) => set('message', e.target.value)}
           placeholder="Tell us what you have in mind…"
-          className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#00cc6a]/40 focus:border-[#00cc6a] transition-colors resize-none"
+          className="w-full rounded-lg border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-[#131314]/40 focus:border-[#befc65] transition-colors resize-none"
         />
       </div>
 
@@ -92,7 +92,7 @@ export function QuickMessageForm() {
       <button
         type="submit"
         disabled={state === 'loading'}
-        className="inline-flex items-center gap-2 bg-[#00cc6a] text-black px-7 py-3 rounded font-bold text-sm hover:bg-[#00b85e] transition-colors disabled:opacity-60 uppercase tracking-wide"
+        className="inline-flex items-center gap-2 bg-[#befc65] text-black px-7 py-3 rounded font-bold text-sm hover:bg-[#d0ff8a] transition-colors disabled:opacity-60 uppercase tracking-wide"
       >
         {state === 'loading' ? (
           <Loader2 className="h-4 w-4 animate-spin" />
