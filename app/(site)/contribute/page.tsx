@@ -9,6 +9,7 @@ import {
 } from 'lucide-react'
 import { getPublishedArticles } from '@/lib/queries'
 import type { Article } from '@/types'
+import { SITE_HOST } from '@/lib/site'
 
 export const revalidate = 60
 
@@ -29,7 +30,7 @@ const steps = [
   { step: '01', icon: PenLine,     title: 'Create an account', desc: 'Sign up with your email and build a contributor profile with your byline, role, and bio.' },
   { step: '02', icon: BookOpen,    title: 'Submit your piece', desc: 'Fill out the submission form with your headline, summary, and draft or a Google Docs link.' },
   { step: '03', icon: Eye,         title: 'Editorial review',  desc: 'Our editor reviews every submission. You will hear back within 5 to 7 days with approval or feedback.' },
-  { step: '04', icon: CheckCircle, title: 'Published!',        desc: 'Approved pieces go live on amiananventures.org with your byline and are shared across our channels.' },
+  { step: '04', icon: CheckCircle, title: 'Published!',        desc: `Approved pieces go live on ${SITE_HOST} with your byline and are shared across our channels.` },
 ]
 
 const values = [

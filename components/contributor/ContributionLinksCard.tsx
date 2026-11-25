@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Link2, Copy, Check, Loader2 } from 'lucide-react'
+import { SITE_URL } from '@/lib/site'
 
 interface ContributionLinksCardProps {
   submissionId: string
@@ -18,7 +19,7 @@ export function ContributionLinksCard({
 }: ContributionLinksCardProps) {
   const [copied, setCopied]       = useState<'preview' | 'live' | null>(null)
 
-  const siteUrl     = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://amiananventures.org'
+  const siteUrl     = SITE_URL
   const previewUrl  = `${siteUrl}/preview/${submissionId}`
   // URL is always predictable — contributions always live at /contributions/[id]
   const expectedUrl = `${siteUrl}/contributions/${submissionId}`
@@ -107,7 +108,7 @@ export function ContributionLinksCard({
             type="url"
             value={liveUrl}
             onChange={(e) => { setLiveUrl(e.target.value); setSaved(false); setSaveError('') }}
-            placeholder="https://amiananventures.org/news/…"
+            placeholder={`${SITE_URL}/news/…`}
             className="flex-1 min-w-0 text-[11px] font-mono bg-muted/40 border border-border/40 rounded px-2 py-1.5 focus:outline-none focus:border-border focus:bg-background transition-colors placeholder:text-muted-foreground/40"
           />
           {liveUrl.trim() && (

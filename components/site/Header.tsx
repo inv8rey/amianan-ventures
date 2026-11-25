@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { MAIN_SITE_URL } from '@/lib/site'
 
 // Renders /public/amianan.svg; falls back to styled "AV" text if file not present
 function LogoIcon() {
@@ -72,6 +73,12 @@ export function Header() {
                   {link.label}
                 </Link>
               ))}
+              <a
+                href={MAIN_SITE_URL}
+                className="px-3 py-2 text-xs font-semibold transition-colors rounded tracking-wide text-white/70 hover:text-white"
+              >
+                Work With Us
+              </a>
             </nav>
 
             {/* CTAs + mobile toggle */}
@@ -141,6 +148,12 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
+            <a
+              href={MAIN_SITE_URL}
+              className="px-3 py-2.5 text-sm font-medium rounded transition-colors text-white/70 hover:text-white"
+            >
+              Work With Us
+            </a>
             <div className="mt-2 flex gap-2">
               <Link
                 href="/contribute"

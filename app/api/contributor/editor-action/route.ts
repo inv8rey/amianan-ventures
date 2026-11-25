@@ -8,6 +8,7 @@ import {
   sendPublished,
 } from '@/lib/email'
 import type { SubmissionStatus } from '@/types/contributor'
+import { SITE_URL } from '@/lib/site'
 
 // Called from EditorActions client component to update submission status and trigger emails.
 // When approving:
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://amiananventures.org'
+  const siteUrl = SITE_URL
   if (!supabaseUrl || !serviceKey) {
     return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
   }

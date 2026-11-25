@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Loader2, CheckCircle, XCircle, Globe, ExternalLink, Banknote, CalendarClock, ListChecks, Check } from 'lucide-react'
 import { toast } from 'sonner'
 import { DELIVERABLES, type SpotlightApplication, type SpotlightStatus } from '@/types/spotlight'
+import { SITE_URL } from '@/lib/site'
 
 interface Props {
   application: SpotlightApplication
@@ -38,7 +39,7 @@ function generatePublishedUrl(businessName: string) {
     if (next.length > 50) break
     slug = next
   }
-  return `https://amiananventures.org/founder-stories/${slug}`
+  return `${SITE_URL}/founder-stories/${slug}`
 }
 
 export function SpotlightEditorActions({ application }: Props) {
@@ -326,7 +327,7 @@ export function SpotlightEditorActions({ application }: Props) {
                 type="url"
                 value={publishUrl}
                 onChange={(e) => setPublishUrl(e.target.value)}
-                placeholder="https://amiananventures.org/founder-stories/..."
+                placeholder={`${SITE_URL}/founder-stories/...`}
                 className="w-full rounded-md border border-border/40 bg-background px-3 py-2 text-xs text-foreground placeholder-muted-foreground outline-none focus:border-border"
               />
               <div className="flex gap-2">

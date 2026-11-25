@@ -35,6 +35,7 @@ import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 import type { Article, ArticleFormData } from '@/types'
 import { LOCATIONS } from '@/types'
+import { SITE_URL } from '@/lib/site'
 
 interface ArticleFormProps {
   article?: Article
@@ -73,7 +74,7 @@ export function ArticleForm({ article }: ArticleFormProps) {
   const [deleting, setDeleting] = useState(false)
   const [copied, setCopied] = useState<'live' | 'preview' | null>(null)
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://amiananventures.org'
+  const siteUrl = SITE_URL
   const liveUrl = `${siteUrl}/${form.category}/${form.slug}`
   const previewUrl = article ? `${siteUrl}/preview/${article.id}` : null
 

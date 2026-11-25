@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans, Geist_Mono, DM_Serif_Display } from 'next/font/googl
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
+import { SITE_URL } from '@/lib/site'
 
 // Body / UI font — geometric grotesque
 const jakartaSans = Plus_Jakarta_Sans({
@@ -25,7 +26,7 @@ const dmSerifDisplay = DM_Serif_Display({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://amiananventures.org'),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'Amianan Ventures — Innovation Media for Northern Luzon',
     template: '%s | Amianan Ventures',
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_PH',
-    url: 'https://amiananventures.org',
+    url: SITE_URL,
     siteName: 'Amianan Ventures',
     title: 'Amianan Ventures — Innovation Media for Northern Luzon',
     description:

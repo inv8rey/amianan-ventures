@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Mail, PenLine, ShieldCheck, ArrowRight, Compass, Users, BookOpen, Heart, MapPin } from 'lucide-react'
 import { NewsletterSignup } from './NewsletterSignup'
 import { FacebookIcon } from './SocialIcons'
+import { MAIN_SITE_URL } from '@/lib/site'
 
 const EXPLORE_LINKS = [
   { href: '/news', label: 'News & Updates' },
@@ -22,6 +23,7 @@ const PARTICIPATE_LINKS = [
 const RESOURCE_LINKS = [
   { href: '/ecosystem-pulse', label: 'Reports & Insights' },
   { href: '/contact', label: 'Contact Us' },
+  { href: MAIN_SITE_URL, label: 'Work With Us' },
 ]
 
 const FOLLOW_LINKS = [

@@ -1,7 +1,8 @@
 import type { MetadataRoute } from 'next'
 import { getAllArticleSlugs, getAllEventSlugs } from '@/lib/queries'
+import { SITE_URL } from '@/lib/site'
 
-const BASE = 'https://amiananventures.org'
+const BASE = SITE_URL
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [articleSlugs, eventSlugs] = await Promise.all([

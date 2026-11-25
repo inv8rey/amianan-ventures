@@ -16,6 +16,7 @@ import {
 } from '@/types/contributor'
 import { EditorActions } from '@/components/contributor/EditorActions'
 import { ContributionLinksCard } from '@/components/contributor/ContributionLinksCard'
+import { SITE_URL } from '@/lib/site'
 
 export default async function EditorReviewPage({
   params,
@@ -51,7 +52,7 @@ export default async function EditorReviewPage({
       .eq('id', id)
 
     // Fire email in background (don't await to not block render)
-    fetch(`${process.env.NEXT_PUBLIC_SITE_URL ?? ''}/api/contributor/send-email`, {
+    fetch(`${SITE_URL}/api/contributor/send-email`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type: 'under_review', submissionId: id }),

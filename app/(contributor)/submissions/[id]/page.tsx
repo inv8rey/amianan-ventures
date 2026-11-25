@@ -11,6 +11,7 @@ import {
   type SubmissionStatus,
 } from '@/types/contributor'
 import { SubmissionDetailActions } from '@/components/contributor/SubmissionDetailActions'
+import { SITE_HOST } from '@/lib/site'
 
 export const dynamic = 'force-dynamic'
 
@@ -115,7 +116,7 @@ export default async function SubmissionDetailPage({
             className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#00a855] hover:underline"
           >
             <ExternalLink className="h-3.5 w-3.5" />
-            Read your article on amiananventures.org
+            Read your article on {SITE_HOST}
           </a>
         </div>
       )}

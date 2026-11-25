@@ -1,10 +1,11 @@
 import type { MetadataRoute } from 'next'
+import { SITE_URL } from '@/lib/site'
 
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       { userAgent: '*', allow: '/', disallow: ['/admin', '/login'] },
     ],
-    sitemap: 'https://amiananventures.org/sitemap.xml',
+    sitemap: `${SITE_URL}/sitemap.xml`,
   }
 }

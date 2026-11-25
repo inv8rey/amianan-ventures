@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@supabase/supabase-js'
 import { sendPublished } from '@/lib/email'
+import { SITE_URL } from '@/lib/site'
 
 // Vercel Cron endpoint — runs every minute via vercel.json.
 // Publishes:
@@ -19,7 +20,7 @@ export async function GET(request: Request) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://amiananventures.org'
+  const siteUrl = SITE_URL
 
   // Use service key if available, fall back to anon (will be limited by RLS)
   const key = serviceKey ?? anonKey
