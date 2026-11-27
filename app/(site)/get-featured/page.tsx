@@ -56,7 +56,7 @@ async function getSpotlightExamples(): Promise<SpotlightExample[]> {
 
 export const metadata: Metadata = {
   title: 'Partner With Amianan Ventures',
-  description: 'Promote your organization, share your story, and connect with founders, startups, innovators, and ecosystem stakeholders across Northern Luzon.',
+  description: 'Promote your organization, share your story, and connect with founders, startups, innovators, and ecosystem stakeholders, from Northern Luzon and beyond.',
 }
 
 const heroStats = [
@@ -88,21 +88,21 @@ const receiveCards = [
   { icon: Monitor, title: 'Homepage Feature', desc: 'Prominent placement on the homepage for two weeks, seen by every visitor.' },
   { icon: Layers, title: 'Article Banner Placement', desc: 'Your brand placed inside relevant articles read across the ecosystem.' },
   { icon: Quote, title: 'Founder Quote Card', desc: 'A branded quote graphic featuring your story, ready to share anywhere.' },
-  { icon: IdCard, title: 'Directory Spotlight', desc: 'A standout profile in the Northern Luzon ecosystem directory.' },
+  { icon: IdCard, title: 'Directory Spotlight', desc: 'A standout profile that introduces your organization to our community.' },
   { icon: Share2, title: 'Social Media Feature', desc: 'Your story or organization shared across Amianan Ventures\' channels.' },
 ]
 
 const whyCards = [
   { icon: ShieldCheck, title: 'Build Credibility', desc: 'Professionally showcase your work and impact.' },
   { icon: Eye, title: 'Increase Visibility', desc: 'Reach founders, innovators, and ecosystem stakeholders.' },
-  { icon: Users, title: 'Strengthen Community Presence', desc: 'Become part of Northern Luzon\'s growing innovation ecosystem.' },
+  { icon: Users, title: 'Strengthen Community Presence', desc: 'Become part of a growing innovation community rooted in Northern Luzon.' },
   { icon: Sparkles, title: 'Create Lasting Assets', desc: 'Receive content and placements you can continue using beyond the campaign.' },
 ]
 
 const faqs = [
   {
     q: 'Who can apply?',
-    a: 'Founders, startups, MSMEs, businesses, universities, government agencies, programs, and any organization building or supporting Northern Luzon\'s innovation ecosystem.',
+    a: 'Founders, startups, MSMEs, businesses, universities, government agencies, programs, and any organization building or supporting innovation, in Northern Luzon or beyond.',
   },
   {
     q: 'Can universities and government agencies participate?',
@@ -143,11 +143,11 @@ export default async function GetFeaturedPage() {
                 Partner With Amianan Ventures
               </span>
               <h1 className="text-4xl sm:text-5xl lg:text-[3.4rem] font-semibold text-zinc-900 leading-[1.08] mb-5">
-                Reach Northern Luzon&apos;s<br />
+                Reach a Growing<br />
                 <span className="text-[#131314]">Innovation Community</span>
               </h1>
               <p className="text-base sm:text-lg text-zinc-500 leading-relaxed max-w-lg mb-8">
-                Promote your organization, share your story, and connect with founders, startups, innovators, businesses, universities, and ecosystem stakeholders across Northern Luzon.
+                Promote your organization, share your story, and connect with founders, startups, innovators, businesses, universities, and ecosystem stakeholders, from Northern Luzon and beyond.
               </p>
               <div className="flex items-center gap-3 flex-wrap mb-10">
                 <Link
@@ -180,7 +180,7 @@ export default async function GetFeaturedPage() {
               <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
                 <Image
                   src="/get-featured-hero.png"
-                  alt="Founders, business owners, and ecosystem builders across Northern Luzon"
+                  alt="Founders, business owners, and ecosystem builders"
                   fill
                   priority
                   className="object-cover object-center"
@@ -205,7 +205,7 @@ export default async function GetFeaturedPage() {
           <div className="mt-16 rounded-2xl bg-zinc-50 border border-zinc-200 p-6 sm:p-7 flex items-center gap-4">
             <ShieldCheck className="h-6 w-6 text-[#131314] shrink-0" />
             <p className="text-sm sm:text-base text-zinc-600 leading-relaxed">
-              Helping organizations, founders, and ecosystem builders share their stories, build credibility, and increase visibility across Northern Luzon.
+              Helping organizations, founders, and ecosystem builders share their stories, build credibility, and increase their visibility.
             </p>
           </div>
         </div>
@@ -267,7 +267,7 @@ export default async function GetFeaturedPage() {
               <span className="text-[10px] font-semibold uppercase tracking-widest text-[#131314] mb-3">For Organizations & Programs</span>
               <h3 className="text-2xl font-semibold text-zinc-900 mb-2">Ecosystem Visibility Package</h3>
               <p className="text-sm text-zinc-500 leading-relaxed mb-6">
-                Promote your organization and connect with Northern Luzon&apos;s innovation community.
+                Promote your organization and connect with a growing innovation community.
               </p>
 
               <div className="flex items-baseline gap-2.5 mb-6">
@@ -451,7 +451,7 @@ export default async function GetFeaturedPage() {
             Ready To Share Your Story Or Promote Your Organization?
           </h2>
           <p className="text-sm sm:text-base text-white/50 max-w-xl mx-auto leading-relaxed mb-12">
-            Join the founders, businesses, universities, programs, and ecosystem partners helping shape Northern Luzon&apos;s future.
+            Join the founders, businesses, universities, programs, and ecosystem partners helping shape what gets built next.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto text-left">

@@ -32,7 +32,7 @@ const TRACK_COPY = {
   founder: {
     eyebrow: 'Founder Stories',
     title: 'Share Your Founder Story',
-    subtitle: 'Are you a founder or innovator building a startup in Northern Luzon? Tell us your story — we’ll amplify it to the entire Amianan community.',
+    subtitle: 'Are you a founder or innovator building a startup? Tell us your story — we’ll amplify it to the entire Amianan community.',
     orgLabel: 'Startup Name',
     orgPlaceholder: 'Your startup or company',
     photoLabel: 'Founder Photo',
@@ -171,7 +171,7 @@ function TrackSelector({ onSelect }: { onSelect: (track: Track) => void }) {
         <p className="text-[10px] font-bold uppercase tracking-widest text-[#d97706] mb-2">Share Your Story</p>
         <h1 className="text-4xl font-semibold text-zinc-900 mb-3 leading-tight">Which story fits you best?</h1>
         <p className="text-zinc-500 leading-relaxed max-w-lg">
-          Northern Luzon&apos;s innovation ecosystem is built by founders and by the people supporting them. Pick whichever path matches your story.
+          Every innovation ecosystem is built by founders and by the people supporting them. Pick whichever path matches your story.
         </p>
       </div>
 

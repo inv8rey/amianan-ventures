@@ -71,7 +71,7 @@ export default function PartnerPage() {
         <p className="text-[10px] font-bold uppercase tracking-widest text-[#131314] mb-2">Partnerships</p>
         <h1 className="text-4xl font-semibold text-zinc-900 mb-3 leading-tight">Partner With Us</h1>
         <p className="text-zinc-500 leading-relaxed max-w-lg">
-          Amianan Ventures reaches founders, innovators, investors, and ecosystem builders across Northern Luzon. Partner with us to amplify your programs, initiatives, or organization to the right audience.
+          Amianan Ventures reaches founders, innovators, investors, and ecosystem builders, from Northern Luzon and beyond. Partner with us to amplify your programs, initiatives, or organization to the right audience.
         </p>
       </div>
 

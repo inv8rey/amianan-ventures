@@ -34,7 +34,7 @@ function Tooltip() {
         <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 z-50 w-56 rounded-lg border border-zinc-200 bg-white shadow-lg px-3 py-2.5 text-left pointer-events-none">
           <p className="text-[11px] font-bold text-zinc-800 mb-1">What is Ecosystem Pulse?</p>
           <p className="text-[10px] text-zinc-500 leading-relaxed">
-            Original research reports on the Northern Luzon startup and innovation ecosystem —
+            Original research reports on startup and innovation ecosystems, starting with Northern Luzon:
             data, trends, and insights for founders, policymakers, and builders.
           </p>
           {/* Arrow */}

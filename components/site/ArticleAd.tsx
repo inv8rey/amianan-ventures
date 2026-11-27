@@ -17,7 +17,7 @@ export async function ArticleAd() {
         </div>
         <div className="text-center sm:text-left">
           <p className="text-xs font-semibold uppercase tracking-widest text-[#131314] mb-1">Sponsor This Article</p>
-          <p className="text-lg font-semibold text-zinc-900 mb-1">Reach Northern Luzon&apos;s Innovation Community</p>
+          <p className="text-lg font-semibold text-zinc-900 mb-1">Reach a Growing Innovation Community</p>
           <p className="text-sm text-zinc-500 leading-relaxed max-w-sm">
             Feature your organization, program, or product alongside our stories. Seen by founders, investors, and ecosystem builders across the region.
           </p>

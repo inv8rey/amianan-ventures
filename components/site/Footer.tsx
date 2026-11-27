@@ -8,19 +8,18 @@ import { MAIN_SITE_URL } from '@/lib/site'
 const EXPLORE_LINKS = [
   { href: '/news', label: 'News & Updates' },
   { href: '/founder-stories', label: 'Founder Stories' },
-  { href: '/ecosystem', label: 'Ecosystem Directory' },
+  { href: '/opportunities', label: 'Opportunities' },
   { href: '/events', label: 'Events' },
 ]
 
 const PARTICIPATE_LINKS = [
   { href: '/get-featured', label: 'Get Featured' },
   { href: '/share-your-story', label: 'Submit a Story' },
-  { href: '/submit-startup', label: 'List a Startup' },
   { href: '/partner', label: 'Partner With Us' },
 ]
 
 const RESOURCE_LINKS = [
-  { href: '/ecosystem-pulse', label: 'Reports & Insights' },
+  { href: '/ecosystem-pulse', label: 'Ecosystem Insights' },
   { href: '/contact', label: 'Contact Us' },
   { href: MAIN_SITE_URL, label: 'Work With Us' },
 ]
@@ -28,13 +27,6 @@ const RESOURCE_LINKS = [
 const FOLLOW_LINKS = [
   { href: 'https://www.facebook.com/amiananventures', label: 'Facebook', icon: FacebookIcon, external: true },
   { href: 'mailto:amiananventures@gmail.com', label: 'Email Us', icon: Mail, external: true },
-]
-
-const REGION_LINKS = [
-  { href: '/news?location=cordillera', label: 'Cordillera' },
-  { href: '/news?location=cagayan-valley', label: 'Cagayan Valley' },
-  { href: '/news?location=ilocos-region', label: 'Ilocos Region' },
-  { href: '/news?location=pangasinan', label: 'Pangasinan' },
 ]
 
 function LinkColumn({
@@ -94,7 +86,7 @@ export function Footer() {
               </div>
               <p className="text-xs font-semibold uppercase tracking-widest text-[#befc65] mb-2">Stay in the Loop</p>
               <h3 className="text-2xl font-semibold text-white leading-tight mb-3 max-w-sm">
-                Stories, opportunities, and updates from Northern Luzon.
+                Stories, opportunities, and updates, rooted in Northern Luzon.
               </h3>
               <p className="text-sm text-zinc-400 leading-relaxed mb-6 max-w-sm">
                 Subscribe to our newsletter and never miss what&apos;s happening in the innovation ecosystem.
@@ -136,11 +128,11 @@ export function Footer() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/amianan-logo-light.svg" alt="Amianan Ventures" width={129} height={48} className="h-12 w-auto" />
               <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-zinc-500">
-                News · Northern Luzon
+                News · Rooted in the North
               </span>
             </Link>
             <p className="text-sm text-zinc-400 leading-relaxed max-w-xs mb-5">
-              An innovation platform connecting startups, founders, universities, and ecosystem partners across Northern Luzon. Open, mapped, community-updated.
+              Stories, opportunities, and insights for founders and ecosystem builders. Rooted in Northern Luzon, open to builders everywhere.
             </p>
             <div className="flex items-center gap-2.5">
               {FOLLOW_LINKS.map((link) => (
@@ -168,14 +160,9 @@ export function Footer() {
         <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="flex items-center gap-2 text-xs text-zinc-500 text-center sm:text-left">
             <MapPin className="h-3.5 w-3.5 text-[#befc65] shrink-0" />
-            Proudly representing the Cordillera, Cagayan Valley, Ilocos Region, and Pangasinan.
+            Rooted in Northern Luzon. Working beyond it.
           </p>
           <div className="flex items-center gap-4 flex-wrap justify-center">
-            {REGION_LINKS.map((link) => (
-              <Link key={link.href} href={link.href} className="text-xs text-zinc-600 hover:text-zinc-400 transition-colors">
-                {link.label}
-              </Link>
-            ))}
             <span className="text-xs text-zinc-600">
               © {new Date().getFullYear()} Amianan Ventures. All rights reserved.
             </span>

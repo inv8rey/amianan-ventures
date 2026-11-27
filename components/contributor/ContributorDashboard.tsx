@@ -84,7 +84,7 @@ export function ContributorDashboard({
       {isNewUser ? (
         <>
           <h1 className="text-2xl font-semibold text-zinc-900">Welcome to Amianan Ventures, {firstName}! 👋</h1>
-          <p className="text-sm text-zinc-500 mt-1 mb-6">We&apos;re excited to have you join the Northern Luzon innovation community.</p>
+          <p className="text-sm text-zinc-500 mt-1 mb-6">We&apos;re excited to have you join the Amianan innovation community.</p>
         </>
       ) : (
         <>
@@ -219,7 +219,7 @@ function HeroCard({ spotlight, hasSubmittedSpotlight }: { spotlight: SpotlightAp
         <div className="absolute inset-0">
           <Image
             src="/get-featured-hero.png"
-            alt="Founders and agripreneurs building across Northern Luzon"
+            alt="Founders and agripreneurs building their ventures"
             fill
             className="object-cover object-center"
             sizes="100vw"
@@ -266,7 +266,7 @@ function HeroCard({ spotlight, hasSubmittedSpotlight }: { spotlight: SpotlightAp
               Apply for a Feature <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
-              href="/ecosystem"
+              href="/opportunities"
               className="inline-flex items-center gap-2 border border-zinc-300 text-zinc-700 px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-zinc-50 transition-colors"
             >
               Explore Opportunities
@@ -290,7 +290,7 @@ function WaysToGetInvolvedCard({ spotlight }: { spotlight: SpotlightApplication 
           icon={<PenLine className="h-4 w-4 text-[#131314]" />}
           iconBg="bg-[#131314]/10"
           title="Share a Perspective"
-          desc="Share your insights, experiences, lessons, or ideas with the Northern Luzon innovation community."
+          desc="Share your insights, experiences, lessons, or ideas with the Amianan innovation community."
           cta="Create an article"
           href="/submit"
         />
@@ -399,7 +399,7 @@ function StoriesPreviewCard({
       <div className="flex items-center justify-between mb-5">
         <div>
           <p className="text-sm font-semibold text-zinc-900">Recent Stories from the Community</p>
-          <p className="text-xs text-zinc-400 mt-0.5">Get inspired by stories from founders and organizations across Northern Luzon.</p>
+          <p className="text-xs text-zinc-400 mt-0.5">Get inspired by stories from founders and organizations in our community.</p>
         </div>
         <Link href="/founder-stories" className="text-xs font-bold text-[#131314] hover:underline flex items-center gap-1 shrink-0">
           View all stories <ArrowRight className="h-3 w-3" />
@@ -496,7 +496,7 @@ function GettingStartedCard({
     { icon: ClipboardCheck, title: 'Complete your profile', desc: 'Tell us about yourself or your organization', href: '/profile', done: profileComplete },
     { icon: FileText, title: 'Submit your first story', desc: 'Share your knowledge or insights', href: '/submit', done: hasSubmission },
     { icon: Star, title: 'Apply for a feature', desc: 'Get featured on Amianan Ventures', href: '/feature-packages', done: hasFeatureApp },
-    { icon: Compass, title: 'Explore the ecosystem', desc: 'Discover opportunities and resources', href: '/ecosystem', done: false },
+    { icon: Compass, title: 'Explore opportunities', desc: 'Discover open calls, programs and funding', href: '/opportunities', done: false },
   ]
   const trackable = steps.slice(0, 3)
   const doneCount = trackable.filter((s) => s.done).length

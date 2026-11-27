@@ -312,13 +312,13 @@ export default async function ContributionPage({
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-1">Community Contributions</p>
                   <p className="text-sm font-bold text-zinc-900">Have a story to share?</p>
-                  <p className="text-xs text-zinc-500 mt-0.5">Founders, researchers, and builders — submit your perspective.</p>
+                  <p className="text-xs text-zinc-500 mt-0.5">Founders, researchers, and builders: send us your perspective.</p>
                 </div>
                 <Link
-                  href="/contribute"
+                  href="/contact?topic=story#message"
                   className="shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-black text-white text-sm font-bold hover:bg-zinc-800 transition-colors"
                 >
-                  Become a Contributor
+                  Get in touch
                 </Link>
               </div>
             </div>
@@ -391,13 +391,13 @@ export default async function ContributionPage({
                 </div>
                 <div className="p-3 bg-white">
                   <p className="text-xs text-zinc-500 mb-3 leading-relaxed">
-                    Share your insights on the Northern Luzon innovation ecosystem.
+                    Share your insights with the Amianan community.
                   </p>
                   <Link
-                    href="/contribute"
+                    href="/contact?topic=story#message"
                     className="flex items-center justify-center gap-1 w-full py-1.5 bg-black text-white text-[10px] font-bold rounded hover:bg-zinc-800 transition-colors uppercase tracking-wide"
                   >
-                    Become a contributor →
+                    Get in touch →
                   </Link>
                 </div>
               </div>

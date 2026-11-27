@@ -14,7 +14,7 @@ import { DecorativeSkyline } from '@/components/site/DecorativeSkyline'
 const FEATURES = [
   { icon: PenLine, label: 'Share your story and opportunities' },
   { icon: Users, label: 'Connect with founders and partners' },
-  { icon: BarChart3, label: 'Grow the Northern Luzon ecosystem' },
+  { icon: BarChart3, label: 'Grow the innovation ecosystem' },
   { icon: Star, label: 'Get recognized for your contributions' },
 ]
 
@@ -132,8 +132,8 @@ export default function ContributorSignupPage() {
               <Users className="h-3.5 w-3.5 text-[#befc65]" /> Contributor Portal
             </span>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white leading-tight mb-5">
-              Join a community building the future of{' '}
-              <span className="text-[#befc65]">Northern Luzon.</span>
+              Join a community building{' '}
+              <span className="text-[#befc65]">what&apos;s next.</span>
             </h1>
             <p className="text-zinc-300 leading-relaxed mb-8 max-w-sm">
               Create your account to share stories, discover opportunities, and connect with founders, innovators, and ecosystem partners.
@@ -295,7 +295,7 @@ export default function ContributorSignupPage() {
                 <div>
                   <p className="text-xs font-bold text-zinc-900">Your privacy matters.</p>
                   <p className="text-xs text-zinc-500 mt-0.5 leading-relaxed">
-                    We&apos;ll never share your information. It will only be used to improve the ecosystem and connect builders across Northern Luzon.
+                    We&apos;ll never share your information. It will only be used to improve the ecosystem and connect builders across our community.
                   </p>
                 </div>
               </div>

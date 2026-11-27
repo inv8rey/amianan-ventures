@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import type { Article, DirectoryEntry, Event, FeaturedListing, Location } from '@/types'
+import type { Article, Event, FeaturedListing, Location } from '@/types'
 
 export async function getPublishedArticles(limit?: number, category?: string, location?: Location) {
   const supabase = await createClient()
@@ -111,32 +111,6 @@ export async function getAllEventSlugs() {
   return data ?? []
 }
 
-export async function getDirectoryEntries(type?: string, limit = 6) {
-  const supabase = await createClient()
-  let query = supabase
-    .from('directory')
-    .select('*')
-    .eq('status', 'published')
-    .order('name', { ascending: true })
-
-  if (type) query = query.eq('type', type)
-  query = query.limit(limit)
-
-  const { data } = await query
-  return (data ?? []) as DirectoryEntry[]
-}
-
-export async function getAllDirectoryEntries(limit = 60) {
-  const supabase = await createClient()
-  const { data } = await supabase
-    .from('directory')
-    .select('*')
-    .eq('status', 'published')
-    .order('name', { ascending: true })
-    .limit(limit)
-  return (data ?? []) as DirectoryEntry[]
-}
-
 export async function getFeaturedListings() {
   const supabase = await createClient()
   const { data } = await supabase
@@ -147,13 +121,3 @@ export async function getFeaturedListings() {
   return (data ?? []) as FeaturedListing[]
 }
 
-export async function getFeaturedDirectoryEntries() {
-  const supabase = await createClient()
-  const { data } = await supabase
-    .from('directory')
-    .select('*')
-    .eq('status', 'published')
-    .eq('featured', true)
-    .order('name', { ascending: true })
-  return (data ?? []) as DirectoryEntry[]
-}

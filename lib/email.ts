@@ -128,7 +128,7 @@ export async function sendApproved(
       ${pill('Approved', '#10b981')}
       <div style="margin-top:16px">
         ${p(`Congratulations! Our editor has approved your submission <strong>"${headline}"</strong>. We'll schedule it for publication on <a href="${SITE_URL}" style="color:#00a855">${SITE_HOST}</a> and notify you when it goes live.`)}
-        ${p('Thank you for contributing to the Northern Luzon innovation ecosystem.')}
+        ${p('Thank you for contributing to the Amianan innovation community.')}
         ${btn(`${SITE_URL}/dashboard`, 'View My Dashboard')}
       </div>
     `),
@@ -148,7 +148,7 @@ export async function sendRejected(
       ${p(`Thank you for taking the time to submit <strong>"${headline}"</strong> to Amianan Innovation Ventures.`)}
       ${p('After careful review, our editor has decided not to move forward with this particular piece at this time. This doesn\'t reflect on the quality of your work — editorial decisions are often about fit, timing, and our current content mix.')}
       ${p('We encourage you to submit again in the future. Your perspective and experience are valuable to our community.')}
-      ${btn(`${SITE_URL}/contribute`, 'Submit Another Piece')}
+      ${btn(`${SITE_URL}/submit`, 'Submit Another Piece')}
     `),
   })
 }
@@ -165,7 +165,7 @@ export async function sendPublished(
       ${h1('Your article is now live! 🚀')}
       ${pill('Published', '#00a855')}
       <div style="margin-top:16px">
-        ${p(`<strong>"${headline}"</strong> is now published on Amianan Innovation Ventures. Share it with your network and help spread the word about the Northern Luzon innovation ecosystem!`)}
+        ${p(`<strong>"${headline}"</strong> is now published on Amianan Innovation Ventures. Share it with your network and help spread the word!`)}
         ${btn(url, 'Read Your Article')}
         <p style="margin-top:16px;font-size:13px;color:#6b7280">
           Direct link: <a href="${url}" style="color:#00a855">${url}</a>

@@ -57,7 +57,7 @@ export function FeaturePackages({ spotlight }: { spotlight: SpotlightApplication
         Get Featured <Star className="h-5 w-5 text-amber-400 fill-amber-400" />
       </h1>
       <p className="text-sm text-zinc-500 mt-1 mb-6">
-        Amplify your story and reach more people in the Northern Luzon innovation ecosystem.
+        Amplify your story and reach more people across the Amianan community.
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6">
@@ -68,7 +68,7 @@ export function FeaturePackages({ spotlight }: { spotlight: SpotlightApplication
             <div className="absolute inset-0">
               <Image
                 src="/get-featured-hero.png"
-                alt="Founders and ecosystem builders across Northern Luzon"
+                alt="Founders and ecosystem builders"
                 fill
                 className="object-cover object-center"
                 sizes="(max-width: 1024px) 100vw, 70vw"
@@ -121,7 +121,7 @@ export function FeaturePackages({ spotlight }: { spotlight: SpotlightApplication
                 id="ecosystem-visibility"
                 label="For Organizations & Programs"
                 name="Ecosystem Visibility Package"
-                desc="Promote your organization and connect with Northern Luzon's innovation community."
+                desc="Promote your organization and connect with a growing innovation community."
                 includes={partnerIncludes}
                 matched={spotlight?.package === 'ecosystem-visibility'}
                 hasApplication={hasApplication}

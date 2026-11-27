@@ -11,6 +11,12 @@ const nextConfig: NextConfig = {
       // About and Resources moved to the main studio site
       { source: '/about', destination: 'https://amiananventures.org/about/', permanent: true },
       { source: '/resources', destination: 'https://amiananventures.org/resources/', permanent: true },
+      // The ecosystem directory was retired; that space is now Opportunities
+      { source: '/ecosystem', destination: '/opportunities', permanent: true },
+      // Contributor sign-ups are paused; send people to the contact form instead.
+      // Temporary, so login and password reset keep working for existing contributors.
+      { source: '/contribute', destination: '/contact?topic=story', permanent: false },
+      { source: '/contribute/signup', destination: '/contact?topic=story', permanent: false },
     ]
   },
   images: {

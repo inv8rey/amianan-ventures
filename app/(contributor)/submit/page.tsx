@@ -43,7 +43,7 @@ export default async function SubmitPage({
     revision_requested: 'Make the requested changes and resubmit',
   }
   const title    = status ? (titleMap[status]    ?? 'Edit Your Submission') : 'New Submission'
-  const subtitle = status ? (subtitleMap[status] ?? 'Make your changes and resubmit for editorial review') : 'Share your story with the Northern Luzon innovation ecosystem'
+  const subtitle = status ? (subtitleMap[status] ?? 'Make your changes and resubmit for editorial review') : 'Share your story with the Amianan community'
 
   return (
     <div>

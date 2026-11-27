@@ -277,7 +277,7 @@ export function SpotlightForm({ application }: { application: SpotlightApplicati
             <p className="text-sm text-zinc-500 mb-6">
               {locked
                 ? 'Your application is locked while we produce your feature.'
-                : `We'll use the information below to create your feature and showcase your ${isOrgPackage ? 'organization' : 'startup'} to the Northern Luzon innovation community.`}
+                : `We'll use the information below to create your feature and showcase your ${isOrgPackage ? 'organization' : 'startup'} to the Amianan innovation community.`}
             </p>
           </>
         )}

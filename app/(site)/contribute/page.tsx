@@ -15,7 +15,7 @@ export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'Contribute — Write for Amianan Ventures',
-  description: 'Share your story, insights, and expertise with the Northern Luzon innovation ecosystem.',
+  description: 'Share your story, insights, and expertise with the Amianan innovation community.',
 }
 
 const contentTypes = [
@@ -37,7 +37,7 @@ const values = [
   {
     icon: Globe,
     title: 'Reach thousands of readers',
-    desc: 'Your article goes out to founders, TBI staff, investors, students, and government officials across Northern Luzon and beyond.',
+    desc: 'Your article goes out to founders, TBI staff, investors, students, and government officials, in Northern Luzon and beyond.',
   },
   {
     icon: BadgeCheck,
@@ -52,7 +52,7 @@ const values = [
   {
     icon: Megaphone,
     title: 'Shape the narrative',
-    desc: 'The stories that get told shape what gets funded, built, and supported. Your voice helps define Northern Luzon on the innovation map.',
+    desc: 'The stories that get told shape what gets funded, built, and supported. Your voice helps put more builders on the innovation map.',
   },
   {
     icon: BarChart2,
@@ -95,7 +95,7 @@ export default async function ContributePage() {
       <section className="relative min-h-[600px] lg:min-h-[92vh] flex items-center overflow-hidden">
         <Image
           src="/contribute-hero.jpg"
-          alt="Northern Luzon mountains"
+          alt="Mountains of the Cordillera"
           fill
           priority
           className="object-cover object-center"
@@ -117,12 +117,12 @@ export default async function ContributePage() {
               <h1 className="text-4xl sm:text-5xl lg:text-[3.25rem] font-semibold text-white leading-[1.08] mb-5">
                 The Home for Startup<br />
                 Stories and Innovation<br />
-                <span className="rounded-md bg-[#befc65] px-1.5 text-[#131314] [box-decoration-break:clone] [-webkit-box-decoration-break:clone]">in Northern Luzon.</span>
+                <span className="rounded-md bg-[#befc65] px-1.5 text-[#131314] [box-decoration-break:clone] [-webkit-box-decoration-break:clone]">from the North and Beyond.</span>
               </h1>
 
               <p className="text-base text-white/70 max-w-md leading-relaxed mb-8">
                 Share stories, insights, and ideas that spotlight founders, programs,
-                and innovations across Cordillera, Cagayan Valley, Ilocos, and Pangasinan.
+                and innovations, rooted in Northern Luzon and open to builders everywhere.
               </p>
 
               <div className="flex items-center gap-3 flex-wrap mb-10">
@@ -198,7 +198,7 @@ export default async function ContributePage() {
                 ))
               )}
               <div className="flex flex-wrap gap-2 mt-2 justify-end">
-                {['Cordillera', 'Cagayan Valley', 'Ilocos Region', 'Pangasinan'].map((r) => (
+                {['Founders', 'Researchers', 'MSMEs', 'Ecosystem builders'].map((r) => (
                   <span key={r} className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 text-[11px] font-semibold text-white">
                     <MapPin className="h-2.5 w-2.5 text-[#befc65]" /> {r}
                   </span>
@@ -305,7 +305,7 @@ export default async function ContributePage() {
         </h2>
         <p className="text-sm text-zinc-500 mb-8 max-w-md mx-auto leading-relaxed">
           Create a free account in under a minute. Your first submission could reach thousands of
-          founders, investors, and ecosystem builders across Northern Luzon.
+          founders, investors, and ecosystem builders, from Northern Luzon and beyond.
         </p>
         <Link
           href="/contribute/signup"

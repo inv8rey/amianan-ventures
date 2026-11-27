@@ -112,7 +112,6 @@ export async function GET(request: Request) {
 
     // Revalidate public pages that show contributions
     revalidatePath('/')
-    revalidatePath('/ecosystem')
     revalidatePath('/contributions')
 
     console.log(`[publish-scheduled] Published ${contributionsPublished} contributions`)

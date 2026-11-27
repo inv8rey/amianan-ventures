@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { format } from 'date-fns'
 import {
   ChevronLeft, ChevronRight, Pencil, User,
-  MessageCircle, CalendarCheck, Lightbulb, BookOpen, ArrowRight,
+  MessageCircle, CalendarCheck, Lightbulb, BookOpen,
 } from 'lucide-react'
 import { ROLE_LABELS } from '@/types/contributor'
 import type { ContentType, ContributorRole } from '@/types/contributor'
@@ -83,11 +83,11 @@ export function CommunityContributions({ contributions }: { contributions: Commu
           </h2>
           <p className="text-sm text-zinc-500 max-w-lg leading-relaxed">
             Perspectives, lessons, and field insights from founders, students, researchers,
-            and builders shaping innovation across Northern Luzon.
+            and builders shaping innovation, from Northern Luzon and beyond.
           </p>
         </div>
         <Link
-          href="/contribute/signup"
+          href="/contact?topic=story#message"
           className="hidden sm:inline-flex shrink-0 items-center gap-2 px-4 py-2.5 rounded-lg border-2 border-[#131314] text-[#131314] text-sm font-bold hover:bg-[#131314] hover:text-white transition-colors whitespace-nowrap mt-1"
         >
           <Pencil className="h-3.5 w-3.5" />
@@ -113,12 +113,6 @@ export function CommunityContributions({ contributions }: { contributions: Commu
             </button>
           ))}
         </div>
-        <Link
-          href="/contribute"
-          className="hidden sm:flex items-center gap-1 text-[10px] font-bold text-[#131314] hover:underline uppercase tracking-wider shrink-0 pb-3"
-        >
-          View all contributions <ArrowRight className="h-3 w-3" />
-        </Link>
       </div>
 
       {/* ── Cards grid ── */}

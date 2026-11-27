@@ -75,7 +75,7 @@ export default function ContributorLoginPage() {
             </span>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-white leading-tight mb-5">
               Welcome back! Let&apos;s keep building{' '}
-              <span className="text-[#befc65]">Northern Luzon</span> together.
+              <span className="text-[#befc65]">what&apos;s next</span> together.
             </h1>
             <p className="text-zinc-300 leading-relaxed mb-10 max-w-sm">
               Sign in to continue sharing ideas, stories, and opportunities that drive innovation and impact across our region.
@@ -176,14 +176,14 @@ export default function ContributorLoginPage() {
             </form>
 
             <p className="text-center text-sm text-zinc-500 mt-6">
-              Don&apos;t have an account?{' '}
-              <Link href="/contribute/signup" className="text-[#131314] font-semibold hover:underline">
-                Sign up
+              Want to contribute?{' '}
+              <Link href="/contact?topic=story" className="text-[#131314] font-semibold hover:underline">
+                Get in touch
               </Link>
             </p>
 
             <p className="text-center text-xs text-zinc-400 mt-5 pt-5 border-t border-zinc-100">
-              <Link href="/contribute" className="hover:underline">← Back to contributor info</Link>
+              <Link href="/" className="hover:underline">← Back to the news site</Link>
             </p>
           </div>
         </div>

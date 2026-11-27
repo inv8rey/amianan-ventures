@@ -184,7 +184,7 @@ export default async function FounderStoryPage({ params }: { params: Promise<{ s
                   <p className="text-[10px] font-semibold text-black uppercase tracking-wider">Share Your Journey</p>
                 </div>
                 <div className="p-3 bg-white">
-                  <p className="text-xs text-zinc-500 mb-3 leading-relaxed">Are you a founder in Northern Luzon? We&apos;d love to tell your story.</p>
+                  <p className="text-xs text-zinc-500 mb-3 leading-relaxed">Are you a founder? We&apos;d love to tell your story.</p>
                   <Link href="/contact" className="flex items-center justify-center gap-1 w-full py-1.5 bg-black text-white text-[10px] font-bold rounded hover:bg-zinc-800 transition-colors uppercase tracking-wide">
                     Get featured →
                   </Link>

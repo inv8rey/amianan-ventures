@@ -14,7 +14,7 @@ const SECTORS = [
 
 const LOCATIONS = [
   'Baguio City', 'Cordillera (non-Baguio)', 'Cagayan Valley',
-  'Ilocos Region', 'Pangasinan', 'Other in Northern Luzon',
+  'Ilocos Region', 'Pangasinan', 'Other in Northern Luzon', 'Outside Northern Luzon',
 ]
 
 export default function SubmitStartupPage() {
@@ -79,7 +79,7 @@ export default function SubmitStartupPage() {
         <p className="text-[10px] font-bold uppercase tracking-widest text-[#131314] mb-2">Submit</p>
         <h1 className="text-4xl font-semibold text-zinc-900 mb-3 leading-tight">Submit a Startup</h1>
         <p className="text-zinc-500 leading-relaxed max-w-lg">
-          Add your startup to the Northern Luzon innovation ecosystem directory. We feature startups, early-stage ventures, and emerging businesses from Baguio, Cordillera, and surrounding regions.
+          Tell us about your startup. We feature startups, early-stage ventures, and emerging businesses from Baguio, Cordillera, and surrounding regions.
         </p>
       </div>
 

@@ -164,7 +164,7 @@ export function ApplyWizard({ packageId = 'founding-rate' }: { packageId?: Packa
 
         {/* Right: image */}
         <div className="relative hidden lg:block">
-          <Image src="/get-featured-hero.png" alt="Founders across Northern Luzon" fill priority className="object-cover object-center" sizes="50vw" />
+          <Image src="/get-featured-hero.png" alt="Founders and ecosystem builders" fill priority className="object-cover object-center" sizes="50vw" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
           <div className="absolute bottom-8 left-8 right-8 bg-white/95 backdrop-blur-sm rounded-2xl p-5 shadow-xl border border-white/50">
             <p className="text-sm font-semibold text-zinc-800 leading-relaxed italic">

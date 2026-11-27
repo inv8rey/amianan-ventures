@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Geist, Geist_Mono, Source_Serif_4 } from 'next/font/google'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
@@ -23,15 +23,23 @@ const geistDisplay = Geist({
   weight: ['500', '600'],
 })
 
+// Editorial serif for major headlines (homepage, opportunities)
+const editorial = Source_Serif_4({
+  variable: '--font-editorial',
+  subsets: ['latin'],
+  weight: ['400', '600', '700'],
+  style: ['normal', 'italic'],
+})
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Amianan Ventures — Innovation Media for Northern Luzon',
+    default: 'Amianan Ventures: Innovation stories rooted in Northern Luzon',
     template: '%s | Amianan Ventures',
   },
   description:
-    'Connecting founders, startups, universities, and innovation programs across Baguio, the Cordillera, and Northern Luzon.',
-  keywords: ['startups', 'innovation', 'Baguio', 'Cordillera', 'Northern Luzon', 'founders', 'tech'],
+    'Stories, opportunities, and insights for founders and innovators, rooted in Northern Luzon and open to builders everywhere.',
+  keywords: ['startups', 'innovation', 'founders', 'Philippines', 'Northern Luzon', 'Baguio', 'opportunities', 'tech'],
   authors: [{ name: 'Amianan Ventures', url: 'https://amiananventures.org' }],
   creator: 'Amianan Ventures',
   openGraph: {
@@ -39,14 +47,14 @@ export const metadata: Metadata = {
     locale: 'en_PH',
     url: SITE_URL,
     siteName: 'Amianan Ventures',
-    title: 'Amianan Ventures — Innovation Media for Northern Luzon',
+    title: 'Amianan Ventures: Innovation stories rooted in Northern Luzon',
     description:
-      'Connecting founders, startups, universities, and innovation programs across Baguio, the Cordillera, and Northern Luzon.',
+      'Stories, opportunities, and insights for founders and innovators, rooted in Northern Luzon and open to builders everywhere.',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Amianan Ventures',
-    description: 'Innovation media for Northern Luzon',
+    description: 'Innovation stories rooted in Northern Luzon',
     creator: '@amiananventures',
   },
   robots: {
@@ -59,7 +67,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} ${geistDisplay.variable} antialiased min-h-screen`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${geistDisplay.variable} ${editorial.variable} antialiased min-h-screen`}>
         {children}
         <Toaster />
       </body>

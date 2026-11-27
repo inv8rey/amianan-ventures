@@ -11,7 +11,7 @@ export function SubmitStoryBanner({ className = 'mt-12' }: { className?: string 
       <div className="bg-white p-6 flex flex-col sm:flex-row items-start sm:items-center gap-5 justify-between">
         <div>
           <h3 className="text-lg font-semibold text-zinc-900 mb-1 leading-tight">
-            Are you a founder, innovator, or community builder in Northern Luzon?
+            Are you a founder, innovator, or community builder?
           </h3>
           <p className="text-sm text-zinc-500 leading-relaxed max-w-xl">
             We&apos;re always looking for compelling stories from the region&apos;s ecosystem. Whether you&apos;re launching a startup, running a program, or doing something interesting — we&apos;d love to feature you.

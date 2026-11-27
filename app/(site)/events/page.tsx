@@ -4,7 +4,7 @@ import { getPublishedEvents } from '@/lib/queries'
 
 export const metadata: Metadata = {
   title: 'Events',
-  description: 'Upcoming innovation workshops, conferences, and community gatherings across Northern Luzon.',
+  description: 'Upcoming innovation workshops, conferences, and community gatherings.',
 }
 
 export const revalidate = 60
@@ -31,7 +31,7 @@ export default async function EventsPage() {
           <h1 className="text-3xl font-bold">Events</h1>
         </div>
         <p className="text-muted-foreground text-sm ml-4">
-          Innovation workshops, conferences, and gatherings across Northern Luzon
+          Innovation workshops, conferences, and gatherings for our community
         </p>
       </div>
 

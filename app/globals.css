@@ -10,6 +10,7 @@
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
   --font-display: var(--font-display);
+  --font-editorial: var(--font-editorial);
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -32,7 +33,7 @@
   --radius-xl: calc(var(--radius) * 1.4);
 }
 
-/* ─── Amianan Ventures — Regional innovation media for Northern Luzon ─── */
+/* ─── Amianan Ventures: innovation media rooted in Northern Luzon ─── */
 :root {
   --background: #f3f3f4;
   --foreground: #131314;
@@ -87,7 +88,6 @@
   }
 }
 
-/* ─── Display / editorial serif ─── */
 .font-display {
   font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   font-weight: 500;
