@@ -67,6 +67,41 @@ export async function analyzeWithGemini(item: { title: string; description: stri
 function stripHtml(value: string) { return value.replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/\s+/g, ' ').trim() }
 function safeUrl(value: string) { try { const u = new URL(value); if (!['http:','https:'].includes(u.protocol)) return null; u.hash = ''; for (const key of [...u.searchParams.keys()]) if (/^(utm_.+|fbclid|gclid|mc_cid|mc_eid)$/i.test(key)) u.searchParams.delete(key); u.searchParams.sort(); return u.toString() } catch { return null } }
 
+const DEFAULT_INTELLIGENCE_SOURCES = [
+  { name: 'DOST Philippines RSS', url: 'https://www.dost.gov.ph/?format=feed&type=rss', stream: 'funding', region: 'Philippines', reliability: 9 },
+  { name: 'GMA News', url: 'https://data.gmanews.tv/gno/rss/news/feed.xml', stream: 'news', region: 'Philippines', reliability: 8 },
+  { name: 'BusinessWorld', url: 'https://www.bworldonline.com/feed/', stream: 'news', region: 'Philippines', reliability: 8 },
+  { name: 'The Philippine Star', url: 'https://www.philstar.com/rss/headlines', stream: 'news', region: 'Philippines', reliability: 8 },
+  { name: 'Philippine Daily Inquirer', url: 'https://www.inquirer.net/fullfeed', stream: 'news', region: 'Philippines', reliability: 8 },
+  { name: 'Interaksyon', url: 'https://www.interaksyon.com/feed/', stream: 'news', region: 'Philippines', reliability: 7 },
+  { name: 'Rappler', url: 'https://www.rappler.com/philippines/feed/', stream: 'news', region: 'Philippines', reliability: 8 },
+  { name: 'TechCrunch', url: 'https://techcrunch.com/feed/', stream: 'news', region: 'Global', reliability: 8 },
+  { name: 'YourStory', url: 'https://yourstory.com/feed', stream: 'news', region: 'ASEAN', reliability: 7 },
+  { name: 'Philstar Business', url: 'https://www.philstar.com/rss/business', stream: 'news', region: 'Philippines', reliability: 8 },
+  { name: 'YugaTech', url: 'https://www.yugatech.com/feed/', stream: 'news', region: 'Philippines', reliability: 7 },
+  { name: 'UNBOX PH', url: 'https://www.unbox.ph/feed/', stream: 'news', region: 'Philippines', reliability: 7 },
+  { name: 'TechPinas', url: 'https://feeds.feedburner.com/Techpinas', stream: 'news', region: 'Philippines', reliability: 7 },
+  { name: 'The Verge', url: 'https://www.theverge.com/rss/index.xml', stream: 'news', region: 'Global', reliability: 8 },
+  { name: 'Ars Technica', url: 'https://feeds.arstechnica.com/arstechnica/index', stream: 'news', region: 'Global', reliability: 8 },
+  { name: 'WIRED', url: 'https://www.wired.com/feed/rss', stream: 'news', region: 'Global', reliability: 8 },
+  { name: 'Sifted', url: 'https://sifted.eu/feed', stream: 'news', region: 'ASEAN', reliability: 8 },
+  { name: 'EU-Startups', url: 'https://www.eu-startups.com/feed/', stream: 'news', region: 'Global', reliability: 7 },
+  { name: 'Startup Daily', url: 'https://startupdaily.net/feed/', stream: 'news', region: 'ASEAN', reliability: 7 },
+]
+
+async function mapWithConcurrency<T>(items: T[], concurrency: number, worker: (item: T, index: number) => Promise<void>) {
+  let cursor = 0
+  await Promise.all(Array.from({ length: Math.min(concurrency, items.length) }, async () => {
+    while (cursor < items.length) {
+      const index = cursor++
+      await worker(items[index], index)
+    }
+  }))
+}
+
+type FeedSource = { id: string; name: string; url: string; source_type: string; stream: string; region: string; reliability: number }
+type FeedCandidate = { source: FeedSource; title: string; description: string; url: string; publishedAt: string | null }
+
 export async function runIntelligenceScan() {
   const supabase = createServiceClient()
   const { data: run, error: createError } = await supabase.from('intelligence_scan_runs').insert({ status: 'running' }).select('id').single()
@@ -74,53 +109,44 @@ export async function runIntelligenceScan() {
   let sourcesChecked = 0, sourcesFailed = 0, collected = 0, added = 0
   const errors: string[] = []
   try {
-    // Ensure a stable first-party monitoring source exists even when the initial
-    // setup SQL was run before RSS discovery was added to the MVP.
-    const { error: seedError } = await supabase.from('intelligence_sources').upsert({
-      name: 'DOST Philippines RSS',
-      url: 'https://www.dost.gov.ph/?format=feed&type=rss',
-      source_type: 'rss', stream: 'funding', region: 'Philippines', reliability: 9, enabled: true,
-    }, { onConflict: 'url', ignoreDuplicates: true })
+    const { error: seedError } = await supabase.from('intelligence_sources').upsert(
+      DEFAULT_INTELLIGENCE_SOURCES.map(source => ({ ...source, source_type: 'rss', enabled: true })),
+      { onConflict: 'url', ignoreDuplicates: true },
+    )
     if (seedError) throw seedError
     const { data: sources, error } = await supabase.from('intelligence_sources').select('*').eq('enabled', true)
     if (error) throw error
-    const prioritizedSources = (sources ?? []).sort((a, b) => Number(b.source_type === 'rss') - Number(a.source_type === 'rss'))
-    for (const source of prioritizedSources.slice(0, 8)) {
-      if (collected >= 16) break
-      if (!['rss','gdelt'].includes(source.source_type)) continue
+    const prioritizedSources = (sources ?? [])
+      .filter(source => ['rss', 'gdelt'].includes(source.source_type))
+      .sort((a, b) => Number(b.source_type === 'rss') - Number(a.source_type === 'rss'))
+      .slice(0, 30)
+
+    const candidates: FeedCandidate[] = []
+    await mapWithConcurrency(prioritizedSources, 6, async source => {
       sourcesChecked++
       try {
-        const response = await fetch(source.url, { headers: { 'User-Agent': 'AmiananIntelligence/1.0 (+public-source-monitor)' }, signal: AbortSignal.timeout(12_000), cache: 'no-store' })
+        const response = await fetch(source.url, { headers: { 'User-Agent': 'AmiananIntelligence/1.0 (+public-source-monitor)', 'Accept': 'application/rss+xml, application/atom+xml, application/xml, text/xml' }, signal: AbortSignal.timeout(12_000), cache: 'no-store' })
         if (!response.ok) throw new Error(`HTTP ${response.status}`)
         const declaredSize = Number(response.headers.get('content-length') ?? 0)
         if (declaredSize > 1_500_000) throw new Error('Feed exceeds the 1.5 MB size limit')
         const xml = await response.text()
         if (xml.length > 1_500_000) throw new Error('Feed exceeds the 1.5 MB size limit')
-        const entries = [...xml.matchAll(/<(item|entry)\b[^>]*>([\s\S]*?)<\/\1>/gi)].slice(0, 16)
+        const entries = [...xml.matchAll(/<(item|entry)\b[^>]*>([\s\S]*?)<\/\1>/gi)].slice(0, 4)
+        let accepted = 0
         for (const [, , entry] of entries) {
-          if (collected >= 16) break
           const field = (name: string) => entry.match(new RegExp(`<${name}[^>]*>([\\s\\S]*?)<\\/${name}>`, 'i'))?.[1] ?? ''
           const title = stripHtml(field('title'))
-          const description = stripHtml(field('description') || field('summary') || field('content'))
+          const description = stripHtml(field('description') || field('summary') || field('content:encoded') || field('content'))
           const link = field('link')
           const href = entry.match(/<link\b[^>]*href=["']([^"']+)/i)?.[1] ?? stripHtml(link)
           const url = safeUrl(href)
           if (!title || !url) continue
-          collected++
-          const analysis = await analyzeWithGemini({ title, description, url, source: source.name, region: source.region, reliability: source.reliability }).catch(e => { errors.push(`${source.name}: AI ${e instanceof Error ? e.message : 'error'}`); return null })
           const dateRaw = stripHtml(field('pubDate') || field('published') || field('updated'))
-          const published = dateRaw && !Number.isNaN(Date.parse(dateRaw)) ? new Date(dateRaw).toISOString() : null
-          const { data: inserted, error: insertError } = await supabase.from('intelligence_items').upsert({
-            source_id: source.id, source_url: url, source_title: source.name, source_excerpt: description.slice(0, 500), title,
-            summary: analysis?.summary ?? description.slice(0, 400), stream: analysis?.stream ?? source.stream,
-            region: analysis?.region ?? source.region, organization: analysis?.organization ?? null,
-            location: analysis?.location ?? null, published_at: published, deadline_text: analysis?.deadline_text ?? null, deadline_at: analysis?.deadline_at ?? null,
-            relevance_score: analysis?.relevance_score ?? 0, confidence_score: analysis?.confidence_score ?? 0,
-            recommended_action: analysis?.recommended_action ?? 'MONITOR', evidence: analysis?.evidence ?? null,
-            inference: analysis?.inference ?? null, tags: analysis?.tags ?? [],
-          }, { onConflict: 'source_url', ignoreDuplicates: true }).select('id')
-          if (insertError) errors.push(`${source.name}: ${insertError.message}`); else if (inserted?.length) added++
+          const publishedAt = dateRaw && !Number.isNaN(Date.parse(dateRaw)) ? new Date(dateRaw).toISOString() : null
+          candidates.push({ source, title, description, url, publishedAt })
+          accepted++
         }
+        if (!accepted) throw new Error('Feed responded but contained no readable RSS/Atom entries')
         await supabase.from('intelligence_sources').update({ last_checked_at: new Date().toISOString(), last_error: null }).eq('id', source.id)
       } catch (e) {
         sourcesFailed++
@@ -128,9 +154,37 @@ export async function runIntelligenceScan() {
         errors.push(`${source.name}: ${message}`)
         await supabase.from('intelligence_sources').update({ last_checked_at: new Date().toISOString(), last_error: message.slice(0, 500) }).eq('id', source.id)
       }
+    })
+
+    const uniqueCandidates = [...new Map(candidates.map(candidate => [candidate.url, candidate])).values()]
+    collected = uniqueCandidates.length
+    if (uniqueCandidates.length) {
+      const { data: existing, error: existingError } = await supabase.from('intelligence_items').select('source_url').in('source_url', uniqueCandidates.map(candidate => candidate.url))
+      if (existingError) throw existingError
+      const known = new Set((existing ?? []).map(item => item.source_url))
+      const fresh = uniqueCandidates.filter(candidate => !known.has(candidate.url))
+      // Keep Gemini usage bounded per run; all remaining fresh feed entries are still saved with source metadata.
+      const aiLimit = 36
+      await mapWithConcurrency(fresh, 4, async (candidate, index) => {
+        const { source, title, description, url, publishedAt } = candidate
+        const analysis = index < aiLimit
+          ? await analyzeWithGemini({ title, description, url, source: source.name, region: source.region, reliability: source.reliability }).catch(e => { errors.push(`${source.name}: AI ${e instanceof Error ? e.message : 'error'}`); return null })
+          : null
+        const { data: inserted, error: insertError } = await supabase.from('intelligence_items').upsert({
+          source_id: source.id, source_url: url, source_title: source.name, source_excerpt: description.slice(0, 500), title,
+          summary: analysis?.summary ?? description.slice(0, 400), stream: analysis?.stream ?? source.stream,
+          region: analysis?.region ?? source.region, organization: analysis?.organization ?? null,
+          location: analysis?.location ?? null, published_at: publishedAt, deadline_text: analysis?.deadline_text ?? null, deadline_at: analysis?.deadline_at ?? null,
+          relevance_score: analysis?.relevance_score ?? 0, confidence_score: analysis?.confidence_score ?? 0,
+          recommended_action: analysis?.recommended_action ?? 'MONITOR', evidence: analysis?.evidence ?? null,
+          inference: analysis?.inference ?? null, tags: analysis?.tags ?? [],
+        }, { onConflict: 'source_url', ignoreDuplicates: true }).select('id')
+        if (insertError) errors.push(`${source.name}: ${insertError.message}`)
+        else if (inserted?.length) added++
+      })
     }
     await supabase.from('intelligence_scan_runs').update({ status: sourcesChecked > 0 && sourcesFailed === sourcesChecked ? 'failed' : 'completed', finished_at: new Date().toISOString(), sources_checked: sourcesChecked, items_collected: collected, items_added: added, error: errors.length ? errors.slice(0, 20).join('\n').slice(0, 5000) : null }).eq('id', run.id)
-    return { runId: run.id, sourcesChecked, collected, added, errors }
+    return { runId: run.id, sourcesChecked, sourcesFailed, collected, added, errors }
   } catch (e) {
     await supabase.from('intelligence_scan_runs').update({ status: 'failed', finished_at: new Date().toISOString(), sources_checked: sourcesChecked, items_collected: collected, items_added: added, error: e instanceof Error ? e.message : 'Scan failed' }).eq('id', run.id)
     throw e
