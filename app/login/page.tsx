@@ -26,8 +26,9 @@ export default function LoginPage() {
       return
     }
 
-    // The proxy forwards admins to the admin area; its address stays out of this public page.
-    window.location.assign('/login')
+    // Revisit the login route so the server proxy can verify admin access and restore the requested page.
+    const next = new URLSearchParams(window.location.search).get('next')
+    window.location.assign(`/login${next ? `?next=${encodeURIComponent(next)}` : ''}`)
   }
 
   return (

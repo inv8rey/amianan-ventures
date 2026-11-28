@@ -34,22 +34,29 @@ export async function proxy(request: NextRequest) {
 
   const path = request.nextUrl.pathname
   const inAdmin = path === ADMIN_PATH || path.startsWith(ADMIN_PATH + '/')
-  const goTo = (pathname: string) => {
+  const goTo = (pathname: string, returnTo?: string) => {
     const url = request.nextUrl.clone()
     url.pathname = pathname
     url.search = ''
+    if (pathname === '/login' && returnTo && (returnTo === ADMIN_PATH || returnTo.startsWith(ADMIN_PATH + '/'))) {
+      url.searchParams.set('next', returnTo)
+    }
     return NextResponse.redirect(url)
   }
 
   if (!user) {
-    if (inAdmin) return goTo('/login')
+    if (inAdmin) return goTo('/login', path + request.nextUrl.search)
     return supabaseResponse
   }
 
   // Signed in is not enough: the account must be on the admin list.
   const { data: isAdmin } = await supabase.rpc('is_admin')
   if (inAdmin && isAdmin !== true) return goTo('/no-access')
-  if (path === '/login') return goTo(isAdmin === true ? ADMIN_PATH : '/no-access')
+  if (path === '/login') {
+    const requestedPath = request.nextUrl.searchParams.get('next') ?? ''
+    const destination = requestedPath === ADMIN_PATH || requestedPath.startsWith(ADMIN_PATH + '/') ? requestedPath : ADMIN_PATH
+    return goTo(isAdmin === true ? destination : '/no-access')
+  }
 
   return supabaseResponse
 }
