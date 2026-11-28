@@ -28,3 +28,9 @@ Every scan is bounded to eight sources and sixteen feed entries total to fit the
 ## First-run check
 
 After schema and environment setup, run a manual scan. Confirm source check timestamps update, findings link to their original URLs, and repeated scans do not create duplicate rows. Missing or invalid AI credentials do not fabricate assessments.
+
+## One-click publishing to Opportunities
+
+Findings the AI identifies as open calls appear under the Intelligence **Opportunities** filter. Open a finding and use **Publish live to Opportunities** to add it directly to the existing public opportunities table and directory at `/opportunities` (the News site destination linked from the main site). The action is admin-only, deduplicates by the official application URL, and records the review as actioned.
+
+Publishing is enabled only when the finding has an AI opportunity classification, an explicit future deadline with timezone, an organizer, a source-backed summary, and an HTTPS source URL. Verify the original source before clicking. The existing opportunities schema and the `tags` field are reused; no additional database migration is needed.

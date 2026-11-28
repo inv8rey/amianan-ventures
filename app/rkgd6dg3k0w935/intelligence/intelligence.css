@@ -11,3 +11,11 @@
 @media(max-width:900px){.intel-ops-grid{grid-template-columns:1fr}}
 
 .intel-run-state.is-partial{background:#fff5e5;color:#a27431}
+
+.intel-publish-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:6px;background:#befc65;color:#172013;padding:9px 12px;font-size:9px;font-weight:750;cursor:pointer;transition:background .16s,transform .16s}.intel-publish-button:hover:not(:disabled){background:#d0ff8a;transform:translateY(-1px)}.intel-publish-button:disabled{opacity:.58;cursor:not-allowed}.intel-live-link{display:flex;width:max-content;align-items:center;gap:6px;margin-top:10px;color:#547c33;font-size:9px;font-weight:700;text-decoration:none}.intel-live-link:hover{text-decoration:underline}
+@media(max-width:760px){.intel-publish-button{width:100%}}
+
+.intel-ready-pill{display:inline-flex;vertical-align:1px;margin-left:7px;border-radius:4px;padding:3px 5px;background:#eef6e6;color:#5e823a;font-size:7px;font-weight:800;letter-spacing:.06em;white-space:nowrap}
+
+.intel-publish-button{white-space:nowrap}
+@media(max-width:760px){.intel-detail-actions{flex-wrap:wrap}.intel-detail-actions .intel-publish-button{order:-1;flex:0 0 100%}.intel-detail-actions label{flex:1}}
