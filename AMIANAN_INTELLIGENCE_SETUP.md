@@ -21,7 +21,7 @@ Sign in with an account in the existing admin allowlist, then open `/rkgd6dg3k0w
 
 ## Source handling and limitations
 
-The initial scanner ingests RSS and GDELT RSS feeds. Directory entries typed `official` or `philgeps` are reference sources and are not scraped by this MVP. Add only verified RSS URLs to the source table with `source_type='rss'`; the scanner intentionally does not crawl arbitrary websites or treat AI output as verified facts. AI output is a prioritization aid. Review deadlines, eligibility, buying needs, and contacts against the original source before acting. The `deadline_at` field is only populated when the source states an unambiguous date and timezone.
+The scanner automatically ensures the official DOST Philippines RSS feed is enabled, and can also ingest administrator-added RSS and GDELT RSS sources. RSS feeds are prioritized before GDELT, which may rate-limit frequent requests. Directory entries typed `official` or `philgeps` are reference sources and are not scraped by this MVP. Add only verified RSS URLs to the source table with `source_type='rss'`; the scanner intentionally does not crawl arbitrary websites or treat AI output as verified facts. AI output is a prioritization aid. Review deadlines, eligibility, buying needs, and contacts against the original source before acting. The `deadline_at` field is only populated when the source states an unambiguous date and timezone.
 
 Every scan is bounded to eight sources and sixteen feed entries total to fit the hosted function window. Duplicates are ignored by canonical source URL. Source errors and scan history are visible in the dashboard.
 

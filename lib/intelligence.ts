@@ -74,9 +74,18 @@ export async function runIntelligenceScan() {
   let sourcesChecked = 0, sourcesFailed = 0, collected = 0, added = 0
   const errors: string[] = []
   try {
+    // Ensure a stable first-party monitoring source exists even when the initial
+    // setup SQL was run before RSS discovery was added to the MVP.
+    const { error: seedError } = await supabase.from('intelligence_sources').upsert({
+      name: 'DOST Philippines RSS',
+      url: 'https://www.dost.gov.ph/?format=feed&type=rss',
+      source_type: 'rss', stream: 'funding', region: 'Philippines', reliability: 9, enabled: true,
+    }, { onConflict: 'url', ignoreDuplicates: true })
+    if (seedError) throw seedError
     const { data: sources, error } = await supabase.from('intelligence_sources').select('*').eq('enabled', true)
     if (error) throw error
-    for (const source of (sources ?? []).slice(0, 8)) {
+    const prioritizedSources = (sources ?? []).sort((a, b) => Number(b.source_type === 'rss') - Number(a.source_type === 'rss'))
+    for (const source of prioritizedSources.slice(0, 8)) {
       if (collected >= 16) break
       if (!['rss','gdelt'].includes(source.source_type)) continue
       sourcesChecked++

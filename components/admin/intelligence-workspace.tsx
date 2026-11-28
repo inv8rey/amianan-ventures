@@ -74,7 +74,8 @@ export function IntelligenceWorkspace({ initialItems, initialSources, initialRun
       const response=await fetch('/api/intelligence/scan',{method:'POST'})
       const result=await response.json()
       if(!response.ok) throw new Error(result.error||'Scan failed')
-      setNotice(result.errors?.length ? `Scan finished with ${result.errors.length} warning(s) · ${result.added} new findings` : `Scan complete · ${result.added} new findings from ${result.sourcesChecked} sources`)
+      const firstWarning = result.errors?.[0] ? ` · ${String(result.errors[0]).slice(0, 150)}` : ''
+      setNotice(result.collected === 0 ? `No items received from ${result.sourcesChecked} sources${firstWarning}` : result.errors?.length ? `Scanned ${result.collected} items · ${result.added} new findings · ${result.errors.length} warning(s)${firstWarning}` : `Scanned ${result.collected} items · ${result.added} new findings from ${result.sourcesChecked} sources`)
       startTransition(()=>router.refresh())
     } catch(e) { setNotice(e instanceof Error?e.message:'Scan failed') } finally { setWorking(false); setTimeout(()=>setNotice(''),6500) }
   }

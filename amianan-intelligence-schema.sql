@@ -86,5 +86,6 @@ insert into public.intelligence_sources (name,url,source_type,stream,region,reli
 ('Department of Information and Communications Technology','https://dict.gov.ph/','official','program','Philippines',9),
 ('Department of Trade and Industry','https://www.dti.gov.ph/','official','client','Philippines',9),
 ('PhilGEPS Open Data','https://philgeps.ebizolution.net/open-data','philgeps','client','Philippines',10),
+('DOST Philippines RSS','https://www.dost.gov.ph/?format=feed&type=rss','rss','funding','Philippines',9),
 ('GDELT — Northern Luzon innovation','https://api.gdeltproject.org/api/v2/doc/doc?query=(startup%20OR%20innovation)%20(Northern%20Luzon%20OR%20Baguio)&mode=ArtList&format=rss&maxrecords=50&sort=DateDesc','gdelt','news','Northern Luzon',5)
 on conflict (url) do nothing;
