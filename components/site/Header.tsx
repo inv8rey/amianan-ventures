@@ -3,18 +3,27 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
-import { ArrowRight, ChevronDown, GraduationCap, Rocket, Search, Sprout, Store } from 'lucide-react'
+import { ArrowRight, CalendarCheck, ChevronDown, GraduationCap, LineChart, Newspaper, Rocket, Search, Sprout, Store, UserRound } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { MAIN_SITE_URL } from '@/lib/site'
 
 // Same primary navigation as amiananventures.org. "Insights" is this site.
 const MAIN = MAIN_SITE_URL
-const SERVICES: { href: string; title: string; sub: string; Icon: LucideIcon }[] = [
+const SERVICES: MenuItem[] = [
   { href: `${MAIN}/#svc-startups`, title: 'For Startups', sub: 'Product strategy, design, and your first working version.', Icon: Rocket },
   { href: `${MAIN}/#svc-research`, title: 'For Students & Researchers', sub: 'Capstone, thesis, and research projects turned into real tools.', Icon: GraduationCap },
   { href: `${MAIN}/#svc-msme`, title: 'For MSMEs & Businesses', sub: 'Practical digital tools that improve how you operate.', Icon: Store },
   { href: `${MAIN}/#svc-tbi`, title: 'For Incubators (TBIs)', sub: 'Product development support for your incubatees.', Icon: Sprout },
+]
+
+type MenuItem = { href: string; title: string; sub: string; Icon: LucideIcon; internal?: boolean }
+
+const INSIGHTS: MenuItem[] = [
+  { href: '/news', title: 'News', sub: 'Startup and innovation news from the region and beyond.', Icon: Newspaper, internal: true },
+  { href: '/founder-stories', title: 'Founder Stories', sub: 'Real journeys of people building ventures.', Icon: UserRound, internal: true },
+  { href: '/opportunities', title: 'Opportunities', sub: 'Grants, programs, and events, sorted by deadline.', Icon: CalendarCheck, internal: true },
+  { href: '/ecosystem-pulse', title: 'Ecosystem Insights', sub: 'Research and data on how ventures grow.', Icon: LineChart, internal: true },
 ]
 
 // Sections of the news site, shown in a slim bar under the main header.
@@ -32,11 +41,7 @@ const navLink =
 export function Header() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
-  const [dropOpen, setDropOpen] = useState(false) // opened by click / keyboard
-  const [dropHover, setDropHover] = useState(false) // opened by mouse hover
-  const servicesOpen = dropOpen || dropHover
   const [hidden, setHidden] = useState(false)
-  const dropRef = useRef<HTMLDivElement>(null)
   const lastY = useRef(0)
   const headerRef = useRef<HTMLElement>(null)
   const [menuTop, setMenuTop] = useState(104)
@@ -53,21 +58,6 @@ export function Header() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
-
-  // Close the Services menu on outside click or Escape.
-  useEffect(() => {
-    if (!dropOpen) return
-    const onDown = (e: MouseEvent) => {
-      if (!dropRef.current?.contains(e.target as Node)) setDropOpen(false)
-    }
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setDropOpen(false)
-    document.addEventListener('mousedown', onDown)
-    document.addEventListener('keydown', onKey)
-    return () => {
-      document.removeEventListener('mousedown', onDown)
-      document.removeEventListener('keydown', onKey)
-    }
-  }, [dropOpen])
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
@@ -106,60 +96,21 @@ export function Header() {
               <a href={`${MAIN}/`} className={navLink}>Home</a>
               <a href={`${MAIN}/about/`} className={navLink}>About</a>
 
-              <div
-                ref={dropRef}
-                className="group/drop relative flex items-center gap-0.5"
-                onMouseEnter={() => window.matchMedia('(hover: hover) and (pointer: fine)').matches && setDropHover(true)}
-                onMouseLeave={() => setDropHover(false)}
-              >
-                <a href={`${MAIN}/#services`} className={navLink}>Services</a>
-                <button
-                  type="button"
-                  aria-expanded={servicesOpen}
-                  aria-controls="servicesMenu"
-                  aria-label="Show services"
-                  onClick={() => setDropOpen((v) => !v)}
-                  className={cn('grid h-6 w-6 place-items-center rounded-full opacity-[.86] transition-transform duration-300 hover:opacity-100', servicesOpen && 'rotate-180 opacity-100')}
-                >
-                  <ChevronDown className="h-3.5 w-3.5" strokeWidth={2.25} />
-                </button>
-                <div
-                  id="servicesMenu"
-                  role="menu"
-                  aria-label="Services"
-                  className={cn(
-                    'absolute left-1/2 top-[calc(100%+14px)] grid w-[400px] gap-0.5 rounded-2xl border border-[#e0dfdf] bg-white p-2 text-[#131314] shadow-[0_24px_48px_-16px_rgba(19,19,20,.28)] transition-all duration-300',
-                    'before:absolute before:inset-x-0 before:-top-4 before:h-4 before:content-[""]',
-                    servicesOpen ? 'visible -translate-x-1/2 translate-y-0 opacity-100' : 'invisible -translate-x-1/2 -translate-y-1.5 opacity-0'
-                  )}
-                >
-                  {SERVICES.map(({ href, title, sub, Icon }) => (
-                    <a
-                      key={href}
-                      href={href}
-                      role="menuitem"
-                      className="group/item grid grid-cols-[40px_minmax(0,1fr)] items-start gap-3 rounded-xl p-3 transition-colors hover:bg-[#f3f3f4] focus-visible:bg-[#f3f3f4]"
-                    >
-                      <span className="grid h-10 w-10 place-items-center rounded-[10px] bg-[#f3f3f4] transition-colors group-hover/item:bg-[#befc65]">
-                        <Icon className="h-5 w-5" strokeWidth={1.6} aria-hidden />
-                      </span>
-                      <span className="grid gap-0.5">
-                        <strong className="text-[15px] font-medium tracking-[-0.01em]">{title}</strong>
-                        <small className="text-[13px] leading-[1.4] text-[#66646d]">{sub}</small>
-                      </span>
-                    </a>
-                  ))}
-                  <a
-                    href={`${MAIN}/#work`}
-                    role="menuitem"
-                    className="mt-1 flex items-center justify-between rounded-b-xl border-t border-[#e0dfdf] p-3 text-sm font-medium hover:bg-[#f3f3f4]"
-                  >
-                    See selected work <ArrowRight className="h-4 w-4" aria-hidden />
-                  </a>
-                </div>
-              </div>
-
-              <Link href="/" aria-current="page" className={cn(navLink, 'opacity-100')}>Insights</Link>
+              <NavDrop
+                id="servicesMenu"
+                label="Services"
+                href={`${MAIN}/#services`}
+                items={SERVICES}
+                foot={{ href: `${MAIN}/#work`, label: 'See selected work' }}
+              />
+              <NavDrop
+                id="insightsMenu"
+                label="Insights"
+                href="/"
+                current
+                items={INSIGHTS}
+                foot={{ href: '/', label: 'See the latest stories', internal: true }}
+              />
               <a href={`${MAIN}/resources/`} className={navLink}>Resources</a>
               <a href={`${MAIN}/contact/`} className={navLink}>Contact</a>
             </nav>
@@ -279,5 +230,109 @@ export function Header() {
         </div>
       )}
     </>
+  )
+}
+
+/** Desktop dropdown, same look and behaviour as amiananventures.org: hover, click, or keyboard. */
+function NavDrop({
+  id,
+  label,
+  href,
+  items,
+  foot,
+  current = false,
+}: {
+  id: string
+  label: string
+  href: string
+  items: MenuItem[]
+  foot: { href: string; label: string; internal?: boolean }
+  current?: boolean
+}) {
+  const [clicked, setClicked] = useState(false)
+  const [hovered, setHovered] = useState(false)
+  const open = clicked || hovered
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!clicked) return
+    const onDown = (e: MouseEvent) => { if (!ref.current?.contains(e.target as Node)) setClicked(false) }
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { setClicked(false); setHovered(false) } }
+    document.addEventListener('mousedown', onDown)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDown)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [clicked])
+
+  const close = () => { setClicked(false); setHovered(false) }
+  const itemClass =
+    'group/item grid grid-cols-[40px_minmax(0,1fr)] items-start gap-3 rounded-xl p-3 transition-colors hover:bg-[#f3f3f4] focus-visible:bg-[#f3f3f4]'
+  const footClass =
+    'mt-1 flex items-center justify-between rounded-b-xl border-t border-[#e0dfdf] p-3 text-sm font-medium hover:bg-[#f3f3f4]'
+
+  return (
+    <div
+      ref={ref}
+      className="relative flex items-center gap-0.5"
+      onMouseEnter={() => window.matchMedia('(hover: hover) and (pointer: fine)').matches && setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onBlur={(e) => { if (!ref.current?.contains(e.relatedTarget as Node)) close() }}
+    >
+      {href.startsWith('/') ? (
+        <Link href={href} aria-current={current ? 'page' : undefined} className={cn(navLink, current && 'opacity-100')}>{label}</Link>
+      ) : (
+        <a href={href} className={navLink}>{label}</a>
+      )}
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={id}
+        aria-label={`Show ${label.toLowerCase()}`}
+        onClick={() => setClicked((v) => !v)}
+        className={cn('grid h-6 w-6 place-items-center rounded-full opacity-[.86] transition-transform duration-300 hover:opacity-100', open && 'rotate-180 opacity-100')}
+      >
+        <ChevronDown className="h-3.5 w-3.5" strokeWidth={2.25} />
+      </button>
+      <div
+        id={id}
+        role="menu"
+        aria-label={label}
+        className={cn(
+          'absolute left-1/2 top-[calc(100%+14px)] grid w-[400px] gap-0.5 rounded-2xl border border-[#e0dfdf] bg-white p-2 text-[#131314] shadow-[0_24px_48px_-16px_rgba(19,19,20,.28)] transition-all duration-300',
+          'before:absolute before:inset-x-0 before:-top-4 before:h-4 before:content-[""]',
+          open ? 'visible -translate-x-1/2 translate-y-0 opacity-100' : 'invisible -translate-x-1/2 -translate-y-1.5 opacity-0'
+        )}
+      >
+        {items.map(({ href: to, title, sub, Icon, internal }) => {
+          const inner = (
+            <>
+              <span className="grid h-10 w-10 place-items-center rounded-[10px] bg-[#f3f3f4] transition-colors group-hover/item:bg-[#befc65]">
+                <Icon className="h-5 w-5" strokeWidth={1.6} aria-hidden />
+              </span>
+              <span className="grid gap-0.5">
+                <strong className="text-[15px] font-medium tracking-[-0.01em]">{title}</strong>
+                <small className="text-[13px] leading-[1.4] text-[#66646d]">{sub}</small>
+              </span>
+            </>
+          )
+          return internal ? (
+            <Link key={to} href={to} role="menuitem" onClick={close} className={itemClass}>{inner}</Link>
+          ) : (
+            <a key={to} href={to} role="menuitem" className={itemClass}>{inner}</a>
+          )
+        })}
+        {foot.internal ? (
+          <Link href={foot.href} role="menuitem" onClick={close} className={footClass}>
+            {foot.label} <ArrowRight className="h-4 w-4" aria-hidden />
+          </Link>
+        ) : (
+          <a href={foot.href} role="menuitem" className={footClass}>
+            {foot.label} <ArrowRight className="h-4 w-4" aria-hidden />
+          </a>
+        )}
+      </div>
+    </div>
   )
 }

@@ -1,3 +1,4 @@
+import { UUID_RE } from '@/lib/rate-limit'
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
@@ -12,7 +13,7 @@ export async function GET(request: Request) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-  if (!id || !url || !serviceKey) {
+  if (!id || !UUID_RE.test(id) || !url || !serviceKey) {
     return NextResponse.redirect(new URL('/', request.url))
   }
 
@@ -24,11 +25,13 @@ export async function GET(request: Request) {
     .eq('id', id)
     .single()
 
-  if (!listing?.cta_url) {
+  let target: URL | null = null
+  try { target = new URL(listing?.cta_url ?? '') } catch {}
+  if (!target || !['https:', 'http:'].includes(target.protocol)) {
     return NextResponse.redirect(new URL('/', request.url))
   }
 
   await supabase.rpc('increment_featured_listing_clicks', { listing_id: id })
 
-  return NextResponse.redirect(listing.cta_url)
+  return NextResponse.redirect(target)
 }

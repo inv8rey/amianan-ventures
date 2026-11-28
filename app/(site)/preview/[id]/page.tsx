@@ -1,3 +1,4 @@
+import { cleanHtml } from '@/lib/sanitize'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -11,6 +12,7 @@ import { CONTENT_TYPE_LABELS } from '@/types/contributor'
 // Never cache preview pages — always fresh
 export const revalidate = 0
 export const dynamic = 'force-dynamic'
+export const metadata = { robots: { index: false, follow: false } }
 
 const STATUS_COLORS: Record<string, string> = {
   draft:              'bg-zinc-500',
@@ -30,6 +32,8 @@ export default async function PreviewPage({
 }) {
   const { id } = await params
   const { isAdmin } = await getSessionRole()
+  // Drafts and unpublished submissions are for admins only
+  if (!isAdmin) notFound()
 
   // Service client bypasses RLS — shows any article regardless of status
   let supabase
@@ -132,7 +136,7 @@ export default async function PreviewPage({
               </div>
             )}
 
-            <div className="prose-article" dangerouslySetInnerHTML={{ __html: article.content }} />
+            <div className="prose-article" dangerouslySetInnerHTML={{ __html: cleanHtml(article.content) }} />
           </div>
         </div>
       </>
@@ -244,7 +248,7 @@ export default async function PreviewPage({
               </a>
             </div>
           ) : sub.draft_content ? (
-            <div className="prose-article" dangerouslySetInnerHTML={{ __html: sub.draft_content }} />
+            <div className="prose-article" dangerouslySetInnerHTML={{ __html: cleanHtml(sub.draft_content) }} />
           ) : (
             <p className="text-zinc-400 italic">No draft content submitted.</p>
           )}

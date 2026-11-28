@@ -1,3 +1,4 @@
+import { cleanHtml } from '@/lib/sanitize'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -296,7 +297,7 @@ export default async function ContributionPage({
               ) : contribution.draft_content ? (
                 <div
                   className="prose-article"
-                  dangerouslySetInnerHTML={{ __html: contribution.draft_content }}
+                  dangerouslySetInnerHTML={{ __html: cleanHtml(contribution.draft_content) }}
                 />
               ) : (
                 <p className="text-zinc-400 text-sm text-center py-8">No content available.</p>

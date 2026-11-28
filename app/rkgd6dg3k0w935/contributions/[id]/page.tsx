@@ -1,3 +1,4 @@
+import { cleanHtml } from '@/lib/sanitize'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -148,7 +149,7 @@ export default async function EditorReviewPage({
             ) : submission.draft_content ? (
               <div
                 className="prose-article"
-                dangerouslySetInnerHTML={{ __html: submission.draft_content }}
+                dangerouslySetInnerHTML={{ __html: cleanHtml(submission.draft_content) }}
               />
             ) : (
               <p className="text-sm text-muted-foreground">No draft content</p>

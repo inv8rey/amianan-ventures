@@ -9,6 +9,24 @@ function getResend() {
 const FROM = process.env.CONTRIBUTOR_FROM_EMAIL ?? 'onboarding@resend.dev'
 const EDITOR_EMAIL = process.env.EDITOR_EMAIL ?? ''
 
+// Everything below can contain text typed by visitors or contributors.
+// esc() keeps it as plain text in the HTML; safeUrl() only allows web links;
+// line() keeps subject lines on one line.
+function esc(value: unknown) {
+  return String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!)
+}
+function safeUrl(value: unknown) {
+  try {
+    const u = new URL(String(value))
+    return u.protocol === 'https:' || u.protocol === 'http:' ? esc(u.toString()) : '#'
+  } catch {
+    return '#'
+  }
+}
+function line(value: unknown) {
+  return String(value ?? '').replace(/[\r\n]+/g, ' ').slice(0, 200)
+}
+
 function baseHtml(content: string) {
   return `
 <!DOCTYPE html>
@@ -59,14 +77,14 @@ export async function sendSubmissionReceived(
   return getResend().emails.send({
     from: `Amianan Ventures <${FROM}>`,
     to,
-    subject: `We received your submission: "${headline}"`,
+    subject: `We received your submission: "${line(headline)}"`,
     html: baseHtml(`
       ${h1('Submission received!')}
       ${p(`Thanks for submitting to Amianan Innovation Ventures. We've received your article and our editor will review it soon.`)}
       <div style="background:#f9fafb;border-radius:8px;padding:14px 16px;margin:16px 0">
         <p style="margin:0 0 4px;font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px">Submission</p>
-        <p style="margin:0;font-size:15px;font-weight:600;color:#111827">${headline}</p>
-        <p style="margin:4px 0 0;font-size:11px;color:#9ca3af">ID: ${submissionId}</p>
+        <p style="margin:0;font-size:15px;font-weight:600;color:#111827">${esc(headline)}</p>
+        <p style="margin:4px 0 0;font-size:11px;color:#9ca3af">ID: ${esc(submissionId)}</p>
       </div>
       ${p('You\'ll hear from us within 5–7 business days. You can track your submission status on your dashboard.')}
       ${btn(`${SITE_URL}/dashboard`, 'View My Dashboard')}
@@ -81,12 +99,12 @@ export async function sendUnderReview(
   return getResend().emails.send({
     from: `Amianan Ventures <${FROM}>`,
     to,
-    subject: `Your submission is now under review: "${headline}"`,
+    subject: `Your submission is now under review: "${line(headline)}"`,
     html: baseHtml(`
       ${h1('Your article is under review')}
       ${pill('Under Review', '#f59e0b')}
       <div style="margin-top:16px">
-        ${p(`Our editor has started reviewing your submission <strong>"${headline}"</strong>. We'll get back to you with feedback or approval shortly.`)}
+        ${p(`Our editor has started reviewing your submission <strong>"${esc(headline)}"</strong>. We'll get back to you with feedback or approval shortly.`)}
         ${p('In the meantime, feel free to update your contributor profile to add a bio or photo — it helps us introduce you alongside your piece.')}
         ${btn(`${SITE_URL}/dashboard`, 'View My Dashboard')}
       </div>
@@ -101,13 +119,13 @@ export async function sendRevisionRequested(
   return getResend().emails.send({
     from: `Amianan Ventures <${FROM}>`,
     to,
-    subject: `Revision requested for: "${headline}"`,
+    subject: `Revision requested for: "${line(headline)}"`,
     html: baseHtml(`
       ${h1('A few revisions needed')}
       ${pill('Revision Requested', '#f97316')}
       <div style="margin-top:16px">
-        ${p(`Our editor reviewed <strong>"${headline}"</strong> and has some feedback before we can move forward.`)}
-        ${callout(`<p style="margin:0 0 6px;font-size:12px;font-weight:600;color:#92400e;text-transform:uppercase;letter-spacing:0.5px">Editor's Notes</p><p style="margin:0;font-size:14px;color:#78350f;line-height:1.5">${notes}</p>`)}
+        ${p(`Our editor reviewed <strong>"${esc(headline)}"</strong> and has some feedback before we can move forward.`)}
+        ${callout(`<p style="margin:0 0 6px;font-size:12px;font-weight:600;color:#92400e;text-transform:uppercase;letter-spacing:0.5px">Editor's Notes</p><p style="margin:0;font-size:14px;color:#78350f;line-height:1.5">${esc(notes)}</p>`)}
         ${p('Please review the feedback and resubmit when you\'re ready. You can edit your submission directly from your dashboard.')}
         ${btn(`${SITE_URL}/dashboard`, 'View Feedback & Resubmit')}
       </div>
@@ -122,12 +140,12 @@ export async function sendApproved(
   return getResend().emails.send({
     from: `Amianan Ventures <${FROM}>`,
     to,
-    subject: `Your article has been approved: "${headline}"`,
+    subject: `Your article has been approved: "${line(headline)}"`,
     html: baseHtml(`
       ${h1('Your article is approved! 🎉')}
       ${pill('Approved', '#10b981')}
       <div style="margin-top:16px">
-        ${p(`Congratulations! Our editor has approved your submission <strong>"${headline}"</strong>. We'll schedule it for publication on <a href="${SITE_URL}" style="color:#00a855">${SITE_HOST}</a> and notify you when it goes live.`)}
+        ${p(`Congratulations! Our editor has approved your submission <strong>"${esc(headline)}"</strong>. We'll schedule it for publication on <a href="${SITE_URL}" style="color:#00a855">${SITE_HOST}</a> and notify you when it goes live.`)}
         ${p('Thank you for contributing to the Amianan innovation community.')}
         ${btn(`${SITE_URL}/dashboard`, 'View My Dashboard')}
       </div>
@@ -142,10 +160,10 @@ export async function sendRejected(
   return getResend().emails.send({
     from: `Amianan Ventures <${FROM}>`,
     to,
-    subject: `Update on your submission: "${headline}"`,
+    subject: `Update on your submission: "${line(headline)}"`,
     html: baseHtml(`
       ${h1('An update on your submission')}
-      ${p(`Thank you for taking the time to submit <strong>"${headline}"</strong> to Amianan Innovation Ventures.`)}
+      ${p(`Thank you for taking the time to submit <strong>"${esc(headline)}"</strong> to Amianan Innovation Ventures.`)}
       ${p('After careful review, our editor has decided not to move forward with this particular piece at this time. This doesn\'t reflect on the quality of your work — editorial decisions are often about fit, timing, and our current content mix.')}
       ${p('We encourage you to submit again in the future. Your perspective and experience are valuable to our community.')}
       ${btn(`${SITE_URL}/submit`, 'Submit Another Piece')}
@@ -160,15 +178,15 @@ export async function sendPublished(
   return getResend().emails.send({
     from: `Amianan Ventures <${FROM}>`,
     to,
-    subject: `Your article is live: "${headline}"`,
+    subject: `Your article is live: "${line(headline)}"`,
     html: baseHtml(`
       ${h1('Your article is now live! 🚀')}
       ${pill('Published', '#00a855')}
       <div style="margin-top:16px">
-        ${p(`<strong>"${headline}"</strong> is now published on Amianan Innovation Ventures. Share it with your network and help spread the word!`)}
-        ${btn(url, 'Read Your Article')}
+        ${p(`<strong>"${esc(headline)}"</strong> is now published on Amianan Innovation Ventures. Share it with your network and help spread the word!`)}
+        ${btn(safeUrl(url), 'Read Your Article')}
         <p style="margin-top:16px;font-size:13px;color:#6b7280">
-          Direct link: <a href="${url}" style="color:#00a855">${url}</a>
+          Direct link: <a href="${safeUrl(url)}" style="color:#00a855">${esc(url)}</a>
         </p>
       </div>
     `),
@@ -191,16 +209,16 @@ export async function sendReportDownloadLink({
   return getResend().emails.send({
     from: `Amianan Ventures <${FROM}>`,
     to,
-    subject: `Your download: ${reportTitle}`,
+    subject: `Your download: ${line(reportTitle)}`,
     html: baseHtml(`
-      ${h1(`Here's your report, ${name.split(' ')[0]}!`)}
+      ${h1(`Here's your report, ${esc(name.split(' ')[0])}!`)}
       ${p(`Thank you for your interest in the Amianan Ventures Ecosystem Pulse series. Your requested report is ready to download.`)}
       <div style="background:#f9fafb;border-radius:8px;padding:14px 16px;margin:16px 0;border-left:3px solid #00cc6a">
-        <p style="margin:0;font-size:13px;font-weight:700;color:#111827">${reportTitle}</p>
+        <p style="margin:0;font-size:13px;font-weight:700;color:#111827">${esc(reportTitle)}</p>
         <p style="margin:4px 0 0;font-size:11px;color:#6b7280">Ecosystem Pulse · Amianan Ventures</p>
       </div>
-      ${btn(downloadUrl, 'Download Report')}
-      ${p(`<span style="font-size:12px;color:#9ca3af">If the button doesn't work, copy and paste this link: <a href="${downloadUrl}" style="color:#00a855">${downloadUrl}</a></span>`)}
+      ${btn(safeUrl(downloadUrl), 'Download Report')}
+      ${p(`<span style="font-size:12px;color:#9ca3af">If the button doesn't work, copy and paste this link: <a href="${safeUrl(downloadUrl)}" style="color:#00a855">${esc(downloadUrl)}</a></span>`)}
     `),
   })
 }
@@ -220,16 +238,16 @@ export async function sendEditorAlert({
   return getResend().emails.send({
     from: `Amianan Ventures <${FROM}>`,
     to: EDITOR_EMAIL,
-    subject: `New submission: "${headline}"`,
+    subject: `New submission: "${line(headline)}"`,
     html: baseHtml(`
       ${h1('New contributor submission')}
-      ${p(`<strong>${contributor}</strong> has submitted a new article for review.`)}
+      ${p(`<strong>${esc(contributor)}</strong> has submitted a new article for review.`)}
       <div style="background:#f9fafb;border-radius:8px;padding:14px 16px;margin:16px 0">
-        <p style="margin:0 0 8px;font-size:13px;color:#6b7280"><strong>Type:</strong> ${contentType}</p>
-        <p style="margin:0 0 4px;font-size:15px;font-weight:600;color:#111827">${headline}</p>
-        <p style="margin:4px 0 0;font-size:11px;color:#9ca3af">ID: ${submissionId}</p>
+        <p style="margin:0 0 8px;font-size:13px;color:#6b7280"><strong>Type:</strong> ${esc(contentType)}</p>
+        <p style="margin:0 0 4px;font-size:15px;font-weight:600;color:#111827">${esc(headline)}</p>
+        <p style="margin:4px 0 0;font-size:11px;color:#9ca3af">ID: ${esc(submissionId)}</p>
       </div>
-      ${btn(`${SITE_URL}/rkgd6dg3k0w935/contributions/${submissionId}`, 'Review Submission')}
+      ${btn(`${SITE_URL}/rkgd6dg3k0w935/contributions/${esc(submissionId)}`, 'Review Submission')}
     `),
   })
 }
@@ -243,10 +261,10 @@ export async function sendSpotlightSubmitted(
   return getResend().emails.send({
     from: `Amianan Ventures <${FROM}>`,
     to,
-    subject: `We received your Get Featured application: "${businessName}"`,
+    subject: `We received your Get Featured application: "${line(businessName)}"`,
     html: baseHtml(`
       ${h1('Application received!')}
-      ${p(`Thanks for applying to be featured, <strong>${businessName}</strong>. Our team will review your application and get back to you within 1–3 business days.`)}
+      ${p(`Thanks for applying to be featured, <strong>${esc(businessName)}</strong>. Our team will review your application and get back to you within 1–3 business days.`)}
       ${p('You can keep editing your details from your dashboard at any time before payment.')}
       ${btn(`${SITE_URL}/dashboard`, 'View My Dashboard')}
     `),
@@ -260,12 +278,12 @@ export async function sendSpotlightApproved(
   return getResend().emails.send({
     from: `Amianan Ventures <${FROM}>`,
     to,
-    subject: `Your Get Featured application was approved: "${businessName}"`,
+    subject: `Your Get Featured application was approved: "${line(businessName)}"`,
     html: baseHtml(`
       ${h1('Your application is approved! 🎉')}
       ${pill('Approved', '#10b981')}
       <div style="margin-top:16px">
-        ${p(`Congratulations! <strong>${businessName}</strong> has been approved for the Amianan Startup Spotlight. The next step is payment — head to your dashboard to see your payment instructions and upload your proof of payment.`)}
+        ${p(`Congratulations! <strong>${esc(businessName)}</strong> has been approved for the Amianan Startup Spotlight. The next step is payment — head to your dashboard to see your payment instructions and upload your proof of payment.`)}
         ${p('Payment is requested only after your application has been reviewed and approved — exactly where you are now.')}
         ${btn(`${SITE_URL}/spotlight`, 'Complete Payment')}
       </div>
@@ -280,12 +298,12 @@ export async function sendSpotlightRejected(
   return getResend().emails.send({
     from: `Amianan Ventures <${FROM}>`,
     to,
-    subject: `Update on your Get Featured application: "${businessName}"`,
+    subject: `Update on your Get Featured application: "${line(businessName)}"`,
     html: baseHtml(`
       ${h1('An update on your application')}
-      ${p(`Thank you for applying to be featured, <strong>${businessName}</strong>.`)}
+      ${p(`Thank you for applying to be featured, <strong>${esc(businessName)}</strong>.`)}
       ${p('After careful review, we\'re not able to move forward with your application at this time.')}
-      ${notes ? callout(`<p style="margin:0 0 6px;font-size:12px;font-weight:600;color:#92400e;text-transform:uppercase;letter-spacing:0.5px">Notes</p><p style="margin:0;font-size:14px;color:#78350f;line-height:1.5">${notes}</p>`) : ''}
+      ${notes ? callout(`<p style="margin:0 0 6px;font-size:12px;font-weight:600;color:#92400e;text-transform:uppercase;letter-spacing:0.5px">Notes</p><p style="margin:0;font-size:14px;color:#78350f;line-height:1.5">${esc(notes)}</p>`) : ''}
       ${p('We encourage you to apply again in the future.')}
     `),
   })
@@ -298,12 +316,12 @@ export async function sendSpotlightPaymentConfirmed(
   return getResend().emails.send({
     from: `Amianan Ventures <${FROM}>`,
     to,
-    subject: `Payment confirmed: "${businessName}"`,
+    subject: `Payment confirmed: "${line(businessName)}"`,
     html: baseHtml(`
       ${h1('Payment confirmed!')}
       ${pill('Paid', '#10b981')}
       <div style="margin-top:16px">
-        ${p(`We've confirmed your payment for <strong>${businessName}</strong>. Our team will now start producing your feature story and content assets.`)}
+        ${p(`We've confirmed your payment for <strong>${esc(businessName)}</strong>. Our team will now start producing your feature story and content assets.`)}
         ${btn(`${SITE_URL}/spotlight`, 'View My Application')}
       </div>
     `),
@@ -317,15 +335,15 @@ export async function sendSpotlightPublished(
   return getResend().emails.send({
     from: `Amianan Ventures <${FROM}>`,
     to,
-    subject: `Your feature is live: "${businessName}"`,
+    subject: `Your feature is live: "${line(businessName)}"`,
     html: baseHtml(`
       ${h1('Your feature is now live! 🚀')}
       ${pill('Published', '#00a855')}
       <div style="margin-top:16px">
-        ${p(`<strong>${businessName}</strong> is now featured on Amianan Innovation Ventures. Share it with your network!`)}
-        ${btn(url, 'View Your Feature')}
+        ${p(`<strong>${esc(businessName)}</strong> is now featured on Amianan Innovation Ventures. Share it with your network!`)}
+        ${btn(safeUrl(url), 'View Your Feature')}
         <p style="margin-top:16px;font-size:13px;color:#6b7280">
-          Direct link: <a href="${url}" style="color:#00a855">${url}</a>
+          Direct link: <a href="${safeUrl(url)}" style="color:#00a855">${esc(url)}</a>
         </p>
       </div>
     `),
@@ -343,11 +361,11 @@ export async function sendEditorSpotlightAlert({
   return getResend().emails.send({
     from: `Amianan Ventures <${FROM}>`,
     to: EDITOR_EMAIL,
-    subject: `New Get Featured application: "${businessName}"`,
+    subject: `New Get Featured application: "${line(businessName)}"`,
     html: baseHtml(`
       ${h1('New Get Featured application')}
-      ${p(`<strong>${businessName}</strong> has submitted a Get Featured application for review.`)}
-      ${btn(`${SITE_URL}/rkgd6dg3k0w935/spotlight/${applicationId}`, 'Review Application')}
+      ${p(`<strong>${esc(businessName)}</strong> has submitted a Get Featured application for review.`)}
+      ${btn(`${SITE_URL}/rkgd6dg3k0w935/spotlight/${esc(applicationId)}`, 'Review Application')}
     `),
   })
 }

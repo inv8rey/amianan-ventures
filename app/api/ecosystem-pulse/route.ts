@@ -1,13 +1,19 @@
+import { EMAIL_RE, isRateLimited, str, tooMany, UUID_RE } from '@/lib/rate-limit'
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
 import { sendReportDownloadLink } from '@/lib/email'
 
 export async function POST(request: Request) {
   try {
-    const { reportId, name, organization, email } = await request.json()
+    if (isRateLimited(request, 'report-email', 5, 10 * 60_000)) return tooMany()
+    const body = await request.json().catch(() => ({}))
+    const reportId = str(body.reportId, 40)
+    const name = str(body.name, 120)
+    const organization = str(body.organization, 150)
+    const email = str(body.email, 254)
 
-    if (!reportId || !name || !email) {
-      return NextResponse.json({ error: 'Missing required fields.' }, { status: 400 })
+    if (!reportId || !UUID_RE.test(reportId) || !name || !email || !EMAIL_RE.test(email)) {
+      return NextResponse.json({ error: 'Please enter your name and a valid email.' }, { status: 400 })
     }
 
     const supabase = createServiceClient()
@@ -32,7 +38,7 @@ export async function POST(request: Request) {
           report_id: reportId,
           email: email.toLowerCase().trim(),
           name: name.trim(),
-          organization: organization?.trim() ?? null,
+          organization,
         },
         { onConflict: 'report_id,email' },
       )
@@ -62,7 +68,7 @@ export async function POST(request: Request) {
           { status: 500 },
         )
       }
-      return NextResponse.json({ error: `Failed to send email: ${msg}` }, { status: 500 })
+      return NextResponse.json({ error: 'We could not send the email. Please try again later.' }, { status: 500 })
     }
 
     return NextResponse.json({ ok: true })

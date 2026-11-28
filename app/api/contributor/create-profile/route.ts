@@ -1,3 +1,5 @@
+import { canSetUpAccount } from '@/lib/new-account'
+import { isRateLimited, str, tooMany } from '@/lib/rate-limit'
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
@@ -18,20 +20,24 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
   }
 
-  const body = await request.json()
-  const { userId, displayName, fullName, role } = body
-
-  if (!userId) {
-    return NextResponse.json({ error: 'userId required' }, { status: 400 })
+  if (isRateLimited(request, 'create-profile', 10, 60_000)) return tooMany()
+  const body = await request.json().catch(() => ({}))
+  const { userId } = body
+  if (!(await canSetUpAccount(userId))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
+  const ROLES = ['founder', 'tbi_staff', 'student', 'ecosystem_builder', 'researcher', 'other']
+  const displayName = str(body.displayName, 80) ?? ''
+  const fullName = str(body.fullName, 120)
+  const role = ROLES.includes(body.role) ? body.role : null
 
   const supabase = createClient(url, serviceKey, { auth: { persistSession: false } })
 
   const payload = {
     id: userId,
-    display_name: displayName ?? '',
-    full_name: fullName ?? null,
-    role: role ?? null,
+    display_name: displayName,
+    full_name: fullName,
+    role,
   }
 
   // Retry up to 5 times on FK violation — handles auth commit race condition

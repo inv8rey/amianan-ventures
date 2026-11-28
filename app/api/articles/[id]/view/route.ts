@@ -1,3 +1,4 @@
+import { isRateLimited, UUID_RE } from '@/lib/rate-limit'
 import { createServiceClient } from '@/lib/supabase/service'
 
 export async function POST(
@@ -6,7 +7,8 @@ export async function POST(
 ) {
   try {
     const { id } = await params
-    if (!id) return new Response(null, { status: 400 })
+    if (!UUID_RE.test(id)) return new Response(null, { status: 400 })
+    if (isRateLimited(_req, `view:${id}`, 5, 60_000)) return new Response(null, { status: 204 })
 
     const supabase = createServiceClient()
 
@@ -15,7 +17,9 @@ export async function POST(
       .from('articles')
       .select('views')
       .eq('id', id)
+      .eq('status', 'published')
       .single()
+    if (!data) return new Response(null, { status: 404 })
 
     await supabase
       .from('articles')

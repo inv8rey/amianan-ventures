@@ -1,3 +1,4 @@
+import { cleanHtml, jsonLd as toJsonLd } from '@/lib/sanitize'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
@@ -86,7 +87,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: toJsonLd(jsonLd) }} />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-10 xl:gap-14">
 
@@ -137,7 +138,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             <ArticleAd />
 
             <ViewTracker articleId={article.id} />
-            <div className="prose-article" dangerouslySetInnerHTML={{ __html: article.content }} />
+            <div className="prose-article" dangerouslySetInnerHTML={{ __html: cleanHtml(article.content) }} />
 
             {/* Submit Story Banner */}
             <SubmitStoryBanner />

@@ -1,3 +1,4 @@
+import { cleanHtml, jsonLd as toJsonLd } from '@/lib/sanitize'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
@@ -80,7 +81,7 @@ export default async function EventPage({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: toJsonLd(jsonLd) }}
       />
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
         <Link
@@ -145,7 +146,7 @@ export default async function EventPage({
         {event.content && (
           <div
             className="prose-article"
-            dangerouslySetInnerHTML={{ __html: event.content }}
+            dangerouslySetInnerHTML={{ __html: cleanHtml(event.content) }}
           />
         )}
       </div>

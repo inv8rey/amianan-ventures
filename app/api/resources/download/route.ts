@@ -1,7 +1,7 @@
+import { EMAIL_RE, isRateLimited, UUID_RE } from '@/lib/rate-limit'
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 // The Resources page lives on the main studio site and downloads through here.
 const ALLOWED_ORIGINS = new Set([
@@ -26,9 +26,12 @@ export function OPTIONS(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const { resourceId, email } = await req.json()
+  if (isRateLimited(req, 'resource-download', 10, 10 * 60_000)) {
+    return NextResponse.json({ error: 'Too many requests. Please wait a minute and try again.' }, { status: 429, headers: cors(req) })
+  }
+  const { resourceId, email } = await req.json().catch(() => ({}))
 
-  if (!resourceId || typeof email !== 'string' || !EMAIL_RE.test(email.trim())) {
+  if (typeof resourceId !== 'string' || !UUID_RE.test(resourceId) || typeof email !== 'string' || email.length > 254 || !EMAIL_RE.test(email.trim())) {
     return NextResponse.json({ error: 'A valid email is required' }, { status: 400, headers: cors(req) })
   }
 

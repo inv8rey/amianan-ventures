@@ -1,3 +1,5 @@
+import { canSetUpAccount } from '@/lib/new-account'
+import { EMAIL_RE, isRateLimited, str, tooMany } from '@/lib/rate-limit'
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { PACKAGES, isPackageId } from '@/types/spotlight'
@@ -23,10 +25,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
   }
 
-  const body = await request.json()
-  const { userId, businessName, contactName, email, packageId } = body
+  if (isRateLimited(request, 'spotlight-start', 10, 60_000)) return tooMany()
+  const body = await request.json().catch(() => ({}))
+  const { userId, packageId } = body
+  if (!(await canSetUpAccount(userId))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+  const businessName = str(body.businessName, 150)
+  const contactName = str(body.contactName, 120)
+  const email = str(body.email, 254)
 
-  if (!userId || !businessName || !contactName || !email) {
+  if (!businessName || !contactName || !email || !EMAIL_RE.test(email)) {
     return NextResponse.json({ error: 'userId, businessName, contactName, and email are required' }, { status: 400 })
   }
 

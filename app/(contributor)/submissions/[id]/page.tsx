@@ -1,3 +1,4 @@
+import { cleanHtml } from '@/lib/sanitize'
 import Link from 'next/link'
 import { redirect, notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
@@ -217,7 +218,7 @@ export default async function SubmissionDetailPage({
           ) : submission.draft_content ? (
             <div
               className="prose prose-sm max-w-none text-zinc-700"
-              dangerouslySetInnerHTML={{ __html: submission.draft_content }}
+              dangerouslySetInnerHTML={{ __html: cleanHtml(submission.draft_content) }}
             />
           ) : (
             <p className="text-sm text-zinc-400">No draft content</p>

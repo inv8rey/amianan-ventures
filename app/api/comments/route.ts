@@ -1,3 +1,4 @@
+import { EMAIL_RE, isRateLimited, tooMany } from '@/lib/rate-limit'
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
 
@@ -7,7 +8,7 @@ export async function GET(req: Request) {
   const articleType = searchParams.get('type')
   const articleId   = searchParams.get('id')
 
-  if (!articleType || !articleId) {
+  if (!articleType || !articleId || articleId.length > 300) {
     return NextResponse.json({ error: 'Missing type or id' }, { status: 400 })
   }
 
@@ -30,6 +31,7 @@ export async function GET(req: Request) {
 
 // ── POST /api/comments ─────────────────────────────────────────────────────
 export async function POST(req: Request) {
+  if (isRateLimited(req, 'comment', 5, 10 * 60_000)) return tooMany()
   try {
     const body = await req.json() as {
       articleType?: string
@@ -48,7 +50,7 @@ export async function POST(req: Request) {
     if (!['article', 'contribution'].includes(articleType)) {
       return NextResponse.json({ error: 'Invalid article type.' }, { status: 400 })
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(authorEmail)) {
+    if (articleId.length > 300 || authorEmail.length > 254 || !EMAIL_RE.test(authorEmail)) {
       return NextResponse.json({ error: 'Invalid email address.' }, { status: 400 })
     }
     if (authorName.length > 100) {
@@ -56,6 +58,10 @@ export async function POST(req: Request) {
     }
     if (content.length > 1000) {
       return NextResponse.json({ error: 'Comment exceeds 1000 characters.' }, { status: 400 })
+    }
+    // Link-stuffed comments are almost always spam
+    if ((content.match(/https?:\/\/|www\./gi) ?? []).length > 2) {
+      return NextResponse.json({ error: 'Comments can include at most two links.' }, { status: 400 })
     }
 
     const supabase = createServiceClient()
