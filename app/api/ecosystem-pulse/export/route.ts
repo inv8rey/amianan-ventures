@@ -1,13 +1,12 @@
 import { NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
-import { createClient } from '@/lib/supabase/server'
+import { getSessionRole } from '@/lib/admin-auth'
 import { format } from 'date-fns'
 
 export async function GET(request: Request) {
   // Verify admin session
-  const supabaseAuth = await createClient()
-  const { data: { user } } = await supabaseAuth.auth.getUser()
-  if (!user) {
+  const { isAdmin } = await getSessionRole()
+  if (!isAdmin) {
     return new NextResponse('Unauthorized', { status: 401 })
   }
 

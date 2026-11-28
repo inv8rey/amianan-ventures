@@ -72,7 +72,7 @@ export function EditorActions({ submission }: EditorActionsProps) {
         const err = await res.json()
         throw new Error(err.error ?? 'Delete failed')
       }
-      startTransition(() => router.push('/admin/contributions'))
+      startTransition(() => router.push('/rkgd6dg3k0w935/contributions'))
     } catch (e) {
       toast.error((e as Error).message)
     } finally {

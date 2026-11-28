@@ -1,3 +1,4 @@
+import { getSessionRole } from '@/lib/admin-auth'
 import { NextResponse } from 'next/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import {
@@ -36,6 +37,13 @@ export async function POST(request: Request) {
 
   if (!sub) {
     return NextResponse.json({ error: 'Submission not found' }, { status: 404 })
+  }
+
+  // Admins can send any notice; a contributor can only announce their own submission.
+  const { user, isAdmin } = await getSessionRole()
+  const isOwnReceipt = type === 'submission_received' && user?.id === sub.contributor_id
+  if (!isAdmin && !isOwnReceipt) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   const { data: profile } = await supabase

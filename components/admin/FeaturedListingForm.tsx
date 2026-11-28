@@ -69,7 +69,7 @@ export function FeaturedListingForm({ listing }: FeaturedListingFormProps) {
         return
       }
       toast.success('Listing created')
-      router.push(`/admin/featured-listings/${data.id}`)
+      router.push(`/rkgd6dg3k0w935/featured-listings/${data.id}`)
     } else {
       const { error } = await supabase
         .from('featured_listings')
@@ -101,7 +101,7 @@ export function FeaturedListingForm({ listing }: FeaturedListingFormProps) {
       return
     }
     toast.success('Listing deleted')
-    router.push('/admin/featured-listings')
+    router.push('/rkgd6dg3k0w935/featured-listings')
   }
 
   return (

@@ -97,7 +97,7 @@ export async function getAllArticleSlugs() {
   const now = new Date().toISOString()
   const { data } = await supabase
     .from('articles')
-    .select('slug, updated_at')
+    .select('slug, category, updated_at')
     .or(`status.eq.published,and(status.eq.scheduled,published_at.lte.${now})`)
   return data ?? []
 }

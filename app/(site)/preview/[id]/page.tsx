@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { format } from 'date-fns'
 import { ArrowLeft, Clock, User, Eye, ExternalLink } from 'lucide-react'
+import { getSessionRole } from '@/lib/admin-auth'
 import { createServiceClient } from '@/lib/supabase/service'
 import type { Article } from '@/types'
 import { CONTENT_TYPE_LABELS } from '@/types/contributor'
@@ -28,6 +29,7 @@ export default async function PreviewPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
+  const { isAdmin } = await getSessionRole()
 
   // Service client bypasses RLS — shows any article regardless of status
   let supabase
@@ -68,12 +70,14 @@ export default async function PreviewPage({
               {article.status}
             </span>
           </div>
-          <Link
-            href={`/admin/articles/${article.id}`}
-            className="text-[11px] font-bold text-[#befc65] hover:underline whitespace-nowrap"
-          >
-            ← Back to Admin
-          </Link>
+          {isAdmin && (
+            <Link
+              href={`/rkgd6dg3k0w935/articles/${article.id}`}
+              className="text-[11px] font-bold text-[#befc65] hover:underline whitespace-nowrap"
+            >
+              ← Back to Admin
+            </Link>
+          )}
         </div>
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
@@ -161,23 +165,27 @@ export default async function PreviewPage({
             {sub.status.replace(/_/g, ' ')}
           </span>
         </div>
-        <Link
-          href={`/admin/contributions/${sub.id}`}
-          className="text-[11px] font-bold text-[#befc65] hover:underline whitespace-nowrap"
-        >
-          ← Back to Admin
-        </Link>
+        {isAdmin && (
+          <Link
+            href={`/rkgd6dg3k0w935/contributions/${sub.id}`}
+            className="text-[11px] font-bold text-[#befc65] hover:underline whitespace-nowrap"
+          >
+            ← Back to Admin
+          </Link>
+        )}
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-3xl mx-auto">
 
-          <Link
-            href="/admin/contributions"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-400 hover:text-zinc-900 transition-colors mb-6 uppercase tracking-wider"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" /> Contributions
-          </Link>
+          {isAdmin && (
+            <Link
+              href="/rkgd6dg3k0w935/contributions"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-400 hover:text-zinc-900 transition-colors mb-6 uppercase tracking-wider"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" /> Contributions
+            </Link>
+          )}
 
           <div className="flex items-center gap-2 mb-3">
             <span className="text-[10px] font-semibold uppercase tracking-wider text-[#befc65]">

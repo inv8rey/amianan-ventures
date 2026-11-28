@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Zap } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -10,7 +9,6 @@ import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 
 export default function LoginPage() {
-  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -28,8 +26,8 @@ export default function LoginPage() {
       return
     }
 
-    router.push('/admin')
-    router.refresh()
+    // The proxy forwards admins to the admin area; its address stays out of this public page.
+    window.location.assign('/login')
   }
 
   return (

@@ -1,3 +1,4 @@
+import { getSessionRole } from '@/lib/admin-auth'
 import { NextResponse } from 'next/server'
 import crypto from 'crypto'
 
@@ -33,6 +34,10 @@ async function getToken(): Promise<string | null> {
 }
 
 export async function GET(req: Request) {
+  const { isAdmin } = await getSessionRole()
+  if (!isAdmin) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
   const { searchParams } = new URL(req.url)
   const period = searchParams.get('period') ?? '30d'
 

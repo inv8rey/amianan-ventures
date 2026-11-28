@@ -1,7 +1,12 @@
+import { getSessionRole } from '@/lib/admin-auth'
 import { NextResponse } from 'next/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 
 export async function POST(req: Request) {
+  const { isAdmin } = await getSessionRole()
+  if (!isAdmin) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
   try {
     const { submissionId, publishedUrl } = await req.json()
 

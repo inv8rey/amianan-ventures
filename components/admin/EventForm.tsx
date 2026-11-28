@@ -118,7 +118,7 @@ export function EventForm({ event }: EventFormProps) {
         return
       }
       toast.success('Event created')
-      router.push(`/admin/events/${data.id}`)
+      router.push(`/rkgd6dg3k0w935/events/${data.id}`)
     } else {
       const { error } = await supabase
         .from('events')
@@ -150,7 +150,7 @@ export function EventForm({ event }: EventFormProps) {
       return
     }
     toast.success('Event deleted')
-    router.push('/admin/events')
+    router.push('/rkgd6dg3k0w935/events')
   }
 
   return (

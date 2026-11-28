@@ -111,7 +111,7 @@ export function DirectoryForm({ entry }: Props) {
         return
       }
       toast.success('Listing created')
-      router.push(`/admin/directory/${data.id}`)
+      router.push(`/rkgd6dg3k0w935/directory/${data.id}`)
     } else {
       const { error } = await supabase
         .from('directory')
@@ -143,7 +143,7 @@ export function DirectoryForm({ entry }: Props) {
       return
     }
     toast.success('Listing deleted')
-    router.push('/admin/directory')
+    router.push('/rkgd6dg3k0w935/directory')
   }
 
   return (

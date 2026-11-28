@@ -1,3 +1,4 @@
+import { getSessionRole } from '@/lib/admin-auth'
 import { NextResponse } from 'next/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { sendSpotlightSubmitted, sendEditorSpotlightAlert } from '@/lib/email'
@@ -22,12 +23,17 @@ export async function POST(request: Request) {
 
   const { data: app } = await supabase
     .from('spotlight_applications')
-    .select('business_name, email')
+    .select('business_name, email, contributor_id')
     .eq('id', applicationId)
     .single()
 
   if (!app) {
     return NextResponse.json({ error: 'Application not found' }, { status: 404 })
+  }
+
+  const { user, isAdmin } = await getSessionRole()
+  if (!isAdmin && user?.id !== app.contributor_id) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   try {

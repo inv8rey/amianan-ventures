@@ -56,7 +56,7 @@ export default function ContributorLoginPage() {
     // same tab could otherwise be served to whoever logs in next.
     if (!profile) {
       // Admin account — redirect to admin
-      window.location.href = '/admin'
+      window.location.href = '/login'
       return
     }
 

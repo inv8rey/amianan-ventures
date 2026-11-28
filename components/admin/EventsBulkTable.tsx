@@ -6,7 +6,7 @@ import { format } from 'date-fns'
 import { Pencil, Trash2, Loader2, ChevronUp, ChevronDown, ChevronsUpDown } from 'lucide-react'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { bulkDeleteEvents } from '@/app/admin/events/actions'
+import { bulkDeleteEvents } from '@/app/rkgd6dg3k0w935/events/actions'
 import { toast } from 'sonner'
 
 interface EventRow {
@@ -190,7 +190,7 @@ export function EventsBulkTable({ events }: { events: EventRow[] }) {
                   </td>
                   <td className="px-4 py-3 text-right">
                     <Link
-                      href={`/admin/events/${event.id}`}
+                      href={`/rkgd6dg3k0w935/events/${event.id}`}
                       className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }))}
                     >
                       <Pencil className="h-3.5 w-3.5" />
@@ -203,7 +203,7 @@ export function EventsBulkTable({ events }: { events: EventRow[] }) {
               <tr>
                 <td colSpan={6} className="px-4 py-10 text-center text-muted-foreground">
                   No events yet.{' '}
-                  <Link href="/admin/events/new" className="text-primary hover:underline">
+                  <Link href="/rkgd6dg3k0w935/events/new" className="text-primary hover:underline">
                     Create one
                   </Link>
                 </td>

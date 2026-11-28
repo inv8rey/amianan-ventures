@@ -135,7 +135,7 @@ export function ArticleForm({ article }: ArticleFormProps) {
         return
       }
       toast.success('Article created')
-      router.push(`/admin/articles/${data.id}`)
+      router.push(`/rkgd6dg3k0w935/articles/${data.id}`)
     } else {
       const { error } = await supabase
         .from('articles')
@@ -172,7 +172,7 @@ export function ArticleForm({ article }: ArticleFormProps) {
       return
     }
     toast.success('Article deleted')
-    router.push('/admin/articles')
+    router.push('/rkgd6dg3k0w935/articles')
   }
 
   // Past-due scheduled — show a prominent fix banner

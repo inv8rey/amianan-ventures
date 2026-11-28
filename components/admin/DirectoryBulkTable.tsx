@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Pencil, Trash2, Loader2, ChevronUp, ChevronDown, ChevronsUpDown } from 'lucide-react'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { bulkDeleteDirectory } from '@/app/admin/directory/actions'
+import { bulkDeleteDirectory } from '@/app/rkgd6dg3k0w935/directory/actions'
 import { toast } from 'sonner'
 
 const TYPE_LABELS: Record<string, string> = {
@@ -200,7 +200,7 @@ export function DirectoryBulkTable({ entries }: { entries: DirectoryRow[] }) {
                 </td>
                 <td className="px-4 py-3 text-right">
                   <Link
-                    href={`/admin/directory/${entry.id}`}
+                    href={`/rkgd6dg3k0w935/directory/${entry.id}`}
                     className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }))}
                   >
                     <Pencil className="h-3.5 w-3.5" />
@@ -212,7 +212,7 @@ export function DirectoryBulkTable({ entries }: { entries: DirectoryRow[] }) {
               <tr>
                 <td colSpan={7} className="px-4 py-10 text-center text-muted-foreground">
                   No listings yet.{' '}
-                  <Link href="/admin/directory/new" className="text-primary hover:underline">
+                  <Link href="/rkgd6dg3k0w935/directory/new" className="text-primary hover:underline">
                     Add the first one
                   </Link>
                 </td>

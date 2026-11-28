@@ -33,12 +33,13 @@ const editorial = Source_Serif_4({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  applicationName: 'Amianan Ventures News',
   title: {
-    default: 'Amianan Ventures: Innovation stories rooted in Northern Luzon',
-    template: '%s | Amianan Ventures',
+    default: 'Amianan Ventures News | Startup Stories & Opportunities',
+    template: '%s | Amianan Ventures News',
   },
   description:
-    'Stories, opportunities, and insights for founders and innovators, rooted in Northern Luzon and open to builders everywhere.',
+    'Startup news, founder stories, and open opportunities for founders and innovators in the Philippines. Rooted in Northern Luzon, open to builders everywhere.',
   keywords: ['startups', 'innovation', 'founders', 'Philippines', 'Northern Luzon', 'Baguio', 'opportunities', 'tech'],
   authors: [{ name: 'Amianan Ventures', url: 'https://amiananventures.org' }],
   creator: 'Amianan Ventures',
@@ -46,15 +47,15 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_PH',
     url: SITE_URL,
-    siteName: 'Amianan Ventures',
-    title: 'Amianan Ventures: Innovation stories rooted in Northern Luzon',
+    siteName: 'Amianan Ventures News',
+    title: 'Amianan Ventures News | Startup Stories & Opportunities',
     description:
-      'Stories, opportunities, and insights for founders and innovators, rooted in Northern Luzon and open to builders everywhere.',
+      'Startup news, founder stories, and open opportunities for founders and innovators in the Philippines.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Amianan Ventures',
-    description: 'Innovation stories rooted in Northern Luzon',
+    title: 'Amianan Ventures News',
+    description: 'Startup news, founder stories, and open opportunities for founders and innovators.',
     creator: '@amiananventures',
   },
   robots: {

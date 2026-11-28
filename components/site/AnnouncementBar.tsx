@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { X, ArrowRight } from 'lucide-react'
-import type { Announcement } from '@/app/admin/settings/actions'
+import type { Announcement } from '@/app/rkgd6dg3k0w935/settings/actions'
 
 export type { Announcement }
 

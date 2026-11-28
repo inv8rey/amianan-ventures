@@ -6,7 +6,7 @@ import { format } from 'date-fns'
 import { Pencil, Trash2, Loader2, ChevronUp, ChevronDown, ChevronsUpDown } from 'lucide-react'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { bulkDeleteArticles } from '@/app/admin/articles/actions'
+import { bulkDeleteArticles } from '@/app/rkgd6dg3k0w935/articles/actions'
 import { toast } from 'sonner'
 
 interface Article {
@@ -210,7 +210,7 @@ export function ArticlesBulkTable({ articles }: { articles: Article[] }) {
                 </td>
                 <td className="px-4 py-3 text-right">
                   <Link
-                    href={`/admin/articles/${article.id}`}
+                    href={`/rkgd6dg3k0w935/articles/${article.id}`}
                     className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }))}
                   >
                     <Pencil className="h-3.5 w-3.5" />
@@ -222,7 +222,7 @@ export function ArticlesBulkTable({ articles }: { articles: Article[] }) {
               <tr>
                 <td colSpan={6} className="px-4 py-10 text-center text-muted-foreground">
                   No articles yet.{' '}
-                  <Link href="/admin/articles/new" className="text-primary hover:underline">
+                  <Link href="/rkgd6dg3k0w935/articles/new" className="text-primary hover:underline">
                     Create one
                   </Link>
                 </td>

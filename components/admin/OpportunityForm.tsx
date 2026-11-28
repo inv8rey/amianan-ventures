@@ -88,7 +88,7 @@ export function OpportunityForm({ opportunity }: { opportunity?: Opportunity }) 
       setSaving(false)
       if (error) return toast.error('Save failed: ' + error.message)
       toast.success('Opportunity created')
-      router.push(`/admin/opportunities/${data.id}`)
+      router.push(`/rkgd6dg3k0w935/opportunities/${data.id}`)
     } else {
       const { error } = await supabase.from('opportunities').update(payload).eq('id', opportunity.id)
       setSaving(false)
@@ -107,7 +107,7 @@ export function OpportunityForm({ opportunity }: { opportunity?: Opportunity }) 
       return toast.error('Delete failed')
     }
     toast.success('Opportunity deleted')
-    router.push('/admin/opportunities')
+    router.push('/rkgd6dg3k0w935/opportunities')
   }
 
   return (

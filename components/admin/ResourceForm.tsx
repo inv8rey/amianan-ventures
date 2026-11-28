@@ -90,7 +90,7 @@ export function ResourceForm({ resource }: ResourceFormProps) {
         return
       }
       toast.success('Resource created')
-      router.push(`/admin/resources/${data.id}`)
+      router.push(`/rkgd6dg3k0w935/resources/${data.id}`)
     } else {
       const { error } = await supabase
         .from('founder_resources')
@@ -121,7 +121,7 @@ export function ResourceForm({ resource }: ResourceFormProps) {
       return
     }
     toast.success('Resource deleted')
-    router.push('/admin/resources')
+    router.push('/rkgd6dg3k0w935/resources')
   }
 
   return (

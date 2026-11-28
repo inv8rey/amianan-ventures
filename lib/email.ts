@@ -229,7 +229,7 @@ export async function sendEditorAlert({
         <p style="margin:0 0 4px;font-size:15px;font-weight:600;color:#111827">${headline}</p>
         <p style="margin:4px 0 0;font-size:11px;color:#9ca3af">ID: ${submissionId}</p>
       </div>
-      ${btn(`${SITE_URL}/admin/contributions/${submissionId}`, 'Review Submission')}
+      ${btn(`${SITE_URL}/rkgd6dg3k0w935/contributions/${submissionId}`, 'Review Submission')}
     `),
   })
 }
@@ -347,7 +347,7 @@ export async function sendEditorSpotlightAlert({
     html: baseHtml(`
       ${h1('New Get Featured application')}
       ${p(`<strong>${businessName}</strong> has submitted a Get Featured application for review.`)}
-      ${btn(`${SITE_URL}/admin/spotlight/${applicationId}`, 'Review Application')}
+      ${btn(`${SITE_URL}/rkgd6dg3k0w935/spotlight/${applicationId}`, 'Review Application')}
     `),
   })
 }

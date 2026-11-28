@@ -1,5 +1,5 @@
 import { AnnouncementBar } from './AnnouncementBar'
-import type { Announcement, AnnouncementBarInput } from '@/app/admin/settings/actions'
+import type { Announcement, AnnouncementBarInput } from '@/app/rkgd6dg3k0w935/settings/actions'
 
 const DEFAULT: AnnouncementBarInput = { enabled: false, announcements: [] }
 

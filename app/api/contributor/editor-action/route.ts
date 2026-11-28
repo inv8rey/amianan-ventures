@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
-import { createClient } from '@/lib/supabase/server'
+import { getSessionRole } from '@/lib/admin-auth'
 import {
   sendRevisionRequested,
   sendApproved,
@@ -16,9 +16,8 @@ import { SITE_URL } from '@/lib/site'
 //   - If scheduled_for is in the future → stays 'approved', cron will publish at that time
 export async function POST(request: Request) {
   // Auth check — only authenticated users (admin) can call this
-  const sessionClient = await createClient()
-  const { data: { user } } = await sessionClient.auth.getUser()
-  if (!user) {
+  const { isAdmin } = await getSessionRole()
+  if (!isAdmin) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

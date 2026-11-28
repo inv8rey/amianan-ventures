@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
-import { createClient } from '@/lib/supabase/server'
+import { getSessionRole } from '@/lib/admin-auth'
 import {
   sendSpotlightApproved,
   sendSpotlightRejected,
@@ -12,9 +12,8 @@ import type { SpotlightStatus } from '@/types/spotlight'
 // Called from SpotlightEditorActions client component to update application
 // status and trigger emails. Mirrors /api/contributor/editor-action.
 export async function POST(request: Request) {
-  const sessionClient = await createClient()
-  const { data: { user } } = await sessionClient.auth.getUser()
-  if (!user) {
+  const { isAdmin } = await getSessionRole()
+  if (!isAdmin) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
