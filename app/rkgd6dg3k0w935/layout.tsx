@@ -1,7 +1,7 @@
 import { getSessionRole } from '@/lib/admin-auth'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { LayoutDashboard, FileText, Building2, ImageIcon, Inbox, Mail, PenLine, Settings2, TrendingUp, MessageCircle, Star, BookOpen, CalendarClock } from 'lucide-react'
+import { LayoutDashboard, FileText, Building2, ImageIcon, Inbox, Mail, PenLine, Settings2, TrendingUp, MessageCircle, Star, BookOpen, CalendarClock, BrainCircuit } from 'lucide-react'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { revalidatePath } from 'next/cache'
 import { AdminLogout } from '@/components/admin/AdminLogout'
@@ -60,6 +60,7 @@ const navItems = [
   { href: '/rkgd6dg3k0w935',                  label: 'Dashboard',        icon: LayoutDashboard, exact: true  },
   { href: '/rkgd6dg3k0w935/articles',         label: 'Articles',         icon: FileText,        exact: false },
   { href: '/rkgd6dg3k0w935/opportunities',    label: 'Opportunities',    icon: CalendarClock,   exact: false },
+  { href: '/rkgd6dg3k0w935/intelligence',     label: 'Intelligence',     icon: BrainCircuit,    exact: false },
   { href: '/rkgd6dg3k0w935/resources',        label: 'Founder Resources',icon: BookOpen,        exact: false },
   { href: '/rkgd6dg3k0w935/directory',        label: 'Directory',        icon: Building2,       exact: false },
   { href: '/rkgd6dg3k0w935/featured-listings',label: 'Featured Listings',icon: ImageIcon,       exact: false },
